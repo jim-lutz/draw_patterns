@@ -5,4 +5,11 @@
 
     set up new R project
     
-    still need to do version control, git on it.
+    thing I got git working for it. No version control in RStudio though
+    
+    trying grep 365 day DHW Profile by number of Bedrooms, after read_file it's a single char vector
+    better to use stringr functions
+    
+    
+    
+    

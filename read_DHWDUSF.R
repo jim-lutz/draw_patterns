@@ -20,9 +20,14 @@ fn_DHWDUSF <- "/home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Fi
 # read DHWDUSF
 DHWDUSF <- read_file(fn_DHWDUSF)
 
-# try grepping DHW1BR out of file
+str(DHWDUSF) # "chr"
+length(DHWDUSF) #1
+str_length(DHWDUSF) # [1] 129357
 
+# try grepping locations of "$dayofyear," out of DHWDUSF 
+pattern = "$dayofyear,"
 
+grepl(pattern, DHWDUSF)
 
 # save the test info data as a csv file
 write.csv(DT_test_info, file= paste0(wd_data,"DT_test_info.csv"), row.names = FALSE)
