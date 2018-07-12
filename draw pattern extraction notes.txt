@@ -1,0 +1,8 @@
+2018-07-12
+    find CBECC-Res draw pattern files
+
+/home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
+
+    set up new R project
+    
+    still need to do version control, git on it.
