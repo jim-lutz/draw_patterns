@@ -1,15 +1,93 @@
-2018-07-12
+332018-07-12
     find CBECC-Res draw pattern files
 
 /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
 
     set up new R project
     
-    thing I got git working for it. No version control in RStudio though
+    think I got git working for it. No version control in RStudio though
     
     trying grep 365 day DHW Profile by number of Bedrooms, after read_file it's a single char vector
     better to use stringr functions
     
+    https://www.r-bloggers.com/basic-text-string-functions-in-r/
     
+2018-07-13
+
+    See CSE User's Manual, California Simulation Engine    
+    https://cse-sim.github.io/cse/cse-user-manual/introduction.html#introduction
+    
+    can use wineconsole to open a DOS window that CSE19.exe runs in
+    
+    copied a sample file from '/home/jiml/Documents/CBECC-Res 2019 Projects/Samples/'
+    it ran, read the input file. choked cause 
+        RulesetFilename   "CA Res 2019.bin"  
+    encouraging
+    
+    created a ExampleFile that runs with CSE errors.        
+        
+2018-07-16
+    try CSE some more
+    make wineconsole of CSE19.exe still works
+    
+    $ wineconsole
+    err:winedevice:ServiceMain driver L"WineBus" failed to load
+    fixme:console:CONSOLE_DefaultHandler Terminating process 31 on event 0
+
+    oops, try uninstalling  wine and playonlinux ?
+    
+    wineconsole still works
+    
+    $ apt list --installed | grep wine
+        wine1.8/xenial,now 1:1.8.0-0ubuntu1~ubuntu15.10.1~ppa1 amd64 [installed,auto-removable]
+        wine1.8-amd64/xenial,now 1:1.8.0-0ubuntu1~ubuntu15.10.1~ppa1 amd64 [installed,auto-removable]
+        wine1.8-i386/xenial,now 1:1.8.0-0ubuntu1~ubuntu15.10.1~ppa1 i386 [installed,auto-removable]
+    $ apt list --installed | grep playonlinux
+    $ apt list  | grep playonlinux
+        playonlinux/xenial-updates,xenial-updates 4.2.10-2ubuntu0.1 all
+
+    so wine is still installed, but playonlinux isn't
+    
+    wineconsole still works
+    figured out how to run CSE19 and get reports.
+    still need to figure out how to put data in reports
+    probably best to use this to report hourly Tinlet
+    
+    Go back to R to get draw info
+        end use
+        start time
+        duration
+   We can set total flow rates as we choose
+   or maybe extract from DHWDUSF.txt without temperature calculations
+   
+2018-07-17
+
+    U0022: DHWSys 'DHW1' member tInlet has not been set yet.
+    
+    had to set EXPORTCOLs
+    
+    got Tinlet for CTZ12
+    figure out how to repeat for all the CTZs
+        
+    made a bash script (writeRUNALL.sh) to make 
+    a CSE input file (RUNALL.tst) th
+    at includes all CTZs
+    that called in include files (DHWDUSF.txt, coreinputfile.txt ) altered input for CTZs
+    in wineconsole 
+        CSE19 RUNALL.tst
+        
+    seemed to work
+        
+2018-07-20
+
+    more detailed draw patterns not in *.rep file
+    see if any probes for DHW in CSE manual
+    
+    was able to get names of DHWDayUse, but couldn't figure out how to get DHWUse
+    go back using R to read DHWDUST.txt
+    
+2018-07-25
+        
+    DHW Profiles from DHWDUSF.txt
     
     
