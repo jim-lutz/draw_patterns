@@ -33,7 +33,11 @@ ends <- str_locate_all(DHWDUSF, pattern)
 ends <- ends[[1]][1:5,'end'] - 1
 # 1]  2902  5151  7400  9649 11898
 
-# // find the ends of the 365 day DHW Profile by number of Bedrooms
+# // extract the 365 day DHW Profile by number of Bedrooms
+DHWProfiles <- str_sub(DHWDUSF, starts, ends)
+str(DHWProfiles)
+# chr [1:5] "\"1H1\",\"1D3\",\"3E2\",\"1E1\",\"1D5\",\"1D2\",\"4D4\",\"2D1\",\"4D5\",\"2E2\",\"1E1\",
+# \"4D2\",\"1D1\",\"1D3\""| __truncated__ ...
 
 
 
