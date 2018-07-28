@@ -4,6 +4,13 @@
 # saves DT_DHWProfiles to .Rdata and .csv files
 # Jim Lutz "Thu Jul 12 09:00:24 2018"
 
+# from CSE Users Manual
+# DHWDAYUSE
+# Defines an object that represents domestic hot water use for a single day. A DHWDAYUSE contains a 
+# collection of DHWUSE objects that specify the time, volume, and duration of individual draws.
+
+# DHWProfiles are lists of 365 DHWDAYUSEs by number of Bedrooms
+
 # set packages & etc
 source("setup.R")
 

@@ -4,6 +4,11 @@
 # saves DT_DHWDAYUSES to .Rdata and .csv files
 # Jim Lutz "Wed Jul 25 16:11:31 2018"
 
+# from CSE Users Manual
+# DHWDAYUSE
+# Defines an object that represents domestic hot water use for a single day. A DHWDAYUSE contains a 
+# collection of DHWUSE objects that specify the time, volume, and duration of individual draws.
+
 # set packages & etc
 source("setup.R")
 
@@ -64,6 +69,9 @@ nchar(DHWDAYUSEs)
 # [23] 2077 2411 1875 2009 1708 1071 1038 2613 1943 3885 5126 2545 2178 1273 1708 2813 2813 4858 6198 3852 3483 1071
 # [45] 3450 6633  737 3751
 
+# remove extraneous whitespace
+DHWDAYUSEs <- str_trim(DHWDAYUSEs, side = "both" )
+
 # look at a short DHWDAYUSE
 DHWDAYUSEs[47]
 
@@ -73,9 +81,7 @@ unique(unlist(str_extract_all(DHWDAYUSEs, "[A-Z]{4}" )))
 
 # insert a string to split DHWDAYUSES on
 DHWDAYUSEs <- str_replace_all(DHWDAYUSEs, "(\\))[:space:]+(DWSH|FAUC|SHWR|CWSH|BATH)","\\1X\\2")
-
-str(DHWDAYUSEs)
-# chr [1:48] "  DWSH(  1.30,  1.667, 1.145,   0)XDWSH(  1.87,  1.500, 1.014,   0)XDWSH(  2.10,  1.333, 1.179,   0)XFAUC(  2.0"| __truncated__ ...
+DHWDAYUSEs[47]
 
 # split the DHWDAYUSEs
 DHWDAYUSEs <- str_split(DHWDAYUSEs, 'X')
@@ -84,9 +90,9 @@ str(DHWDAYUSEs)
 # List of 48
 
 nchar(DHWDAYUSEs)
-#  [1] 2275 1337 1013 1013 1626 2275  724 1085 2419 2167 2167 1013 1193 2996 3429 1265 3826 2780 1842 2852 2780
-# [22] 2311 2239 2600 2023 2167 1842 1157 1121 2816 2095 4187 5521 2744 2347 1373 1842 3033 3033 5233 6676 4151
-# [43] 3754 1157 3718 7145  796 4043
+#  [1] 2273 1335 1011 1011 1624 2273  722 1083 2417 2165 2165 1011 1191 2994 3427 1263 3824 2778 1840 2850 2778
+# [22] 2309 2237 2598 2021 2165 1840 1155 1119 2814 2093 4185 5519 2742 2345 1371 1840 3031 3031 5231 6674 4149
+# [43] 3752 1155 3716 7143  794 4041
 
 length(DHWDAYUSEs)
 # 48
@@ -96,23 +102,5 @@ DHWDAYUSEs[47]
 str(DHWDAYUSEs[47])
 # List of 1
 # $ : chr [1:22] "  FAUC(  8.47,  0.333, 0.928,   0)" "FAUC(  8.68,  0.167, 0.272,   1)" "FAUC(  8.69,  1.167, 0.770,   2)" "FAUC(  9.57,  0.167, 0.317,   3)" ...
-
-
-# // find the names of the 365 day DHW Profile by number of Bedrooms
-# DHW5BR
-pattern = "DHW[1-9]BR"  # look for this
-DHWProfileNames <- str_match_all(DHWDUSF, pattern)
-DHWProfileNames <- DHWProfileNames[[1]][1:5,1] 
-
-# turn the DHWProfiles into a data.table
-DT_DHWProfiles <- data.table( day=1:365) # a null data.table
-DT_DHWProfiles[,(DHWProfileNames) := (DHWProfiles) ]
-
-
-# save the DT_DHWProfiles data as a csv file
-write.csv(DT_DHWProfiles, file= paste0(wd_data,"DT_DHWProfiles.csv"), row.names = FALSE)
-
-# save the test info data as an .Rdata file
-save(DT_DHWProfiles, file = paste0(wd_data,"DT_DHWProfiles7.Rdata"))
 
 

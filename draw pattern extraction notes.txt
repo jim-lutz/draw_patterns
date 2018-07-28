@@ -92,4 +92,14 @@
     
     got the DWHProfiles, turned into data.table and saved
 
- 
+    good start on getting DHWDAYUSEs, probably list of named lists instead of a data.table
+
+
+ 2018-07-28
+    from CSE Users Manual
+    DHWDAYUSE
+    Defines an object that represents domestic hot water use for a single day. A DHWDAYUSE contains a 
+    collection of DHWUSE objects that specify the time, volume, and duration of individual draws.
+
+    think I have DHWDAYUSEs as a list of 48 lists of DHWUSEs
+    turn it into a data.table of DHWUSEs with an added field of which DHWDAYUSE it belongs to
