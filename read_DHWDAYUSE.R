@@ -29,7 +29,7 @@ DHWDUSF <- read_file(fn_DHWDUSF)
 DHWDAYUSE_names <- str_extract_all(as.character(DHWDUSF), "DHWDAYUSE \"[1-9][DEH][1-9]")
 DHWDAYUSE_names <- str_extract_all(as.character(DHWDAYUSE_names), "[1-9][DEH][1-9]")
 
-"# get the DHWDAYUSEs
+# get the DHWDAYUSEs
 
 # define pattern for starts of DHWDAYUSE
 pattern = "DHWDAYUSE \"[1-9][DEH][1-9]\"\n"  # look for this
@@ -64,7 +64,7 @@ ends <- ends[[1]][1:48,'start'] - 2
 # [46] 124726 125493 129274
 
 
-# // extract the DHWDAYUSE by person day type
+#  extract the DHWDAYUSE by person day type
 DHWDAYUSEs <- str_sub(DHWDUSF, starts, ends)
 str(DHWDAYUSEs)
 # chr [1:48] "  DWSH(  1.30,  1.667, 1.145,   0) DWSH(  1.87,  1.500, 1.014,   0) 
@@ -111,7 +111,33 @@ str(DHWDAYUSEs[47])
 
 str(DHWDAYUSEs, nchar.max = 30, strict.width = "cut")
 
+# names of DHWDAYUSEs
 names(DHWDAYUSEs)
 # NULL
+names(DHWDAYUSEs) <- unlist(DHWDAYUSE_names)
+str(DHWDAYUSEs, nchar.max = 30, strict.width = "cut")
+names(DHWDAYUSEs)
+#  [1] "1D1" "1D2" "1D3" "1D4" "1D5" "1E1" "1E2" "1H1" "2D1" "2D2" "2D3" "2D4" "2D5" "2E1" "2E2" "2H1" "3D1"
+# [18] "3D2" "3D3" "3D4" "3D5" "3E1" "3E2" "3H1" "4D1" "4D2" "4D3" "4D4" "4D5" "4E1" "4E2" "4H1" "5D1" "5D2"
+# [35] "5D3" "5D4" "5D5" "5E1" "5E2" "5H1" "6D1" "6D2" "6D3" "6D4" "6D5" "6E1" "6E2" "6H1"
 
-DHWD
+DHWDAYUSEs['3E1']
+
+# blank data.table
+DT_DHWUSEs <- data.table()
+
+# loop through all the DHWDAYUSEs
+for (d in 1:length(DHWDAYUSEs)) {
+
+  # make a 2 column data.table with DHWDAYUSE_names and DHWUSEs
+  DT_temp <- data.table( DHWDAYUSE=names(DHWDAYUSEs[1]) ,DHWUSE=unlist(DHWDAYUSEs[1]) )
+
+  # attach DT_temp to DT_DHWUSEs
+  DT_DHWUSEs <- rbind(DT_DHWUSEs, DT_temp)
+  
+}
+  
+str(DT_DHWUSEs)
+
+
+  
