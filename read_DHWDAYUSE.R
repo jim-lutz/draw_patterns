@@ -139,6 +139,25 @@ for (d in 1:length(DHWDAYUSEs)) {
   
 str(DT_DHWUSEs)
 
+# extract s,d,f,id from DHWUSE end use macros
+DT_DHWUSEs[, s:= str_extract(DHWUSE, "\\( +[0-9]*\\.[0-9]*") ]
+DT_DHWUSEs[, s:= str_extract(s, "[0-9]*\\.[0-9]*") ]
+DT_DHWUSEs[, s:= as.numeric(s) ]  # start as fraction of day
+
+DT_DHWUSEs[, d:= str_extract(DHWUSE, "\\, +[0-9]*\\.[0-9]{3}")]
+DT_DHWUSEs[, d:= str_extract(d, "[0-9]*\\.[0-9]{3}")]
+DT_DHWUSEs[, d:= as.numeric(d) ]  # duration as minutes
+
+DT_DHWUSEs[, f:= str_extract(DHWUSE, ", *[0-9]{1}.[0-9]{3}, *[0-9]*\\)")]
+DT_DHWUSEs[, f:= str_extract(f, "[0-9]*\\.[0-9]*")]
+DT_DHWUSEs[, f:= as.numeric(f) ]
+
+DT_DHWUSEs[, id:= str_extract(DHWUSE, "[0-9]*\\)")]
+DT_DHWUSEs[, id:= str_extract(id, "[0-9]*")]
+DT_DHWUSEs[, id:= as.numeric(id) ]  # id of event where multidraw dishwasher and clothes washer draws are counted as one id
+
+str(DT_DHWUSEs)
+
 # from DHWDUSF.txt
 ShwrFLOWF       = 1        
 ShwrDRAINHREFF  = 0   
@@ -166,22 +185,39 @@ FaucFLOWF       = 1.0
 # #define DWSH( s, d, f, id) \
 # DHWUSE wuHWEndUse="DWashr" wuStart=s wuDuration=d wuFlow=f*DwshFLOWF wuEventID=id
 
-# extract s,d,f,id from DHWUSE end use macros
-DT_DHWUSEs[, s:= str_extract(DHWUSE, "\\( +[0-9]*\\.[0-9]*") ]
-DT_DHWUSEs[, s:= str_extract(s, "[0-9]*\\.[0-9]*") ]
-DT_DHWUSEs[, s:= as.numeric(s) ]
+# calculate the mixedFlows
+# the draw flow rate at the point of use (in other words, the mixed-water flow rate).
+# showers
+DT_DHWUSEs[grepl('SHWR', DHWUSE), `:=` (mixedFlow = f * ShwrFLOWF,
+                                        enduse    = "Shower"
+                                        ) ]
 
-DT_DHWUSEs[, d:= str_extract(DHWUSE, "\\, +[0-9]*\\.[0-9]{3}")]
-DT_DHWUSEs[, d:= str_extract(d, "[0-9]*\\.[0-9]{3}")]
-DT_DHWUSEs[, d:= as.numeric(d) ]
+# baths
+DT_DHWUSEs[grepl('BATH', DHWUSE), `:=` (mixedFlow = f * BathFLOWF,
+                                        enduse    = "Bath"
+) ]
 
-DT_DHWUSEs[, f:= str_extract(DHWUSE, ", *[0-9]{1}.[0-9]{3}, *[0-9]*\\)")]
-DT_DHWUSEs[, f:= str_extract(f, "[0-9]*\\.[0-9]*")]
-DT_DHWUSEs[, f:= as.numeric(f) ]
+# calculate the hotFlows and coldFlows
+# the hot draw flow rate at the point of use (in other words, the hot-water flow rate).
+# and the cold draw flow rate at the point of use (in other words, the cold-water flow rate).
+# faucets
+DT_DHWUSEs[grepl('FAUC', DHWUSE), `:=` (mixedFlow = f * FaucFLOWF,
+                                        hotFlow   = f * FaucFLOWF * FaucHOTF,
+                                        coldFlow  = f * FaucFLOWF * (1-FaucHOTF),
+                                        enduse    = "Faucet"
+                                        ) ]
 
-DT_DHWUSEs[, id:= str_extract(DHWUSE, "[0-9]*\\)")]
-DT_DHWUSEs[, id:= str_extract(id, "[0-9]*")]
-DT_DHWUSEs[, id:= as.numeric(id) ]
+# clothes washer
+DT_DHWUSEs[grepl('CWSH', DHWUSE), `:=` (mixedFlow = f * CwshUSEF,
+                                        hotFlow   = f * CwshUSEF * CwshHOTF,
+                                        coldFlow  = f * CwshUSEF * (1-CwshHOTF),
+                                        enduse    = "ClothesWasher"
+                                        ) ]
 
-str(DT_DHWUSEs)
+# dishwasher
+DT_DHWUSEs[grepl('DWSH', DHWUSE), `:=` (mixedFlow = f * DwshFLOWF,
+                                        hotFlow   = f * DwshFLOWF,
+                                        coldFlow  = f * (1-DwshFLOWF),
+                                        enduse    = "Dishwasher"
+                                        ) ]
 
