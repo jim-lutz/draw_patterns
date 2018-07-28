@@ -25,6 +25,12 @@ fn_DHWDUSF <- "/home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Fi
 # read DHWDUSF
 DHWDUSF <- read_file(fn_DHWDUSF)
 
+# get the DHWDAYUSE names
+DHWDAYUSE_names <- str_extract_all(as.character(DHWDUSF), "DHWDAYUSE \"[1-9][DEH][1-9]")
+DHWDAYUSE_names <- str_extract_all(as.character(DHWDAYUSE_names), "[1-9][DEH][1-9]")
+
+"# get the DHWDAYUSEs
+
 # define pattern for starts of DHWDAYUSE
 pattern = "DHWDAYUSE \"[1-9][DEH][1-9]\"\n"  # look for this
 
@@ -103,4 +109,9 @@ str(DHWDAYUSEs[47])
 # List of 1
 # $ : chr [1:22] "  FAUC(  8.47,  0.333, 0.928,   0)" "FAUC(  8.68,  0.167, 0.272,   1)" "FAUC(  8.69,  1.167, 0.770,   2)" "FAUC(  9.57,  0.167, 0.317,   3)" ...
 
+str(DHWDAYUSEs, nchar.max = 30, strict.width = "cut")
 
+names(DHWDAYUSEs)
+# NULL
+
+DHWD
