@@ -139,5 +139,49 @@ for (d in 1:length(DHWDAYUSEs)) {
   
 str(DT_DHWUSEs)
 
+# from DHWDUSF.txt
+ShwrFLOWF       = 1        
+ShwrDRAINHREFF  = 0   
+CwshHOTF        = 0.22      
+CwshUSEF        = 1         
+FaucHOTF        = 0.50      
+BathFLOWF       = 1        
+BathDRAINHREFF  = 0   
+DwshFLOWF       = 1        
+FaucFLOWF       = 1.0
 
-  
+# // define macros for each end use (with specific parameters exposed)
+# #define SHWR( s, d, f, id)  \
+# DHWUSE wuHWEndUse="Shower" wuStart=s wuDuration=d wuFlow=f*ShwrFLOWF wuTemp=105 wuHeatRecEF=ShwrDRAINHREFF wuEventID=id
+# 
+# #define CWSH( s, d, f, id) \
+# DHWUSE wuHWEndUse="CWashr" wuStart=s wuDuration=d wuFlow=f*CwshUSEF wuHotF=CwshHOTF wuEventID=id
+# 
+# #define FAUC( s, d, f, id) \
+# DHWUSE wuHWEndUse="Faucet" wuStart=s wuDuration=d wuFlow=f*FaucFLOWF wuHotF=FaucHOTF wuEventID=id
+# 
+# #define BATH( s, d, f, id) \
+# DHWUSE wuHWEndUse="Bath" wuStart=s wuDuration=d wuFlow=f*BathFLOWF wuTemp=105 wuHeatRecEF=BathDRAINHREFF wuEventID=id
+# 
+# #define DWSH( s, d, f, id) \
+# DHWUSE wuHWEndUse="DWashr" wuStart=s wuDuration=d wuFlow=f*DwshFLOWF wuEventID=id
+
+# extract s,d,f,id from DHWUSE end use macros
+DT_DHWUSEs[, s:= str_extract(DHWUSE, "\\( +[0-9]*\\.[0-9]*") ]
+DT_DHWUSEs[, s:= str_extract(s, "[0-9]*\\.[0-9]*") ]
+DT_DHWUSEs[, s:= as.numeric(s) ]
+
+DT_DHWUSEs[, d:= str_extract(DHWUSE, "\\, +[0-9]*\\.[0-9]{3}")]
+DT_DHWUSEs[, d:= str_extract(d, "[0-9]*\\.[0-9]{3}")]
+DT_DHWUSEs[, d:= as.numeric(d) ]
+
+DT_DHWUSEs[, f:= str_extract(DHWUSE, ", *[0-9]{1}.[0-9]{3}, *[0-9]*\\)")]
+DT_DHWUSEs[, f:= str_extract(f, "[0-9]*\\.[0-9]*")]
+DT_DHWUSEs[, f:= as.numeric(f) ]
+
+DT_DHWUSEs[, id:= str_extract(DHWUSE, "[0-9]*\\)")]
+DT_DHWUSEs[, id:= str_extract(id, "[0-9]*")]
+DT_DHWUSEs[, id:= as.numeric(id) ]
+
+str(DT_DHWUSEs)
+
