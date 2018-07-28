@@ -130,7 +130,7 @@ DT_DHWUSEs <- data.table()
 for (d in 1:length(DHWDAYUSEs)) {
 
   # make a 2 column data.table with DHWDAYUSE_names and DHWUSEs
-  DT_temp <- data.table( DHWDAYUSE=names(DHWDAYUSEs[1]) ,DHWUSE=unlist(DHWDAYUSEs[1]) )
+  DT_temp <- data.table( DHWDAYUSE=names(DHWDAYUSEs[d]) ,DHWUSE=unlist(DHWDAYUSEs[d]) )
 
   # attach DT_temp to DT_DHWUSEs
   DT_DHWUSEs <- rbind(DT_DHWUSEs, DT_temp)
@@ -220,4 +220,11 @@ DT_DHWUSEs[grepl('DWSH', DHWUSE), `:=` (mixedFlow = f * DwshFLOWF,
                                         coldFlow  = f * (1-DwshFLOWF),
                                         enduse    = "Dishwasher"
                                         ) ]
+
+str(DT_DHWUSEs)
+
+# summary data about DT_DHWUSEs
+DT_DHWUSEs[ , list(vol    = sum(mixedFlow * d),
+                   ndraws = length(DHWUSE)),
+            by = DHWDAYUSE]
 
