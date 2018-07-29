@@ -41,6 +41,7 @@ ends <- ends[[1]][1:5,'end'] - 1
 # 1]  2902  5151  7400  9649 11898
 
 # // extract the 365 day DHW Profile by number of Bedrooms
+# these are DHW1BR:DHW5BR
 DHWProfiles <- str_sub(DHWDUSF, starts, ends)
 str(DHWProfiles)
 # chr [1:5] "\"1H1\",\"1D3\",\"3E2\",\"1E1\",\"1D5\",\"1D2\",\"4D4\",\"2D1\",\"4D5\",\"2E2\",\"1E1\",
@@ -73,20 +74,21 @@ str(DHWProfiles)
 #  $ : chr [1:365] "4H1" "2D3" "5E2" "3E1" ...
 
 # // find the names of the 365 day DHW Profile by number of Bedrooms
-# DHW5BR
+# DHW1BR:DHW5BR
 pattern = "DHW[1-9]BR"  # look for this
 DHWProfileNames <- str_match_all(DHWDUSF, pattern)
 DHWProfileNames <- DHWProfileNames[[1]][1:5,1] 
+str(DHWProfileNames)
+# chr [1:5] "DHW1BR" "DHW2BR" "DHW3BR" "DHW4BR" "DHW5BR"
 
 # turn the DHWProfiles into a data.table
 DT_DHWProfiles <- data.table( day=1:365) # a null data.table
 DT_DHWProfiles[,(DHWProfileNames) := (DHWProfiles) ]
 
-
 # save the DT_DHWProfiles data as a csv file
 write.csv(DT_DHWProfiles, file= paste0(wd_data,"DT_DHWProfiles.csv"), row.names = FALSE)
 
 # save the test info data as an .Rdata file
-save(DT_DHWProfiles, file = paste0(wd_data,"DT_DHWProfiles7.Rdata"))
+save(DT_DHWProfiles, file = paste0(wd_data,"DT_DHWProfiles.Rdata"))
 
 

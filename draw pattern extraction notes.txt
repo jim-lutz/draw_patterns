@@ -95,7 +95,7 @@
     good start on getting DHWDAYUSEs, probably list of named lists instead of a data.table
 
 
- 2018-07-28
+2018-07-28
     from CSE Users Manual
     DHWDAYUSE
     Defines an object that represents domestic hot water use for a single day. A DHWDAYUSE contains a 
@@ -106,5 +106,14 @@
 
     got DT_DHWUSEs but saved it under wrong name, overwrote previous data set
 
+    rerun read_DHWDUSF.R to rebuild the overwritten data sets
+    pick "3D4", 3 bedroom, weekday to send to Yanda & Gary,
 
+    build data.table of 365 day DHW Profiles to DHWUSEs and of CZ inlet water  
+    then can pick days that are high and low use water and draws.
+    think about how to rate clusteriness and dispersion. curve of time between draws?
+    
+    will also want to do distributions of FAUC durations to figure out what to do about
+    clearing and fauceting draws.
+    
     
