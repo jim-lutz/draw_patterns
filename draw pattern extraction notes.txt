@@ -116,4 +116,6 @@
     will also want to do distributions of FAUC durations to figure out what to do about
     clearing and fauceting draws.
     
+    the DHWDAYUSEs are sorted alphabetically in DHWDUSF.txt!
     
+    used table and sink to get a count of enduses per DHWDAYUSE

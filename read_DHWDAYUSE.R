@@ -42,10 +42,11 @@ str_sub(DHWDUSF,
 # // find the starts of the DHWDAYUSE by person day type
 starts <- str_locate_all(DHWDUSF, pattern)
 starts <- starts[[1]][1:48,'end']  + 1
-#  [1]  13518  15658  16928  17895  18862  20400  22540  23239  24287  26561  28600  30639  31606  32742  35552
-# [16]  38764  39979  43560  46170  47908  50584  53194  55367  57474  59928  61833  63872  65610  66711  67779
-# [31]  70422  72395  76323  81479  84054  86262  87565  89303  92146  94989  99890 106118 110000 113513 114614
-# [46] 118094 124757 125524
+#  [1]  13518  15658  16928  17895  18862  20400  22540  23239  24287  26561  28600
+# [12]  30639  31606  32742  35552  38764  39979  43560  46170  47908  50584  53194
+# [23]  55367  57474  59928  61833  63872  65610  66711  67779  70422  72395  76323
+# [34]  81479  84054  86262  87565  89303  92146  94989  99890 106118 110000 113513
+# [45] 114614 118094 124757 125524
 
 # define pattern for ends of DHWDAYUSE
 pattern = "ENDDHWDAYUSE"  # look for this
@@ -62,7 +63,6 @@ ends <- ends[[1]][1:48,'start'] - 2
 # [16]  39935  43529  46139  47877  50553  53163  55336  57443  59884  61802  63841  65579  66680  67748  70391
 # [31]  72364  76279  81448  84023  86231  87534  89272  92115  94958  99846 106087 109969 113482 114583 118063
 # [46] 124726 125493 129274
-
 
 #  extract the DHWDAYUSE by person day type
 DHWDAYUSEs <- str_sub(DHWDUSF, starts, ends)
@@ -121,7 +121,7 @@ names(DHWDAYUSEs)
 # [18] "3D2" "3D3" "3D4" "3D5" "3E1" "3E2" "3H1" "4D1" "4D2" "4D3" "4D4" "4D5" "4E1" "4E2" "4H1" "5D1" "5D2"
 # [35] "5D3" "5D4" "5D5" "5E1" "5E2" "5H1" "6D1" "6D2" "6D3" "6D4" "6D5" "6E1" "6E2" "6H1"
 
-DHWDAYUSEs['3E1']
+DHWDAYUSEs['3D4']
 
 # blank data.table
 DT_DHWUSEs <- data.table()
@@ -138,7 +138,11 @@ for (d in 1:length(DHWDAYUSEs)) {
 }
   
 str(DT_DHWUSEs)
-
+# Classes ‘data.table’ and 'data.frame':	3412 obs. of  2 variables:
+#  $ DHWDAYUSE: chr  "1D1" "1D1" "1D1" "1D1" ...
+#  $ DHWUSE   : chr  "DWSH(  1.30,  1.667, 1.145,   0)" "DWSH(  1.87,  1.500, 1.014,   0)" "DWSH(  2.10,  1.333, 1.179,   0)" "FAUC(  2.09,  0.167, 0.317,   0)" ...
+#  - attr(*, ".internal.selfref")=<externalptr> 
+  
 # extract s,d,f,id from DHWUSE end use macros
 DT_DHWUSEs[, s:= str_extract(DHWUSE, "\\( +[0-9]*\\.[0-9]*") ]
 DT_DHWUSEs[, s:= str_extract(s, "[0-9]*\\.[0-9]*") ]
@@ -157,6 +161,14 @@ DT_DHWUSEs[, id:= str_extract(id, "[0-9]*")]
 DT_DHWUSEs[, id:= as.numeric(id) ]  # id of event where multidraw dishwasher and clothes washer draws are counted as one id
 
 str(DT_DHWUSEs)
+# Classes ‘data.table’ and 'data.frame':	3412 obs. of  6 variables:
+#   $ DHWDAYUSE: chr  "1D1" "1D1" "1D1" "1D1" ...
+#   $ DHWUSE   : chr  "DWSH(  1.30,  1.667, 1.145,   0)" "DWSH(  1.87,  1.500, 1.014,   0)" "DWSH(  2.10,  1.333, 1.179,   0)" "FAUC(  2.09,  0.167, 0.317,   0)" ...
+#   $ s        : num  1.3 1.87 2.1 2.09 6.75 6.76 6.77 7.02 7.22 7.23 ...
+#   $ d        : num  1.667 1.5 1.333 0.167 0.167 ...
+#   $ f        : num  1.145 1.014 1.179 0.317 0.226 ...
+#   $ id       : num  0 0 0 0 1 2 3 4 5 6 ...
+#   - attr(*, ".internal.selfref")=<externalptr> 
 
 # from DHWDUSF.txt
 ShwrFLOWF       = 1        
@@ -223,12 +235,42 @@ DT_DHWUSEs[grepl('DWSH', DHWUSE), `:=` (mixedFlow = f * DwshFLOWF,
 
 
 str(DT_DHWUSEs)
+# Classes ‘data.table’ and 'data.frame':	3412 obs. of  10 variables:
+#   $ DHWDAYUSE: chr  "1D1" "1D1" "1D1" "1D1" ...
+#   $ DHWUSE   : chr  "DWSH(  1.30,  1.667, 1.145,   0)" "DWSH(  1.87,  1.500, 1.014,   0)" "DWSH(  2.10,  1.333, 1.179,   0)" "FAUC(  2.09,  0.167, 0.317,   0)" ...
+#   $ s        : num  1.3 1.87 2.1 2.09 6.75 6.76 6.77 7.02 7.22 7.23 ...
+#   $ d        : num  1.667 1.5 1.333 0.167 0.167 ...
+#   $ f        : num  1.145 1.014 1.179 0.317 0.226 ...
+#   $ id       : num  0 0 0 0 1 2 3 4 5 6 ...
+#   $ mixedFlow: num  1.145 1.014 1.179 0.317 0.226 ...
+#   $ enduse   : chr  "Dishwasher" "Dishwasher" "Dishwasher" "Faucet" ...
+#   $ hotFlow  : num  1.145 1.014 1.179 0.159 0.113 ...
+#   $ coldFlow : num  0 0 0 0.159 0.113 ...
+#   - attr(*, ".internal.selfref")=<externalptr> 
 
 # summary data about DT_DHWUSEs
-DT_DHWUSEs[ , list(vol    = sum(mixedFlow * d),
-                   ndraws = length(DHWUSE)),
-            by = DHWDAYUSE]
+DT_DHWUSEs_sum <-
+  DT_DHWUSEs[ , list(vol    = sum(mixedFlow * d),
+                     ndraws = length(DHWUSE)),
+              by = DHWDAYUSE]
 
+theme(plot.title = element_text(hjust = 0.5)) # to center the title
+
+# scatter plot of volume vs number of draws per DHWDAYUSE
+ggplot(data=DT_DHWUSEs_sum) +
+  geom_point(aes(x=vol, y= ndraws) ) +
+  ggtitle( "DHWDAYUSEs (daily draw pattern templates)" ) +
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+  scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
+  scale_y_continuous(name = "total number of draws per day") +
+  geom_text(data=DT_DHWUSEs_sum[DHWDAYUSE %in% 
+                                  c('3D1', '3D2', '3D3', '3D4', '3D5')],
+          aes(x=vol, y=ndraws, label=DHWDAYUSE, hjust=-0.2, size=1)
+          ) + 
+  guides(size=FALSE)
+
+ggsave(filename = paste0("daily_draws_gallons.png"), path=wd_charts,
+       width = 10.5, height = 8 )
 
 # clean up DT_DHWUSEs
 names(DT_DHWUSEs)
@@ -258,11 +300,51 @@ DT_DHWUSEs[, mins := floor(mins)]
 DT_DHWUSEs[, start := sprintf("%02d:%02d:%02.0f", hrs, mins, secs )]
 DT_DHWUSEs[, c('hrs','mins','secs') := NULL]
 
+# summary data about DT_DHWUSEs
+DT_DHWUSEs_sum <-
+  DT_DHWUSEs[ , list(vol    = sum(mixedFlow * duration),
+                     ndraws = length(id)),
+              by = DHWDAYUSE]
 
-# save the DT_DHWProfiles data as a csv file 
-write.csv(DT_DHWProfiles, file= paste0(wd_data,"DT_DHWProfiles.csv"), row.names = FALSE)
+# scatter plot of volume vs number of draws per DHWDAYUSE
+ggplot(data=DT_DHWUSEs_sum) +
+  geom_point(aes(x=vol, y= ndraws) ) +
+  ggtitle( "DHWDAYUSEs (daily draw pattern templates)" ) +
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+  scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
+  scale_y_continuous(name = "total number of draws per day") +
+  geom_text(data=DT_DHWUSEs_sum[DHWDAYUSE %in% 
+                                  c('3D1', '3D2', '3D3', '3D4', '3D5')],
+            aes(x=vol, y=ndraws, label=DHWDAYUSE, hjust=-0.2, size=1)
+  ) + 
+  guides(size=FALSE)
 
-# save the test info data as an .Rdata file
-save(DT_DHWProfiles, file = paste0(wd_data,"DT_DHWProfiles7.Rdata"))
+# resort the  draws in DT_DHWUSES by time
+setorder(DT_DHWUSEs, DHWDAYUSE, s)
 
+# count of types of draws by DHWDAYUSE
+tbl_DHWDAYUSE_enduse <- (with(DT_DHWUSEs, table(DHWDAYUSE,enduse)))
+
+# Start writing to an output file
+sink(paste0(wd_data,'DHWDAYUSE_enduse.txt'))
+
+# print the table
+print.table(tbl_DHWDAYUSE_enduse)
+
+# reset sink
+sink()
+
+# save the DT_DHWUSEs data as a csv file 
+write.csv(DT_DHWUSEs, file= paste0(wd_data,"DT_DHWUSEs.csv"), row.names = FALSE)
+
+# save the DT_DHWUSEs data as an .Rdata file
+save(DT_DHWUSEs, file = paste0(wd_data,"DT_DHWUSEs.Rdata"))
+
+# save DHWDAYUSE=='3D2'
+write.csv(DT_DHWUSEs[DHWDAYUSE=='3D2'], 
+          file= paste0(wd_data,"DT_DHWUSEs_3D2.csv"), 
+          row.names = FALSE)
+
+DT_DHWUSEs[DHWDAYUSE=='3D1',]
+DT_DHWUSEs[DHWDAYUSE=='3D2',]
 
