@@ -103,3 +103,8 @@
 
     think I have DHWDAYUSEs as a list of 48 lists of DHWUSEs
     turn it into a data.table of DHWUSEs with an added field of which DHWDAYUSE it belongs to
+
+    got DT_DHWUSEs but saved it under wrong name, overwrote previous data set
+
+
+    

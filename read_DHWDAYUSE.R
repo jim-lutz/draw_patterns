@@ -221,10 +221,48 @@ DT_DHWUSEs[grepl('DWSH', DHWUSE), `:=` (mixedFlow = f * DwshFLOWF,
                                         enduse    = "Dishwasher"
                                         ) ]
 
+
 str(DT_DHWUSEs)
 
 # summary data about DT_DHWUSEs
 DT_DHWUSEs[ , list(vol    = sum(mixedFlow * d),
                    ndraws = length(DHWUSE)),
             by = DHWDAYUSE]
+
+
+# clean up DT_DHWUSEs
+names(DT_DHWUSEs)
+# [1] "DHWDAYUSE" "DHWUSE"    "s"         "d"         "f"         "id"        "mixedFlow" "enduse"   
+# [9] "hotFlow"   "coldFlow" 
+
+# remove DHWUSE & f
+DT_DHWUSEs[ , DHWUSE:= NULL]
+DT_DHWUSEs[ , f:= NULL]
+
+# fix names
+setnames(DT_DHWUSEs,
+         old=c("d"),
+         new=c("duration"))
+
+# clean up the order
+setcolorder(DT_DHWUSEs, 
+            neworder= c('DHWDAYUSE', 'enduse', 'id', 's', 'duration', 'mixedFlow', 'hotFlow', 'coldFlow')
+            )
+
+# change start from fraction of a day to hh:mm:ss
+DT_DHWUSEs[, hrs  := floor(s) ]
+DT_DHWUSEs[, mins := (s - hrs) * 60 ]
+DT_DHWUSEs[, secs := (mins - floor(mins)) * 60] 
+DT_DHWUSEs[, mins := floor(mins)]
+
+DT_DHWUSEs[, start := sprintf("%02d:%02d:%02.0f", hrs, mins, secs )]
+DT_DHWUSEs[, c('hrs','mins','secs') := NULL]
+
+
+# save the DT_DHWProfiles data as a csv file 
+write.csv(DT_DHWProfiles, file= paste0(wd_data,"DT_DHWProfiles.csv"), row.names = FALSE)
+
+# save the test info data as an .Rdata file
+save(DT_DHWProfiles, file = paste0(wd_data,"DT_DHWProfiles7.Rdata"))
+
 
