@@ -124,3 +124,5 @@
     summary by day, date, WEH, # bedroooms, # people, # draws, total (mixed) volume, sum draws by type, inlet water temp
     
     made DT_total_drawpatterns
+    
+    something isn't working for datetime

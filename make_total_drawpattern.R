@@ -74,9 +74,9 @@ DT_total_drawpatterns[ , duration := duration * 60]
 
 # make datetime in POSIXct format
 datetime <- ymd_hms(paste("2009-01-01", DT_total_drawpatterns$start), tz= "America/Los_Angeles" ) + 
-            days(DT_total_drawpatterns$day)
+            days(DT_total_drawpatterns$yday)
 
-# add the datetiime
+# add the datetime
 DT_total_drawpatterns[, datetime := datetime]
 
 # add month and day of month
@@ -108,3 +108,26 @@ setcolorder(DT_total_drawpatterns,
               "enduse", "duration", "mixedFlow", "hotFlow", "coldFlow")
             )
 
+DT_total_drawpatterns
+
+# save the DT_total_drawpatterns data as an .Rdata file
+save(DT_total_drawpatterns, file = paste0(wd_data,"DT_total_drawpatterns.Rdata"))
+
+# save the DT_total_drawpatterns data as a csv file
+write.csv(DT_total_drawpatterns, 
+          file= paste0(wd_data,"DT_total_drawpatterns.csv"), 
+          row.names = FALSE)
+
+# some brief data checks
+setorder(DT_total_drawpatterns, DHWProfile, DHWDAYUSE, datetime)
+
+DT_total_drawpatterns[ , list(first = min(datetime),
+                              last  = max(datetime)),
+                       by=DHWProfile]
+#    DHWProfile               first                last
+# 1:     DHW1BR                <NA>                <NA>
+# 2:     DHW2BR 2009-01-02 05:55:48 2010-01-01 23:54:00
+# 3:     DHW3BR 2009-01-02 07:38:24 2010-01-01 23:23:24
+# 4:     DHW5BR                <NA>                <NA>
+# 5:     DHW4BR                <NA>                <NA>
+# oops!  
