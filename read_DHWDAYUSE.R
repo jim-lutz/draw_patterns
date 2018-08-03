@@ -1,7 +1,7 @@
 # read_DHWDAYUSE.R
-# script to read hot water draw pattern information from
+# script to read DHWDAYUSE (daily draw pattern for number of people and day type) from
 # /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
-# saves DT_DHWDAYUSES to .Rdata and .csv files
+# saves DT_DHWUSEs to .Rdata and .csv files
 # Jim Lutz "Wed Jul 25 16:11:31 2018"
 
 # from CSE Users Manual

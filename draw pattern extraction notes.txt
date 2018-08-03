@@ -119,3 +119,8 @@
     the DHWDAYUSEs are sorted alphabetically in DHWDUSF.txt!
     
     used table and sink to get a count of enduses per DHWDAYUSE
+
+2018-08-03
+    summary by day, date, WEH, # bedroooms, # people, # draws, total (mixed) volume, sum draws by type, inlet water temp
+    
+    made DT_total_drawpatterns

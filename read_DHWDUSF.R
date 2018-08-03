@@ -1,5 +1,5 @@
 # read_DHWDUSF.R
-# script to read hot water draw pattern information 
+# script to read 365 day DHW Profile by number of Bedrooms from
 # /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
 # saves DT_DHWProfiles to .Rdata and .csv files
 # Jim Lutz "Thu Jul 12 09:00:24 2018"
@@ -62,6 +62,12 @@ DHWProfiles <- str_remove_all(DHWProfiles, '\"')
 nchar(DHWProfiles)
 # [1] 1470 1470 1470 1470 1470
 
+# remove the \
+DHWProfiles <- str_remove_all(DHWProfiles, '\\\\')
+
+nchar(DHWProfiles)
+# [1] 1459 1459 1459 1459 1459
+
 # split the DHWProfiles
 DHWProfiles <- str_split(DHWProfiles, ',')
 str(DHWProfiles)
@@ -82,8 +88,10 @@ str(DHWProfileNames)
 # chr [1:5] "DHW1BR" "DHW2BR" "DHW3BR" "DHW4BR" "DHW5BR"
 
 # turn the DHWProfiles into a data.table
-DT_DHWProfiles <- data.table( day=1:365) # a null data.table
+DT_DHWProfiles <- data.table( day=1:365) # a null data.table with days only
 DT_DHWProfiles[,(DHWProfileNames) := (DHWProfiles) ]
+
+DT_DHWProfiles[day==118,]
 
 # save the DT_DHWProfiles data as a csv file
 write.csv(DT_DHWProfiles, file= paste0(wd_data,"DT_DHWProfiles.csv"), row.names = FALSE)
