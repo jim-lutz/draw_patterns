@@ -72,9 +72,12 @@ DT_total_drawpatterns[ , c("id", "s"):= NULL]
 # duration in seconds
 DT_total_drawpatterns[ , duration := duration * 60]
 
-# make datetime in POSIXct format
-datetime <- ymd_hms(paste("2009-12-31", DT_total_drawpatterns$start), tz= "America/Los_Angeles" ) + 
-            days(DT_total_drawpatterns$yday)
+# make datetime for day 0 in POSIXct format
+datetime <- ymd_hms("2009-01-01 00:00:00", tz= "America/Los_Angeles" ) 
+
+datetime <- ymd_hms(paste("2009-12-31", DT_total_drawpatterns$start), tz= "America/Los_Angeles" ) 
+  days(DT_total_drawpatterns$yday)
+
 
 # look for February 29
 grep("2009-02-29", datetime)
