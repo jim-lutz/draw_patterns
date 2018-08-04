@@ -73,11 +73,28 @@ DT_total_drawpatterns[ , c("id", "s"):= NULL]
 DT_total_drawpatterns[ , duration := duration * 60]
 
 # make datetime in POSIXct format
-datetime <- ymd_hms(paste("2009-01-01", DT_total_drawpatterns$start), tz= "America/Los_Angeles" ) + 
+datetime <- ymd_hms(paste("2009-12-31", DT_total_drawpatterns$start), tz= "America/Los_Angeles" ) + 
             days(DT_total_drawpatterns$yday)
+
+# look for February 29
+grep("2009-02-29", datetime)
+# integer(0)
+
+# look for times on time change days
+# started Sunday, March 8 at 2 a.m. ended on Sunday, November 1 at 2 a.m.
+sort(unique(grep("2009-03-08", datetime, value = TRUE)))
+# nothing between 02:00 and 03:00
+sort(unique(grep("2009-11-01", datetime, value = TRUE)))
+# only one time, 2009-11-01 01:19:12
+grep("2009-11-01 01:19:12", datetime, value = TRUE)
+# 2 entries
 
 # add the datetime
 DT_total_drawpatterns[, datetime := datetime]
+
+# look for timechange
+DT_total_drawpatterns[datetime==ymd_hms("2009-11-01 01:19:12", tz= "America/Los_Angeles")]
+# it's when 2E1 is on 2009-11-01, DHW4BR & DHW5BR
 
 # add month and day of month
 DT_total_drawpatterns[ , month:= month(datetime, label = TRUE, abbr = TRUE)]
@@ -125,18 +142,11 @@ DT_total_drawpatterns[ , list(first = min(datetime),
                               last  = max(datetime)),
                        by=DHWProfile]
 #    DHWProfile               first                last
-# 1:     DHW1BR                <NA>                <NA>
-# 2:     DHW2BR 2009-01-02 05:55:48 2010-01-01 23:54:00
-# 3:     DHW3BR 2009-01-02 07:38:24 2010-01-01 23:23:24
-# 4:     DHW5BR                <NA>                <NA>
-# 5:     DHW4BR                <NA>                <NA>
-# oops!  
+# 1:     DHW1BR 2009-01-01 05:55:48 2009-12-31 22:39:00
+# 2:     DHW2BR 2009-01-01 05:55:48 2009-12-31 23:54:00
+# 3:     DHW3BR                <NA>                <NA>
+# 4:     DHW4BR 2009-01-01 07:38:24 2009-12-31 23:51:36
+# 5:     DHW5BR 2009-01-01 04:00:36 2009-12-31 22:39:00
+# still something wrong
 
-DT_total_drawpatterns[ !is.na(datetime), 
-                       list(min(datetime),
-                            max(datetime))]
-#                     V1                  V2
-# 1: 2009-01-02 04:00:36 2010-01-01 23:54:00
-nrow(DT_total_drawpatterns[ is.na(datetime),] )
-# [1] 3
 DT_total_drawpatterns[ is.na(datetime),]
