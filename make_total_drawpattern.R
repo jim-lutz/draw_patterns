@@ -131,3 +131,12 @@ DT_total_drawpatterns[ , list(first = min(datetime),
 # 4:     DHW5BR                <NA>                <NA>
 # 5:     DHW4BR                <NA>                <NA>
 # oops!  
+
+DT_total_drawpatterns[ !is.na(datetime), 
+                       list(min(datetime),
+                            max(datetime))]
+#                     V1                  V2
+# 1: 2009-01-02 04:00:36 2010-01-01 23:54:00
+nrow(DT_total_drawpatterns[ is.na(datetime),] )
+# [1] 3
+DT_total_drawpatterns[ is.na(datetime),]
