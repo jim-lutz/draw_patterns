@@ -126,3 +126,13 @@
     made DT_total_drawpatterns
     
     something isn't working for datetime
+    
+    I'm having problems avoiding the timechanges 
+    
+2018-08-04
+    read Tinlet into a data table of:
+        dayOfYear   1:365
+        TinletCTZ01 degF
+        ....
+        TinletCTZ16 degF
+    files are in '/home/jiml/HotWaterResearch/projects/How Low/draw_patterns/CSE/TINLET/'
