@@ -120,8 +120,39 @@ DT_Tinlet[dayOfYear %in% 66:68,]
 # 51:        68     3          9    4    2 47.8085 CTZ01
 # looks like Tinlet calculation doesn't follow time changes
 
+DT_Tinlet[dayOfYear%in% 65:70 , .N, by=c('dayOfYear','Tinlet')]
+#    dayOfYear  Tinlet  N
+# 1:        65 47.7191 24
+# 2:        66 47.7577 24
+# 3:        67 47.7885 23
+# 4:        68 47.7885  1
+# 5:        68 47.8085 23
+# 6:        69 47.8085  1
+# 7:        69 47.8336 23
+# 8:        70 47.8336  1
+# 9:        70 47.8909 23
 
+# this keeps the 365 dayOfYear with the most common Tinlet
+DT_Tinlet[, .N, by=c('dayOfYear','Tinlet')][order(-N)][361:370]
+ #     dayOfYear  Tinlet  N
+ #  1:       300 52.5301 23
+ #  2:       301 52.5375 23
+ #  3:       302 52.5132 23
+ #  4:       303 52.4586 23
+ #  5:       304 52.3674 23
+ #  6:        68 47.7885  1
+ #  7:        69 47.8085  1
+ #  8:        70 47.8336  1
+ #  9:        71 47.8909  1
+ # 10:        72 47.9505  1
 
+# keep the 365 days with the most Tinlets
+DT_daily <-
+DT_Tinlet[, .N, by=c('dayOfYear','Tinlet')][order(-N)][1:365][order(dayOfYear)]
 
-
+# take a look, 
+ggplot(data = DT_daily) +
+  geom_point(aes(dayOfYear, Tinlet))
+# still not as smooth as I'd expect for Tinlet
+# being overly influenced by air temps?
 

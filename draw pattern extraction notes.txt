@@ -136,3 +136,8 @@
         ....
         TinletCTZ16 degF
     files are in '/home/jiml/HotWaterResearch/projects/How Low/draw_patterns/CSE/TINLET/'
+    
+    hourly Tinlet was calculated independently of time changes, was getting way too many
+    even with that fixed Tinlet isn't as smooth as expected
+    maybe being overly influenced by Tair?
+    
