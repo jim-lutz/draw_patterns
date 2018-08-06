@@ -150,3 +150,17 @@ ggplot(data = DT_daily) +
 # save the plot
 ggsave(filename = paste0(wd_charts,"Tinlet_by_ctz.png"))
 
+# rearrange DT_daily
+DT_Tinlets <-
+  dcast(DT_daily, dayOfYear ~ ctz, value.var = 'Tinlet')
+
+# save the DT_Tinlets data as a csv file
+write.csv(DT_Tinlets, file= paste0(wd_data,"DT_Tinlets.csv"), row.names = FALSE)
+
+# save the DT_Tinlets data as an .Rdata file
+save(DT_Tinlets, file = paste0(wd_data,"DT_Tinlets.Rdata"))
+
+
+
+
+
