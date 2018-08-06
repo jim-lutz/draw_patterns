@@ -52,7 +52,7 @@ melt.data.table( data = DT_DHWProfiles,
 DT_DHWProfiles.long[ , bedrooms := str_extract(DHWProfile, "[1-5]" ) ]
 
 # extract number of people 
-DT_DHWProfiles.long[ , people := str_extract_all(DHWDAYUSE, "[1-6]", simplify = TRUE)[1:length(DHWDAYUSE),2] ]
+DT_DHWProfiles.long[ , people := str_extract_all(DHWDAYUSE, "[1-6]", simplify = TRUE)[1:length(DHWDAYUSE),1] ]
 
 # change name of day to yday
 setnames(DT_DHWProfiles.long, old = c("day"), new = c("yday"))
@@ -166,6 +166,12 @@ setcolorder(DT_daily, c('DHWProfile', 'yday', 'date', 'wday', 'DHWDAYUSE', 'bedr
 
 # save the DT_daily data as a csv file
 write.csv(DT_daily, file= paste0(wd_data,"DT_daily.csv"), row.names = FALSE)
+
+# separate files by number of bedrooms
+for(b in 1:5) {
+  write.csv(DT_daily[bedrooms==b,], file= paste0(wd_data,"DT_daily",b,".csv"), row.names = FALSE)
+  }
+
 
 # save the DT_daily data as an .Rdata file
 save(DT_daily, file = paste0(wd_data,"DT_daily.Rdata"))

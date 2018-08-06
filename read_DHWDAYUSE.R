@@ -85,11 +85,11 @@ DHWDAYUSEs[47]
 unique(unlist(str_extract_all(DHWDAYUSEs, "[A-Z]{4}" )))
 # [1] "DWSH" "FAUC" "SHWR" "CWSH" "BATH"
 
-# insert a string to split DHWDAYUSES on
+# insert a string 'X' to split DHWDAYUSES on
 DHWDAYUSEs <- str_replace_all(DHWDAYUSEs, "(\\))[:space:]+(DWSH|FAUC|SHWR|CWSH|BATH)","\\1X\\2")
 DHWDAYUSEs[47]
 
-# split the DHWDAYUSEs
+# split the DHWDAYUSEs on X
 DHWDAYUSEs <- str_split(DHWDAYUSEs, 'X')
 
 str(DHWDAYUSEs)

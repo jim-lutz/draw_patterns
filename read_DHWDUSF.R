@@ -35,7 +35,7 @@ starts <- starts[[1]][1:5,'end']  + 1
 
 # // find the ends of the 365 day DHW Profile by number of Bedrooms
 # "2D2")
-pattern = "\\\"{1}[1-9][DEH][1-9]\\\"\\)"  # look for this
+pattern = "\\\"{1}[1-9][DEH][1-9]\\\"\\)"  # look for lines ending ")
 ends <- str_locate_all(DHWDUSF, pattern)
 ends <- ends[[1]][1:5,'end'] - 1
 # 1]  2902  5151  7400  9649 11898
@@ -68,10 +68,9 @@ DHWProfiles <- str_remove_all(DHWProfiles, '\\\\')
 nchar(DHWProfiles)
 # [1] 1459 1459 1459 1459 1459
 
-# split the DHWProfiles
+# split the DHWProfiles on commas
 DHWProfiles <- str_split(DHWProfiles, ',')
 str(DHWProfiles)
-
 # List of 5
 #  $ : chr [1:365] "1H1" "1D3" "3E2" "1E1" ...
 #  $ : chr [1:365] "1H1" "3D3" "1E2" "4E1" ...
@@ -79,7 +78,7 @@ str(DHWProfiles)
 #  $ : chr [1:365] "3H1" "6D3" "1E2" "2E1" ...
 #  $ : chr [1:365] "4H1" "2D3" "5E2" "3E1" ...
 
-# // find the names of the 365 day DHW Profile by number of Bedrooms
+# find the names of the 365 day DHW Profile by number of Bedrooms
 # DHW1BR:DHW5BR
 pattern = "DHW[1-9]BR"  # look for this
 DHWProfileNames <- str_match_all(DHWDUSF, pattern)

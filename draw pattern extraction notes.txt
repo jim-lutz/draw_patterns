@@ -144,4 +144,7 @@
 2018-08-05
     ignore bumpy Tinlet for now
     just get a wide Tinlet data.table
-        
+
+    4H1 is 4 people Holiday 1 
+    
+    hand assemble an daily_draws.xlsx file from DT_daily{1:5}.csv
