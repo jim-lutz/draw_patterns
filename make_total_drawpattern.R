@@ -129,4 +129,42 @@ DT_total_drawpatterns[ , list(first = min(date),
                        by=c('DHWProfile', 'enduse')]
 # seems OK
 
+# summary by # bedroooms, date, WEH, # people, # draws, total (mixed) volume, 
+# sum draws by enduse
+names(DT_total_drawpatterns)
+DHWProfile yday date wday DHWDAYUSE people sum(mixedFlow*duration/60), length(), 
+
+# build the summary by day
+DT_daily_summary <-
+  DT_total_drawpatterns[,list(date      = unique(date),
+                              wday      = unique(wday),
+                              DHWDAYUSE = unique(DHWDAYUSE),
+                              people    = unique(people),
+                              totvol    = sum(mixedFlow*duration/60),
+                              ndraw     = length(start)
+                              ),
+                        by=c('DHWProfile', 'yday')][order(DHWProfile,yday)]
+
+# count number of enduses by DHWProfile & day
+DT_total_enduses <- 
+  DT_total_drawpatterns[,list(ndraws = length(start)), 
+                        by=c('DHWProfile', 'yday', 'enduse')
+                        ][order(DHWProfile,yday)]
+
+# rearrange DT_total_enduses to wide
+DT_daily_enduses <-
+  dcast(DT_total_enduses, 
+        DHWProfile + yday ~ enduse, value.var = 'ndraws', fill = 0)
+
+# combine daily summary and daily enduses
+DT_daily <- 
+  merge(DT_daily_summary, DT_daily_enduses, by=c('DHWProfile', 'yday'))
+
+# save the DT_daily data as a csv file
+write.csv(DT_daily, file= paste0(wd_data,"DT_daily.csv"), row.names = FALSE)
+
+# save the DT_daily data as an .Rdata file
+save(DT_daily, file = paste0(wd_data,"DT_daily.Rdata"))
+
+# save the DT_daily for 3 bedrooms data as a csv file
 
