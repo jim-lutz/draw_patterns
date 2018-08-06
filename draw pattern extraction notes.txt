@@ -141,3 +141,7 @@
     even with that fixed Tinlet isn't as smooth as expected
     maybe being overly influenced by Tair?
     
+2018-08-05
+    ignore bumpy Tinlet for now
+    just get a wide Tinlet data.table
+        
