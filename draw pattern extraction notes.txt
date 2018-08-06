@@ -148,3 +148,24 @@
     4H1 is 4 people Holiday 1 
     
     hand assemble an daily_draws.xlsx file from DT_daily{1:5}.csv
+    
+2018-08-06
+    start building input for Yanda's spreadsheet model
+    fields:
+        Event Index             1:length*2, includes the 'No use, cool down' Event Types
+        Start Time              date & start in a d/m/yyyy h:m:s format
+        Fixture ID              B2_SK1,B3_SK, K_SK, LN_WA, MB_SH, MB_SK1, MB_SK2, etc
+        Event Type              'Use', 'No use, cool down'
+        Wait for Hot Water?     Yes, (for shower, bath, & long 'first' kitchen sink), No (everything else)	         	
+        Include Behavior Wait?  Yes for shower & bath, No for everything else.
+        Behavior Wait Trigger   5 for showers & baths, blank if 'Include Behavior Wait?' is No  (sec)	
+        Behavior wait           45 for showers & baths, blank if 'Include Behavior Wait?' is No  (sec)(sec)	
+        Use time                duration (sec)	        
+        Flow rate - waiting     kitchen faucet is 1.8, tub/shower combo is 4, master bath tubspout is 6 (GPM)	
+        Flow rate - use         bathroom faucet max is 1.2, kitchen faucet max is 1.8(GPM)	
+        Hot Water Temp          125 (F)	
+        Threshold Temp          105 (F)	
+        Ambient Temp            70 (F)
+
+    use 3D1, 3H1 for now.
+    
