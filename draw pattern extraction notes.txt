@@ -153,12 +153,15 @@
     start building input for Yanda's spreadsheet model
     fields:
         Event Index             1:length*2, includes the 'No use, cool down' Event Types
+            do this after all the others created
         Start Time              date & start in a d/m/yyyy h:m:s format
         Fixture ID              B2_SK1,B3_SK, K_SK, LN_WA, MB_SH, MB_SK1, MB_SK2, etc
+            unlocated enduses at this time
         Event Type              'Use', 'No use, cool down'
         Wait for Hot Water?     Yes, (for shower, bath, & long 'first' kitchen sink), No (everything else)	         	
         Include Behavior Wait?  Yes for shower & bath, No for everything else.
         Behavior Wait Trigger   5 for showers & baths, blank if 'Include Behavior Wait?' is No  (sec)	
+the following still need to be added
         Behavior wait           45 for showers & baths, blank if 'Include Behavior Wait?' is No  (sec)(sec)	
         Use time                duration (sec)	        
         Flow rate - waiting     kitchen faucet is 1.8, tub/shower combo is 4, master bath tubspout is 6 (GPM)	
