@@ -177,3 +177,15 @@ for(b in 1:5) {
 save(DT_daily, file = paste0(wd_data,"DT_daily.Rdata"))
 
 
+# scatter plot of volume vs number of draws per DHWDAYUSE
+ggplot(data=DT_daily) +
+  geom_jitter(aes(x=totvol, y= ndraw, color=bedrooms, shape=bedrooms), 
+             width = 5, height = 5, alpha = 0.5 ) +
+  ggtitle( "Daily Draw Patterns" ) +
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+  scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
+  scale_y_continuous(name = "total number of draws per day") +
+  labs(caption="from CBECC-Res19") + 
+  guides(size=FALSE)
+
+
