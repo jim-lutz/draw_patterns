@@ -74,7 +74,6 @@ DT_total_drawpatterns[ , duration := duration * 60]
 
 # make a data.table for 2009 of character dates & wday
 # where row number is yday 
-# make a year long list of days
 days_of_year <- seq(ymd("2009-01-01", tz="America/Los_Angeles"), 
                     ymd("2009-12-31", tz="America/Los_Angeles"), 
                     by="days")
@@ -132,13 +131,13 @@ DT_total_drawpatterns[ , list(first = min(date),
 # summary by # bedroooms, date, WEH, # people, # draws, total (mixed) volume, 
 # sum draws by enduse
 names(DT_total_drawpatterns)
-DHWProfile yday date wday DHWDAYUSE people sum(mixedFlow*duration/60), length(), 
 
 # build the summary by day
 DT_daily_summary <-
   DT_total_drawpatterns[,list(date      = unique(date),
                               wday      = unique(wday),
                               DHWDAYUSE = unique(DHWDAYUSE),
+                              bedrooms  = unique(bedrooms),
                               people    = unique(people),
                               totvol    = sum(mixedFlow*duration/60),
                               ndraw     = length(start)
@@ -160,11 +159,15 @@ DT_daily_enduses <-
 DT_daily <- 
   merge(DT_daily_summary, DT_daily_enduses, by=c('DHWProfile', 'yday'))
 
+# reorder the columns
+setcolorder(DT_daily, c('DHWProfile', 'yday', 'date', 'wday', 'DHWDAYUSE', 'bedrooms', 'people',
+                        'totvol', 'ndraw', 
+                        'Faucet', 'Shower', 'ClothesWasher', 'Dishwasher', 'Bath'))
+
 # save the DT_daily data as a csv file
 write.csv(DT_daily, file= paste0(wd_data,"DT_daily.csv"), row.names = FALSE)
 
 # save the DT_daily data as an .Rdata file
 save(DT_daily, file = paste0(wd_data,"DT_daily.Rdata"))
 
-# save the DT_daily for 3 bedrooms data as a csv file
 
