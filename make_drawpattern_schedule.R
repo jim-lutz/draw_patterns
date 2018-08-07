@@ -44,10 +44,10 @@ names(DT_1day_drawpatterns)
 #  [7] "date"       "start"      "enduse"     "duration"   "mixedFlow"  "hotFlow"   
 # [13] "coldFlow"  
 
-
-# add Start Time, date & start in a d/m/yyyy h:m:s format
 # build data.table first then worry about formatting and putting into Excel
 # https://cran.r-project.org/web/packages/xlsx/xlsx.pdf
+
+# add Start Time, date & start in a d/m/yyyy h:m:s format
 DT_1day_drawpatterns[ , Start.Time := paste(date,start)]
 
 # add Fixture ID, B2_SK1,B3_SK, K_SK, LN_WA, MB_SH, MB_SK1, MB_SK2, etc
@@ -111,11 +111,98 @@ DT_1day_drawpatterns[,list(nBehavior.Wait.Trigger = length(Behavior.Wait.Trigger
 # looks OK
 # set 0 to blank when exporting to Excel
 
+# add Behavior wait, 45 for showers & baths, 
+# blank if 'Include Behavior Wait?' is No  (sec)(sec)	
+DT_1day_drawpatterns[, Behavior.Wait := 0]
+DT_1day_drawpatterns[  Fixture.ID %in% c("Shower", "Bath"),  
+                       Behavior.Wait := 45]
 
+# check that it worked
+DT_1day_drawpatterns[,list(nBehavior.Wait = length(Behavior.Wait),
+                           Behavior.Wait  = unique(Behavior.Wait)), 
+                     by=c('Fixture.ID')
+                     ]
+#       Fixture.ID nBehavior.Wait Behavior.Wait
+# 1:        Shower              4            45
+# 2:        Faucet             87             0
+# 3:          Bath              1            45
+# 4:    Dishwasher              4             0
+# 5: ClothesWasher             10             0
+# looks OK
+# set 0 to blank when exporting to Excel
 
+# add, Use time, duration (sec)
+# this is the total time of the draw, including any clearing draws
+setnames(DT_1day_drawpatterns,'duration', 'Use.time')
 
+# look at range of Use.time
+DT_1day_drawpatterns[,list(summary(Use.time)), by=Fixture.ID]
+# looks reasonable for one day
+# wait Bath looks short, less than 3 minutes?
+DT_1day_drawpatterns[Fixture.ID=="Bath",]
 
+# look at all the baths
+DT_total_drawpatterns[enduse=='Bath', list(npeople   = unique(people),
+                                           duration  = unique(duration),
+                                           mixedFlow = unique(mixedFlow)),
+                      by=DHWDAYUSE][ , totvol := mixedFlow * duration / 60][
+                        order(DHWDAYUSE)]
+# huh, totvol per bath seems low.
+#     DHWDAYUSE npeople duration mixedFlow    totvol
+#  1:       2D1       2   150.00     3.584  8.960000
+#  2:       2E2       2    79.98     2.820  3.759060
+#  3:       2E2       2   120.00     2.969  5.938000
+#  4:       3D1       3   169.98     3.457  9.793681
+#  5:       3D5       3   160.02     4.174 11.132058
+#  6:       3E2       3   160.02     4.787 12.766929
+#  7:       4D1       4   109.98     7.342 13.457886
+#  8:       4D3       4   139.98     3.790  8.842070
+#  9:       4E2       4   130.02     3.534  7.658178
+# 10:       4E2       4    49.98     3.886  3.237038
+# 11:       5D2       5   319.98     2.308 12.308564
+# 12:       5E1       5   180.00     4.596 13.788000
+# 13:       6D5       6   270.00     5.260 23.670000
+# see http://www.allianceforwaterefficiency.org/Residential_Shower_Introduction.aspx
+# Showers vs Baths
+# for almost all of these the tub is less than 1/2 full
+# most ~ 1/4 full
 
+# add, Flow rate - waiting (GPM)
+#   kitchen faucet is 1.8, 
+#   tub/shower combo is 4, 
+#   master bath tubspout is 6
+# blank if 'Include Behavior Wait?' is No  (sec)(sec)	
+DT_1day_drawpatterns[, Flow.rate.waiting := 0]
+DT_1day_drawpatterns[ Wait.for.Hot.Water == 'Yes' & Fixture.ID == 'Faucet',  
+                      Flow.rate.waiting := 1.8]
+DT_1day_drawpatterns[ Wait.for.Hot.Water == 'Yes' &  Fixture.ID == 'Shower',  
+                      Flow.rate.waiting := 4.0]
+DT_1day_drawpatterns[ Wait.for.Hot.Water == 'Yes' &  Fixture.ID == 'Bath',  
+                      Flow.rate.waiting := 6.0]
 
+# check that it worked
+DT_1day_drawpatterns[Wait.for.Hot.Water == 'Yes', 
+                     c('Fixture.ID', 'Wait.for.Hot.Water', 'Flow.rate.waiting')]
+#    Fixture.ID Wait.for.Hot.Water Flow.rate.waiting
+# 1:     Shower                Yes                 4
+# 2:     Shower                Yes                 4
+# 3:     Shower                Yes                 4
+# 4:     Shower                Yes                 4
+# 5:       Bath                Yes                 6
+
+# rename use flow
+setnames(DT_1day_drawpatterns,'mixedFlow', 'Flow.rate.use')
+
+# check Flow rate - use (GPM)
+#   bathroom faucet max is 1.2, 
+#   kitchen faucet max is 1.8
+DT_1day_drawpatterns[Fixture.ID=='Faucet' & Flow.rate.use > 1.2]
+
+# add temperatures
+# Hot Water Temp, 125 (F)
+# Threshold Temp, 105 (F)	
+# Ambient Temp, 70 (F)
+DT_1day_drawpatterns[, c('Hot Water Temp', 'Threshold Temp', 'Ambient Temp') :=
+                       list(125, 105, 70)]
 
 
