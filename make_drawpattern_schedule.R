@@ -48,80 +48,85 @@ names(DT_1day_drawpatterns)
 # https://cran.r-project.org/web/packages/xlsx/xlsx.pdf
 
 # add Start Time, date & start in a d/m/yyyy h:m:s format
-DT_1day_drawpatterns[ , Start.Time := paste(date,start)]
+DT_1day_drawpatterns[ , 'Start Time' := paste(date,start)]
 
 # add Fixture ID, B2_SK1,B3_SK, K_SK, LN_WA, MB_SH, MB_SK1, MB_SK2, etc
-# for now use 'enduse'
-setnames(DT_1day_drawpatterns,'enduse', 'Fixture.ID')
+# for now use enter a blank
+DT_1day_drawpatterns[ , 'Fixture ID' := ' ']
+
+# add Event Type, 
+# for now enter 'a blank'Use'
+DT_1day_drawpatterns[ , 'Event Type' := 'Use']
 
 # add Wait for Hot Water? 
-# Yes, (for shower, bath, & long 'first' kitchen sink), No (everything else)
-DT_1day_drawpatterns[ ,Wait.for.Hot.Water := 'No']
-DT_1day_drawpatterns[ Fixture.ID %in% c("Shower", "Bath"), 
-                      Wait.for.Hot.Water := 'Yes']
+# Yes, (for shower, bath, & long (>= 1 min) faucet), No (everything else)
+DT_1day_drawpatterns[ ,'Wait for Hot Water?' := 'No']
+DT_1day_drawpatterns[ enduse %in% c("Shower", "Bath"), 
+                      'Wait for Hot Water?' := 'Yes']
+DT_1day_drawpatterns[ enduse=="Faucet" & duration>=60, 
+                      'Wait for Hot Water?' := 'Yes']
 
 # check that it worked
-DT_1day_drawpatterns[,list(nWait.for.Hot.Water = length(Wait.for.Hot.Water),
-                           Wait.for.Hot.Water  = unique(Wait.for.Hot.Water)), 
-                     by=c('Fixture.ID')
-                     ]
-#       Fixture.ID nWait.for.Hot.Water Wait.for.Hot.Water
-# 1:        Shower                   4                Yes
-# 2:        Faucet                  87                 No
-# 3:          Bath                   1                Yes
-# 4:    Dishwasher                   4                 No
-# 5: ClothesWasher                  10                 No
+DT_1day_drawpatterns[,list(n                     = length(start),
+                           'Wait for Hot Water?' = unique('Wait for Hot Water?')), 
+                     by=c('enduse', 'Wait for Hot Water?') ][, 4:=NULL][]
+#           enduse Wait for Hot Water?  n
+# 1:        Shower                 Yes  4
+# 2:        Faucet                  No 70
+# 3:        Faucet                 Yes 17
+# 4:          Bath                 Yes  1
+# 5:    Dishwasher                  No  4
+# 6: ClothesWasher                  No 10
 # looks OK
 
 # add Include Behavior Wait? Yes for shower & bath, No for everything else.
-DT_1day_drawpatterns[ ,Include.Behavior.Wait := 'No']
-DT_1day_drawpatterns[ Fixture.ID %in% c("Shower", "Bath"), 
-                      Include.Behavior.Wait := 'Yes']
+DT_1day_drawpatterns[ ,'Include Behavior Wait?' := 'No']
+DT_1day_drawpatterns[ enduse %in% c("Shower", "Bath"), 
+                      'Include Behavior Wait?' := 'Yes']
 
 # check that it worked
-DT_1day_drawpatterns[,list(nInclude.Behavior.Wait = length(Include.Behavior.Wait),
-                           Include.Behavior.Wait  = unique(Include.Behavior.Wait)), 
-                     by=c('Fixture.ID')
-                     ]
-#       Fixture.ID nInclude.Behavior.Wait Include.Behavior.Wait
-# 1:        Shower                      4                   Yes
-# 2:        Faucet                     87                    No
-# 3:          Bath                      1                   Yes
-# 4:    Dishwasher                      4                    No
-# 5: ClothesWasher                     10                    No
+DT_1day_drawpatterns[,list(n                         = length(start),
+                           'Include Behavior Wait?'  = unique('Include Behavior Wait?')), 
+                     by=c('enduse', 'Include Behavior Wait?')][, 4:=NULL][]
+#           enduse Include Behavior Wait?  n
+# 1:        Shower                    Yes  4
+# 2:        Faucet                     No 87
+# 3:          Bath                    Yes  1
+# 4:    Dishwasher                     No  4
+# 5: ClothesWasher                     No 10
 # looks OK
 
-# add Behavior Wait Trigger, 5 for showers & baths, 
-# blank if 'Include Behavior Wait?' is No  (sec)	
-DT_1day_drawpatterns[ ,Behavior.Wait.Trigger := 0]
-DT_1day_drawpatterns[  Fixture.ID %in% c("Shower", "Bath"),  
-                       Behavior.Wait.Trigger := 5]
+# add Behavior Wait Trigger  (sec)
+# 5 for showers & baths, 
+# blank if 'Include Behavior Wait?' is No 	
+DT_1day_drawpatterns[ , 'Behavior Wait Trigger' := 0]
+DT_1day_drawpatterns[  enduse %in% c("Shower", "Bath"),  
+                       'Behavior Wait Trigger' := 5]
 
 # check that it worked
-DT_1day_drawpatterns[,list(nBehavior.Wait.Trigger = length(Behavior.Wait.Trigger),
-                           Behavior.Wait.Trigger  = unique(Behavior.Wait.Trigger)), 
-                     by=c('Fixture.ID')
-                     ]
-#       Fixture.ID nBehavior.Wait.Trigger Behavior.Wait.Trigger
-# 1:        Shower                      4                     5
-# 2:        Faucet                     87                     0
-# 3:          Bath                      1                     5
-# 4:    Dishwasher                      4                     0
-# 5: ClothesWasher                     10                     0
+DT_1day_drawpatterns[,list(n                      = length(start),
+                           Behavior.Wait.Trigger  = unique('Behavior Wait Trigger')), 
+                     by=c('enduse', 'Behavior Wait Trigger')][, 4:=NULL][]
+#           enduse Behavior Wait Trigger  n
+# 1:        Shower                     5  4
+# 2:        Faucet                     0 87
+# 3:          Bath                     5  1
+# 4:    Dishwasher                     0  4
+# 5: ClothesWasher                     0 10
 # looks OK
 # set 0 to blank when exporting to Excel
 
-# add Behavior wait, 45 for showers & baths, 
-# blank if 'Include Behavior Wait?' is No  (sec)(sec)	
-DT_1day_drawpatterns[, Behavior.Wait := 0]
-DT_1day_drawpatterns[  Fixture.ID %in% c("Shower", "Bath"),  
-                       Behavior.Wait := 45]
+# add Behavior wait (sec)	
+# 45 for showers & baths,
+# 0 if 'Include Behavior Wait?' is No, change to blank when exporting 
+DT_1day_drawpatterns[, 'Behavior wait' := 0]
+DT_1day_drawpatterns[  enduse %in% c("Shower", "Bath"),  
+                       'Behavior wait' := 45]
 
 # check that it worked
-DT_1day_drawpatterns[,list(nBehavior.Wait = length(Behavior.Wait),
-                           Behavior.Wait  = unique(Behavior.Wait)), 
-                     by=c('Fixture.ID')
-                     ]
+DT_1day_drawpatterns[,list(n               = length(start),
+                           'Behavior wait' = unique('Behavior wait')), 
+                     by=c('enduse', 'Behavior wait')][ , 4:=NULL][]
 #       Fixture.ID nBehavior.Wait Behavior.Wait
 # 1:        Shower              4            45
 # 2:        Faucet             87             0
@@ -131,15 +136,16 @@ DT_1day_drawpatterns[,list(nBehavior.Wait = length(Behavior.Wait),
 # looks OK
 # set 0 to blank when exporting to Excel
 
-# add, Use time, duration (sec)
+# add Use time, duration (sec)
 # this is the total time of the draw, including any clearing draws
-setnames(DT_1day_drawpatterns,'duration', 'Use.time')
+DT_1day_drawpatterns[, 'Use time' := duration]
 
 # look at range of Use.time
-DT_1day_drawpatterns[,list(summary(Use.time)), by=Fixture.ID]
+DT_1day_drawpatterns[, list(enduse, n=length(start)), 
+                     by=c('enduse','Use time')][,3:=NULL][ order(enduse)]
 # looks reasonable for one day
 # wait Bath looks short, less than 3 minutes?
-DT_1day_drawpatterns[Fixture.ID=="Bath",]
+DT_1day_drawpatterns[enduse=="Bath",]
 
 # look at all the baths
 DT_total_drawpatterns[enduse=='Bath', list(npeople   = unique(people),

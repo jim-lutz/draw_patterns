@@ -175,6 +175,9 @@ the following still need to be added
 2018-08-07
     output enduse, leave Fixture.ID blank for manual assignment
     refactor to keep DT_total_drawpatterns columns, add all new ones instead of renaming any
-    if I can figure out how to highlight Excel cells, highlight possible faucet draws with clearing draw
     and use Yanda's variable names
+    
+    next one is 'Flow rate - waiting (GPM)'
+    if I can figure out how to highlight Excel cells, highlight possible faucet draws with clearing draw
+    
     
