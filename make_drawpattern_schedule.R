@@ -48,102 +48,101 @@ names(DT_1day_drawpatterns)
 # https://cran.r-project.org/web/packages/xlsx/xlsx.pdf
 
 # add Start Time, date & start in a d/m/yyyy h:m:s format
-DT_1day_drawpatterns[ , 'Start Time' := paste(date,start)]
+DT_1day_drawpatterns[ , Start_Time := paste(date,start)]
 
 # add Fixture ID, B2_SK1,B3_SK, K_SK, LN_WA, MB_SH, MB_SK1, MB_SK2, etc
 # for now use enter a blank
-DT_1day_drawpatterns[ , 'Fixture ID' := ' ']
+DT_1day_drawpatterns[ , Fixture_ID := ' ']
 
 # add Event Type, 
-# for now enter 'a blank'Use'
-DT_1day_drawpatterns[ , 'Event Type' := 'Use']
+# for now enter 'Use'
+DT_1day_drawpatterns[ , Event_Type := 'Use']
 
 # add Wait for Hot Water? 
-# dropped '?' from variable name. It causes problems for R
 # Yes, (for shower, bath, & long (>= 1 min) faucet), No (everything else)
-DT_1day_drawpatterns[ ,'Wait for Hot Water' := 'No']
+DT_1day_drawpatterns[ , Wait_for_Hot_Water := 'No']
 DT_1day_drawpatterns[ enduse %in% c("Shower", "Bath"), 
-                      'Wait for Hot Water' := 'Yes']
+                      Wait_for_Hot_Water := 'Yes']
 DT_1day_drawpatterns[ enduse=="Faucet" & duration>=60, 
-                      'Wait for Hot Water' := 'Yes']
+                      Wait_for_Hot_Water := 'Yes']
 
 # check that it worked
 DT_1day_drawpatterns[,list(n                     = length(start),
-                           'Wait for Hot Water' = unique('Wait for Hot Water')), 
-                     by=c('enduse', 'Wait for Hot Water') ][, 4:=NULL][]
-#           enduse Wait for Hot Water  n
-# 1:        Shower                 Yes  4
-# 2:        Faucet                  No 70
-# 3:        Faucet                 Yes 17
-# 4:          Bath                 Yes  1
-# 5:    Dishwasher                  No  4
-# 6: ClothesWasher                  No 10
+                           Wait_for_Hot_Water    = unique(Wait_for_Hot_Water)), 
+                     by=c('enduse') ]
+#           enduse  n Wait_for_Hot_Water
+# 1:        Shower  4                Yes
+# 2:        Faucet 87                 No
+# 3:        Faucet 87                Yes
+# 4:          Bath  1                Yes
+# 5:    Dishwasher  4                 No
+# 6: ClothesWasher 10                 No
 # looks OK
 
 # add Include Behavior Wait? Yes for shower & bath, No for everything else.
-DT_1day_drawpatterns[ ,'Include Behavior Wait' := 'No']
+DT_1day_drawpatterns[ , Include_Behavior_Wait := 'No']
 DT_1day_drawpatterns[ enduse %in% c("Shower", "Bath"), 
-                      'Include Behavior Wait' := 'Yes']
+                      Include_Behavior_Wait := 'Yes']
 
 # check that it worked
-DT_1day_drawpatterns[,list(n                         = length(start),
-                           'Include Behavior Wait'  = unique('Include Behavior Wait')), 
-                     by=c('enduse', 'Include Behavior Wait')][, 4:=NULL][]
-#           enduse  Include Behavior Wait  n
-# 1:        Shower                    Yes  4
-# 2:        Faucet                     No 87
-# 3:          Bath                    Yes  1
-# 4:    Dishwasher                     No  4
-# 5: ClothesWasher                     No 10
+DT_1day_drawpatterns[,list(n                      = length(start),
+                           Include_Behavior_Wait  = unique(Include_Behavior_Wait)), 
+                     by=c('enduse')]
+#           enduse  n Include_Behavior_Wait
+# 1:        Shower  4                   Yes
+# 2:        Faucet 87                    No
+# 3:          Bath  1                   Yes
+# 4:    Dishwasher  4                    No
+# 5: ClothesWasher 10                    No
 # looks OK
 
 # add Behavior Wait Trigger  (sec)
 # 5 for showers & baths, 
-# blank if 'Include Behavior Wait?' is No 	
-DT_1day_drawpatterns[ , 'Behavior Wait Trigger' := 0]
+# blank (0) if 'Include Behavior Wait?' is No 	
+DT_1day_drawpatterns[ , Behavior_Wait_Trigger := 0]
 DT_1day_drawpatterns[  enduse %in% c("Shower", "Bath"),  
-                       'Behavior Wait Trigger' := 5]
+                       Behavior_Wait_Trigger := 5]
 
 # check that it worked
 DT_1day_drawpatterns[,list(n                      = length(start),
-                           Behavior.Wait.Trigger  = unique('Behavior Wait Trigger')), 
-                     by=c('enduse', 'Behavior Wait Trigger')][, 4:=NULL][]
-#           enduse Behavior Wait Trigger  n
-# 1:        Shower                     5  4
-# 2:        Faucet                     0 87
-# 3:          Bath                     5  1
-# 4:    Dishwasher                     0  4
-# 5: ClothesWasher                     0 10
+                           Behavior_Wait_Trigger  = unique(Behavior_Wait_Trigger)), 
+                     by=c('enduse')]
+#           enduse  n Behavior_Wait_Trigger
+# 1:        Shower  4                     5
+# 2:        Faucet 87                     0
+# 3:          Bath  1                     5
+# 4:    Dishwasher  4                     0
+# 5: ClothesWasher 10                     0
 # looks OK
 # set 0 to blank when exporting to Excel
 
 # add Behavior wait (sec)	
 # 45 for showers & baths,
 # 0 if 'Include Behavior Wait?' is No, change to blank when exporting 
-DT_1day_drawpatterns[, 'Behavior wait' := 0]
+DT_1day_drawpatterns[, Behavior_wait := 0]
 DT_1day_drawpatterns[  enduse %in% c("Shower", "Bath"),  
-                       'Behavior wait' := 45]
+                       Behavior_wait := 45]
 
 # check that it worked
-DT_1day_drawpatterns[,list(n               = length(start),
-                           'Behavior wait' = unique('Behavior wait')), 
-                     by=c('enduse', 'Behavior wait')][ , 4:=NULL][]
-#           enduse Behavior wait  n
-# 1:        Shower            45  4
-# 2:        Faucet             0 87
-# 3:          Bath            45  1
-# 4:    Dishwasher             0  4
-# 5: ClothesWasher             0 10
+DT_1day_drawpatterns[,list(n             = length(start),
+                           Behavior_wait = unique(Behavior_wait)), 
+                     by=c('enduse')]
+#           enduse  n Behavior_wait
+# 1:        Shower  4            45
+# 2:        Faucet 87             0
+# 3:          Bath  1            45
+# 4:    Dishwasher  4             0
+# 5: ClothesWasher 10             0
 # looks OK
 # set 0 to blank when exporting to Excel
 
 # add Use time, duration (sec)
 # this is the total time of the draw, including any clearing draws
-DT_1day_drawpatterns[, 'Use time' := duration]
+DT_1day_drawpatterns[, Use_time := duration]
 
-# look at range of Use.time
+# look at range of Use_time
 DT_1day_drawpatterns[, list(enduse, n=length(start)), 
-                     by=c('enduse','Use time')][,3:=NULL][ order(enduse)]
+                     by=c('enduse','Use_time')][ order(enduse, -Use_time)]
 # looks reasonable for one day
 # wait Bath looks short, less than 3 minutes?
 DT_1day_drawpatterns[enduse=="Bath",]
@@ -179,81 +178,75 @@ DT_total_drawpatterns[enduse=='Bath', list(npeople   = unique(people),
 #   tub/shower combo is 4, 
 #   master bath tubspout is 6
 # blank (0)  if 'Include Behavior Wait?' is No  (sec)(sec)	
-DT_1day_drawpatterns[, 'Flow rate - waiting (GPM)' := 0]
+DT_1day_drawpatterns[, Flow_rate_waiting := 0]
 
 # list to flag rows by 'Wait for Hot Water' == Yes 
-Wait_for_Hot_Water <- grepl("Yes", DT_1day_drawpatterns$'Wait for Hot Water')
+# Wait_for_Hot_Water <- grepl("Yes", DT_1day_drawpatterns$'Wait for Hot Water')
 
-DT_1day_drawpatterns[ Wait_for_Hot_Water & enduse == 'Faucet',  
-                      'Flow rate - waiting (GPM)' := 1.8]
-DT_1day_drawpatterns[ Wait_for_Hot_Water & enduse == 'Shower',  
-                      'Flow rate - waiting (GPM)' := 4.0]
-DT_1day_drawpatterns[ Wait_for_Hot_Water & enduse == 'Bath',  
-                      'Flow rate - waiting (GPM)' := 6.0]
+DT_1day_drawpatterns[ Wait_for_Hot_Water=='Yes' & enduse == 'Faucet',  
+                      Flow_rate_waiting := 1.8]
+DT_1day_drawpatterns[ Wait_for_Hot_Water=='Yes' & enduse == 'Shower',  
+                      Flow_rate_waiting := 4.0]
+DT_1day_drawpatterns[ Wait_for_Hot_Water=='Yes' & enduse == 'Bath',  
+                      Flow_rate_waiting := 6.0]
 
 # check that it worked
-DT_1day_drawpatterns[ Wait_for_Hot_Water, list(enduse, 'Wait for Hot Water') ]
-# OK
-DT_1day_drawpatterns[ 'Wait for Hot Water' == 'Yes',  ]
-# Empty data.table (0 rows) of 22 cols: DHWProfile,DHWDAYUSE,bedrooms,people,yday,wday...
-DT_1day_drawpatterns$'Wait for Hot Water'
-# 106
-DT_1day_drawpatterns[ "Wait for Hot Water" == "No"  ]
-# Empty data.table (0 rows) of 22 cols: DHWProfile,DHWDAYUSE,bedrooms,people,yday,wday...
-DT_1day_drawpatterns[ grepl("Yes", 'Wait for Hot Water'),  ]
-# Empty data.table (0 rows) of 22 cols: DHWProfile,DHWDAYUSE,bedrooms,people,yday,wday...
-DT_1day_drawpatterns[ grepl("Yes", DT_1day_drawpatterns$'Wait for Hot Water'),  ]
-# 22
-Wait_for_Hot_Water <- grepl("Yes", DT_1day_drawpatterns$'Wait for Hot Water')
-DT_1day_drawpatterns[ Wait_for_Hot_Water,  ]
-# 22
+DT_1day_drawpatterns[ Wait_for_Hot_Water=='Yes', 
+                      list(enduse, Wait_for_Hot_Water, Flow_rate_waiting) ]
 
+ add Flow rate - use (GPM)
+DT_1day_drawpatterns[, Flow_rate_use := mixedFlow]
 
-DT_1day_drawpatterns[ "Wait for Hot Water" == 'Yes', 
-                     c('enduse', 'Wait for Hot Water', 'Flow rate - waiting (GPM)')]
-#    Fixture.ID Wait.for.Hot.Water Flow.rate.waiting
-# 1:     Shower                Yes                 4
-# 2:     Shower                Yes                 4
-# 3:     Shower                Yes                 4
-# 4:     Shower                Yes                 4
-# 5:       Bath                Yes                 6
-
-DT_1day_drawpatterns[ "Wait for Hot Water?" == 'Yes', ]
-# Empty data.table (0 rows) of 22 cols: DHWProfile,DHWDAYUSE,bedrooms,people,yday,wday...
-
-DT_1day_drawpatterns[, list('Wait for Hot Water?'='Wait for Hot Water?' ) ]
-grep("Wait for Hot Water?", names(DT_1day_drawpatterns), value = TRUE)
-[1] "Wait for Hot Water?"
-names(DT_1day_drawpatterns)
-#  [1] "DHWProfile"                "DHWDAYUSE"                
-#  [3] "bedrooms"                  "people"                   
-#  [5] "yday"                      "wday"                     
-#  [7] "date"                      "start"                    
-#  [9] "enduse"                    "duration"                 
-# [11] "mixedFlow"                 "hotFlow"                  
-# [13] "coldFlow"                  "Start Time"               
-# [15] "Fixture ID"                "Event Type"               
-# [17] "Wait for Hot Water"        "Include Behavior Wait"    
-# [19] "Behavior Wait Trigger"     "Behavior wait"            
-# [21] "Use time"                  "Flow rate - waiting (GPM)"
-
-# rename use flow
-setnames(DT_1day_drawpatterns,'mixedFlow', 'Flow.rate.use')
-
-
-
-
-
-# check Flow rate - use (GPM)
+# check if Flow rate - use (GPM)
 #   bathroom faucet max is 1.2, 
 #   kitchen faucet max is 1.8
-DT_1day_drawpatterns[Fixture.ID=='Faucet' & Flow.rate.use > 1.2]
+DT_1day_drawpatterns[enduse=='Faucet' & Flow_rate_use > 1.2]
 
 # add temperatures
 # Hot Water Temp, 125 (F)
 # Threshold Temp, 105 (F)	
 # Ambient Temp, 70 (F)
-DT_1day_drawpatterns[, c('Hot Water Temp', 'Threshold Temp', 'Ambient Temp') :=
+DT_1day_drawpatterns[, c('Hot_Water_Temp', 'Threshold_Temp', 'Ambient_Temp') :=
                        list(125, 105, 70)]
 
+names(DT_1day_drawpatterns)
+#  [1] "DHWProfile"            "DHWDAYUSE"             "bedrooms"             
+#  [4] "people"                "yday"                  "wday"                 
+#  [7] "date"                  "start"                 "enduse"               
+# [10] "duration"              "mixedFlow"             "hotFlow"              
+# [13] "coldFlow"              "Start_Time"            "Fixture_ID"           
+# [16] "Event_Type"            "Wait_for_Hot_Water"    "Include_Behavior_Wait"
+# [19] "Behavior_Wait_Trigger" "Behavior_wait"         "Use_time"             
+# [22] "Flow_rate_waiting"     "Flow_rate_use"         "Hot_Water_Temp"       
+# [25] "Threshold_Temp"        "Ambient_Temp"         
 
+# make a data.table for the Excel schedule
+DT_1day_schedule <- 
+DT_1day_drawpatterns[ , list(enduse,
+                             Event_Index = 2*.I-1,
+                             Start_Time,
+                             Fixture_ID,
+                             Event_Type,
+                             Wait_for_Hot_Water,
+                             Include_Behavior_Wait,
+                             Behavior_Wait_Trigger,
+                             Behavior_wait,
+                             Use_time,
+                             Flow_rate_waiting,
+                             Flow_rate_use,
+                             Hot_Water_Temp,
+                             Threshold_Temp,
+                             Ambient_Temp)]
+
+# make the cool down rows
+DT_cool_down_rows <- data.table( Event_Index = seq(2,2*nrow(DT_1day_schedule),by=2))
+
+# merge in the cool down rows
+DT_1day_schedule <- 
+merge(DT_1day_schedule, DT_cool_down_rows, by="Event_Index", all = TRUE)
+
+# set Event_Type for cool down rows
+DT_1day_schedule[is.na(Event_Type), Event_Type := 'No use, cool down']
+
+# save to csv file
+fwrite(DT_1day_schedule, file=paste0(wd_data,"1day_schedule.csv"))

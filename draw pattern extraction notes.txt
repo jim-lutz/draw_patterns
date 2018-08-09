@@ -180,4 +180,7 @@ the following still need to be added
     next one is 'Flow rate - waiting (GPM)'
     if I can figure out how to highlight Excel cells, highlight possible faucet draws with clearing draw
     
+2018-08-08
+    gave up on variable names with symbols & spaces from Excel
     
+        
