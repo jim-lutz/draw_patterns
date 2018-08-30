@@ -1,4 +1,4 @@
-332018-07-12
+2018-07-12
     find CBECC-Res draw pattern files
 
 /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
@@ -183,4 +183,22 @@ the following still need to be added
 2018-08-08
     gave up on variable names with symbols & spaces from Excel
     
-        
+2018-08-29
+    Yesterday spent some time updating packages in R
+   	https://stackoverflow.com/questions/25721884/how-should-i-deal-with-package-xxx-is-not-available-for-r-version-x-y-z-wa
+    for help w/ concepts
+    
+    Also finally created a flowchart.txt for this project.
+
+    25% & 75% 'smaller' & 'larger' draw patterns to show impact of draw schedules
+    pick days from 3bedrooms, weight for repeated DHW days.
+    see /home/jiml/HotWaterResearch/projects/How Low/draw_patterns/contours of ranges of data.txt
+    for ideas about subsetting days
+    would be nice to have a rank by clusteredness
+    for now stick w/ +/- total vol & count of draws
+    will have to assign draws
+    see if can do interactive rectangles by color (fixture type) in plotly
+    
+    
+    
+            

@@ -1,0 +1,56 @@
+./CSE/writeRUNALL.sh
+    #!/bin/bash
+    # bash script to write RUNALL.txt
+    # to generate Tinlet files for all CTZ
+    output: RUNALL.tst
+
+./CSE/RUNALL.tst
+    // RUNALL
+    // batch file to run all CTZs
+    run with:   CSE19.exe
+    input:      ./CSE/CTZ/CTZ{01:16}S13b.CSW
+    output:     ./CSE/TINLET/TINLETCTZ{01:16}.CSV
+    
+read_Tinlet.R
+    # script to read 365 day Tinlet from *.csv files in 
+    # /home/jiml/HotWaterResearch/projects/How Low/draw_patterns/CSE/TINLET
+    input:  ./CSE/TINLET/TINLETCTZ{01:16}.CSV
+    output: ./data/DT_Tinlets.Rdata
+            ./data/DT_Tinlets.csv
+            ./charts/Tinlet_by_ctz.png
+            
+read_DHWDUSF.R
+    # script to read 365 day DHW Profile by number of Bedrooms from
+    # /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
+    # DHWProfiles are lists of 365 DHWDAYUSEs by number of Bedrooms
+    input:  ./CSE/DHWDUSF.txt
+    output: ./data/DT_DHWProfiles.csv
+            ./data/DT_DHWProfiles.Rdata
+            
+read_DHWDAYUSE.R
+    # script to read DHWDAYUSE (daily draw pattern for number of people and day type) from
+    # /home/jiml/.PlayOnLinux/wineprefix/CBECC_Res19/drive_c/Program Files (x86)/CBECC-Res 2019/CSE/DHWDUSF.txt
+    # from CSE Users Manual
+    # DHWDAYUSE
+    # Defines an object that represents domestic hot water use for a single day. A DHWDAYUSE contains a 
+    # collection of DHWUSE objects that specify the time, volume, and duration of individual draws.
+    input:  ./CSE/DHWDUSF.txt
+    output: ./data/DT_DHWUSEs.csv
+            ./data/DT_DHWUSEs.Rdata
+            ./data/DHWDAYUSE_enduse.txt            
+            ./charts/daily_draws_gallons.png
+
+make_total_drawpattern.R
+    # script to build the complete draw pattern for CBECC_Res 
+    # contains all the draws for all days of the year for all number of bedrooms
+    input:  ./data/DT_DHWProfiles.Rdata
+    output: ./data/DT_total_drawpatterns.Rdata
+            ./data/DT_daily.csv
+            ./data/DT_daily{1:5}.csv
+            ./data/DT_daily.Rdata
+
+make_drawpattern_schedule.R
+    # script to build an input file for one day draw pattern for spreadsheet model.
+    input:  ./data/DT_total_drawpatterns.Rdata
+    output: ./data/1day_schedule.csv
+

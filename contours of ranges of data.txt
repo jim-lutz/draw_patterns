@@ -1,0 +1,18 @@
+Contour plots over 
+/home/jiml/HotWaterResearch/projects/How Low/draw_patterns/charts/daily_draws_gallons.png
+
+https://stackoverflow.com/questions/21736337/understanding-what-the-kde2d-z-values-mean
+
+https://www.r-statistics.com/2016/07/using-2d-contour-plots-within-ggplot2-to-visualize-relationships-between-three-variables/
+
+
+Or maybe ovals around the center of population
+https://en.wikipedia.org/wiki/Moss%27s_Egg
+
+or linear fit to get axes of oval/ellipse
+
+or sum the number of points (V>0 & n>0, no doesn't matter ) within a radius of ~50~75 
+for V = 0.5:249.5 & n = 0.5:195.5 then draw contours around those?
+
+
+

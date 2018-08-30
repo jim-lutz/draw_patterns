@@ -80,8 +80,6 @@ days_of_year <- seq(ymd("2009-01-01", tz="America/Los_Angeles"),
 
 DT_date2009 <- data.table(date=as.character(days_of_year, format="%F"),
                           wday=wday(days_of_year, label = TRUE, abbr = TRUE))
-
-
 # add dates
 DT_total_drawpatterns[ , c("date","wday") := list( DT_date2009[yday,date],
                                                    DT_date2009[yday,wday])
@@ -172,20 +170,18 @@ for(b in 1:5) {
   write.csv(DT_daily[bedrooms==b,], file= paste0(wd_data,"DT_daily",b,".csv"), row.names = FALSE)
   }
 
-
 # save the DT_daily data as an .Rdata file
 save(DT_daily, file = paste0(wd_data,"DT_daily.Rdata"))
 
-
 # scatter plot of volume vs number of draws per DHWDAYUSE
-ggplot(data=DT_daily) +
-  geom_jitter(aes(x=totvol, y= ndraw, color=bedrooms, shape=bedrooms), 
-             width = 5, height = 5, alpha = 0.5 ) +
+ggplot(data=DT_daily[bedrooms==3]) +
+  geom_jitter(aes(x=totvol, y= ndraw, size=people), 
+             width = 5, height = 5, alpha = 0.2 ) +
   ggtitle( "Daily Draw Patterns" ) +
   theme(plot.title = element_text(hjust = 0.5)) + # to center the title
   scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
   scale_y_continuous(name = "total number of draws per day") +
-  labs(caption="from CBECC-Res19") + 
-  guides(size=FALSE)
+  labs(caption="from CBECC-Res19") #+ 
+  # guides(size=FALSE)
 
 
