@@ -54,3 +54,10 @@ make_drawpattern_schedule.R
     input:  ./data/DT_total_drawpatterns.Rdata
     output: ./data/1day_schedule.csv
 
+exam_3bed_drawpattern.R
+    # script to exam the draw patterns (DHWDAYUSE) for 3 bedroom households
+    input:  ./data/DT_daily.Rdata
+    output: ./data/DT_selecteds.Rdata
+            ./charts/number_of_occupants.png
+            ./charts/daily_draws_gallons.png
+            

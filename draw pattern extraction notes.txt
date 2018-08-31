@@ -199,6 +199,10 @@ the following still need to be added
     will have to assign draws
     see if can do interactive rectangles by color (fixture type) in plotly
     
+2018-08-30
+    redid daily_draws_gallons.png to show selected DHWDAYUSEs
     
+    next redo shower histogram, skinnier bins and better labels
+       
     
             
