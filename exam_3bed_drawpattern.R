@@ -80,17 +80,32 @@ ggplot(data=DT_3bed_DHWDAYUSE) +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5,
                                      size  = rel(0.75)))
+# save chart
+ggsave(filename = paste0("daily_draws_gallons.png"), path=wd_charts,
+       width = 10.5, height = 8 )
+
+DT_daily[]
 
 
+# new draws 
+# ~ 2 person, ~26 gallons, ~ 30 draws
+# ~ 4 person ~ 80 gallons, ~25 draws
+# ~ 2 person ~ 50 gallons, ~90 draws
+# previous 
+# 3 person 91 gall, 106 draws
+# 3 person  57 gal, 78 draws
 
 
-  
-  geom_jitter(aes(x=totvol, y= ndraw, size=people), 
-              width = 5, height = 5, alpha = 0.2 )  +
-  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
-  scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
-  scale_y_continuous(name = "total number of draws per day") +
-  labs(caption="from CBECC-Res19") #+ 
+# 
+# 
+# 
+#   
+#   geom_jitter(aes(x=totvol, y= ndraw, size=people), 
+#               width = 5, height = 5, alpha = 0.2 )  +
+#   theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+#   scale_x_continuous(name = "total mixed water drawn (gallons/day)") +
+#   scale_y_continuous(name = "total number of draws per day") +
+#   labs(caption="from CBECC-Res19") #+ 
 ================================
   
 
