@@ -72,8 +72,8 @@ if(!require(plotly)){install.packages("plotly")}
 library(plotly)
 
 # required to export images from plotly
-if(!require(RSelenium)){install.packages("RSelenium")}
-library(RSelenium)
+# if(!require(RSelenium)){install.packages("RSelenium")}
+# library(RSelenium)
 
 # environment variables for my plotly account.
 Sys.setenv("plotly_username" = "jlutz")
