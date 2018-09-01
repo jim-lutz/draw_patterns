@@ -1,5 +1,5 @@
 # explore_showers.R
-# script to build generate a plot of shower durations in the CBECC-Res 3 bedroom draw profile
+# script to generate histogram of shower durations in the CBECC-Res 3 bedroom draw profile
 # Jim Lutz "Thu Aug 30 19:28:27 2018"
 
 # set packages & etc

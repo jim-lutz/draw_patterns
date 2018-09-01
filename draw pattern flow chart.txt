@@ -61,3 +61,9 @@ exam_3bed_drawpattern.R
             ./charts/number_of_occupants.png
             ./charts/daily_draws_gallons.png
             
+explore_showers.R
+    # script to generate histogram of shower durations in the CBECC-Res 3 bedroom draw profile
+    input:  ./data/DT_daily.Rdata
+    output: ./charts/CBECC_shower_distributions.png
+    
+    

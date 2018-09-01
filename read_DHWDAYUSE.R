@@ -254,8 +254,6 @@ DT_DHWUSEs_sum <-
                      ndraws = length(DHWUSE)),
               by = DHWDAYUSE]
 
-theme(plot.title = element_text(hjust = 0.5)) # to center the title
-
 # scatter plot of volume vs number of draws per DHWDAYUSE
 ggplot(data=DT_DHWUSEs_sum) +
   geom_point(aes(x=vol, y= ndraws) ) +
@@ -267,10 +265,11 @@ ggplot(data=DT_DHWUSEs_sum) +
                                   c('3D1', '3D2', '3D3', '3D4', '3D5')],
           aes(x=vol, y=ndraws, label=DHWDAYUSE, hjust=-0.2, size=1)
           ) + 
-  guides(size=FALSE)
+  guides(size=FALSE) +
+  labs(caption="from CBECC-Res19")
 
 ggsave(filename = paste0("daily_draws_gallons.png"), path=wd_charts,
-       width = 10.5, height = 8 )
+       width = 5.25, height = 4 )
 
 # clean up DT_DHWUSEs
 names(DT_DHWUSEs)

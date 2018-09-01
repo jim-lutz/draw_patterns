@@ -205,5 +205,7 @@ the following still need to be added
     next redo shower histogram, skinnier bins and better labels
        
 2018-08-31
-    clean up shower histogram    
+    clean up shower histogram
+    charts to go in word documents look better at width = 5.25, height = 4
+    
             

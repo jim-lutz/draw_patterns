@@ -143,12 +143,14 @@ ggplot(data = DT_daily) +
   labs(caption="from CBECC-Res19") +
   xlab("Day of Year") +
   ylab("deg F") + 
-  labs(color="climate zone")
+  labs(color="climate zone") +
+  labs(caption="from CBECC-Res19")
 # still not as smooth as I'd expect for Tinlet
 # being overly influenced by air temps?
 
 # save the plot
-ggsave(filename = paste0(wd_charts,"Tinlet_by_ctz.png"))
+ggsave(filename = paste0(wd_charts,"Tinlet_by_ctz.png"), 
+       width = 5.25, height = 4 )
 
 # rearrange DT_daily
 DT_Tinlets <-

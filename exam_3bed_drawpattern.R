@@ -41,11 +41,12 @@ ggplot(data = DT_3bed_people) +
         plot.subtitle = element_text(hjust = 0.5,
                                      size  = rel(0.75))) +
   scale_x_discrete(name = "number of occupants") +
-  scale_y_continuous(name = "number of days") 
+  scale_y_continuous(name = "number of days")  +
+  labs(caption="from CBECC-Res19")
 
 # save chart
 ggsave(filename = paste0("number_of_occupants.png"), path=wd_charts,
-       width = 10.5, height = 8 )
+       width = 5.25, height = 4 )
 
 DT_daily[]
 
@@ -146,7 +147,7 @@ ggplot(data=DT_3bed_DHWDAYUSE) +
 
 # save chart
 ggsave(filename = paste0("daily_draws_gallons.png"), path=wd_charts,
-       width = 10.5, height = 8 )
+       width = 5.25, height = 4  )
 
 
 
