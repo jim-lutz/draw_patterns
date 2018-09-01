@@ -80,9 +80,19 @@ ggplot(data=DT_shower) +
   geom_histogram(aes(x = duration), breaks = seq(0, 1620, by = 30)) +
   scale_x_continuous(breaks = seq(0, 1620, by = 120),
                      labels = seq(0, 1620, by = 120)/60, 
-                     limits = c(0, 1620)) +
-  geom_vline(xintercept=300, color='red')
+                     limits = c(0, 1620),
+                     name = "duration (minutes)") +
+  geom_vline(xintercept=300, color='red') +
+  ggtitle("Shower Durations",
+          subtitle = "365 days for 3 bedroom house") +
+  # center and format titles
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5,
+                                     size  = rel(0.75)
+                                     )
+        )  +
+  labs(caption="from CBECC-Res19")
 
-
-
-  
+# save chart
+ggsave(filename = paste0("CBECC_shower_distributions.png"), path=wd_charts,
+       width = 5.25, height = 4 )
