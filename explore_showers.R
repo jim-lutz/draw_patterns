@@ -1,5 +1,5 @@
 # explore_showers.R
-# script to build generate a plot of shower durations in CBECC-Res
+# script to build generate a plot of shower durations in the CBECC-Res 3 bedroom draw profile
 # Jim Lutz "Thu Aug 30 19:28:27 2018"
 
 # set packages & etc
@@ -68,5 +68,21 @@ DT_showers[ , list(nshowers        = length(enduse),
 # somedays there's fewer showers than people
 DT_showers[people==1,]
 
-qplot(DT_showers$duration)
+# all the showers in the 3 bedroom annual draw pattern
+DT_shower <-
+  DT_total_drawpatterns[DHWProfile == 'DHW3BR' &
+                          enduse   == 'Shower', list(duration)]
 
+summary(DT_shower)
+
+# histogram of shower durations
+ggplot(data=DT_shower) +
+  geom_histogram(aes(x = duration), breaks = seq(0, 1620, by = 30)) +
+  scale_x_continuous(breaks = seq(0, 1620, by = 120),
+                     labels = seq(0, 1620, by = 120)/60, 
+                     limits = c(0, 1620)) +
+  geom_vline(xintercept=300, color='red')
+
+
+
+  
