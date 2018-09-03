@@ -90,7 +90,18 @@ DT_day1_selected[ mixedFlow<0.1, list(DHWDAYUSE, date, start,
 # 6:       4D5 2009-06-08 08:32:24 ClothesWasher   370.02     0.022
 # 7:       4D5 2009-06-08 08:38:24 ClothesWasher   360.00     0.025
 
-
+# fix baths 2E2
+DT_day1_selected[ DHWDAYUSE=='2E2' & enduse == 'Bath']
+# keep first Bath, change 
+#    duration to 200 seconds, mixedFlow to 2.902
+# see combine_baths_2E2.xls
+DT_day1_selected[ DHWDAYUSE=='2E2' & enduse == 'Bath' &
+                    start =='04:41:24',
+                  c("duration","mixedFlow") := list(200, 2.902)
+                  ]
+# delete 2nd Bath
+DT_day1_selected <- 
+  DT_day1_selected[!(DHWDAYUSE=='2E2' & enduse=='Bath' & start=='04:43:12')]
 
 
 # build data.table first then worry about formatting and putting into Excel
@@ -227,7 +238,7 @@ DT_day1_selected[, list( n=length(start),
                          min.Use_time = min(Use_time)),
                  by=c('enduse')]
 #           enduse   n max.duration min.duration max.Use_time min.Use_time
-# 1:          Bath   3       169.98        79.98       169.98        79.98
+# 1:          Bath   2       200.00       169.98       200.00       169.98
 # 2: ClothesWasher  37       559.98        19.98       559.98        19.98
 # 3:    Dishwasher  10       100.02        30.00       100.02        30.00
 # 4:        Faucet 278       460.02        10.02       400.02        10.02
@@ -244,9 +255,8 @@ DT_day1_selected[enduse=='Bath',
                         order(DHWDAYUSE)]
 # huh, totvol per bath seems low.
 #    DHWDAYUSE npeople duration mixedFlow   totvol
-# 1:       2E2       2    79.98     2.820 3.759060
-# 2:       2E2       2   120.00     2.969 5.938000
-# 3:       3D1       3   169.98     3.457 9.793681
+# 1:       2E2       2   200.00     2.902 9.673333
+# 2:       3D1       3   169.98     3.457 9.793681
 # see http://www.allianceforwaterefficiency.org/Residential_Shower_Introduction.aspx
 # Showers vs Baths
 # for almost all of these the tub is less than 1/2 full
@@ -263,10 +273,6 @@ DT_day1_selected[enduse=='Bath',
 #   bath is 4.5, 
 # blank (0)  if 'Include Behavior Wait?' is No  (sec)
 DT_day1_selected[, Flow_rate_waiting := 0]
-
-# list to flag rows by 'Wait for Hot Water' == Yes 
-# Wait_for_Hot_Water <- grepl("Yes", DT_day1_selected$'Wait for Hot Water')
-
 DT_day1_selected[ Wait_for_Hot_Water=='Yes' & enduse == 'Faucet',  
                       Flow_rate_waiting := 1.2]
 DT_day1_selected[ Wait_for_Hot_Water=='Yes' & enduse == 'Shower',  
@@ -280,6 +286,9 @@ DT_day1_selected[ Wait_for_Hot_Water=='Yes',
 
 # add Flow rate - use (GPM)
 DT_day1_selected[, Flow_rate_use := mixedFlow]
+
+# set shower flow rate to 1.8 GPM
+DT_day1_selected[enduse=='Shower', Flow_rate_use := 1.8]
 
 # check if Flow rate - use (GPM) is above standard after location assigned
 #   bathroom faucet max is 1.2, 
@@ -346,3 +355,4 @@ str(DT_draw_schedule)
 # save to csv file
 fwrite(DT_draw_schedule, file=paste0(wd_data,"day_schedule.csv"),
        quote = TRUE)
+
