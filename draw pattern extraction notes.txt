@@ -210,4 +210,6 @@ the following still need to be added
 
 2018-09-02
     revise make_drawpattern_schedule.R to produce drawschedules for selected DHWDAYUSEs
+    
+    check current Title 20 maximum flow rates showers, lavatory faucets & kitchen faucets, etc
             

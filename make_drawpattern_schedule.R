@@ -93,87 +93,97 @@ DT_day1_selected[ , Event_Type := 'Use']
 DT_day1_selected[ , Wait_for_Hot_Water := 'No']
 DT_day1_selected[ enduse %in% c("Shower", "Bath"), 
                       Wait_for_Hot_Water := 'Yes']
-DT_day1_selected[ enduse=="Faucet" & duration>=60, 
+DT_day1_selected[ enduse=="Faucet" & duration>60, 
                       Wait_for_Hot_Water := 'Yes']
 
 # check that it worked
-DT_day1_selected[,list(n                     = length(start),
-                           Wait_for_Hot_Water    = unique(Wait_for_Hot_Water)), 
-                     by=c('enduse') ]
-#           enduse  n Wait_for_Hot_Water
-# 1:        Shower  4                Yes
-# 2:        Faucet 87                 No
-# 3:        Faucet 87                Yes
-# 4:          Bath  1                Yes
-# 5:    Dishwasher  4                 No
-# 6: ClothesWasher 10                 No
+DT_day1_selected[,list(n = length(start)), 
+                 by=c('enduse','Wait_for_Hot_Water') ]
+#           enduse Wait_for_Hot_Water   n
+# 1:          Bath                Yes   3
+# 2: ClothesWasher                 No  37
+# 3:    Dishwasher                 No  10
+# 4:        Faucet                 No 243
+# 5:        Faucet                Yes  35
+# 6:        Shower                Yes   9
 # looks OK
 
-# add Include Behavior Wait? Yes for shower & bath, No for everything else.
+# add Include Behavior Wait? Yes for shower, No for everything else.
 DT_day1_selected[ , Include_Behavior_Wait := 'No']
-DT_day1_selected[ enduse %in% c("Shower", "Bath"), 
+DT_day1_selected[ enduse %in% c("Shower"), 
                       Include_Behavior_Wait := 'Yes']
 
 # check that it worked
-DT_day1_selected[,list(n                      = length(start),
-                           Include_Behavior_Wait  = unique(Include_Behavior_Wait)), 
-                     by=c('enduse')]
-#           enduse  n Include_Behavior_Wait
-# 1:        Shower  4                   Yes
-# 2:        Faucet 87                    No
-# 3:          Bath  1                   Yes
-# 4:    Dishwasher  4                    No
-# 5: ClothesWasher 10                    No
+DT_day1_selected[,list(n = length(start)),
+                     by=c('enduse','Include_Behavior_Wait')]
+#           enduse Include_Behavior_Wait   n
+# 1:          Bath                    No   3
+# 2: ClothesWasher                    No  37
+# 3:    Dishwasher                    No  10
+# 4:        Faucet                    No 278
+# 5:        Shower                   Yes   9
 # looks OK
 
-# add Behavior Wait Trigger  (sec)
-# 5 for showers & baths, 
+# add Behavior Wait Trigger (sec)
+# 15 for showers only 
 # blank (0) if 'Include Behavior Wait?' is No 	
 DT_day1_selected[ , Behavior_Wait_Trigger := 0]
-DT_day1_selected[  enduse %in% c("Shower", "Bath"),  
-                       Behavior_Wait_Trigger := 5]
+DT_day1_selected[  enduse %in% c("Shower"),  
+                       Behavior_Wait_Trigger := 15]
 
 # check that it worked
-DT_day1_selected[,list(n                      = length(start),
-                           Behavior_Wait_Trigger  = unique(Behavior_Wait_Trigger)), 
-                     by=c('enduse')]
-#           enduse  n Behavior_Wait_Trigger
-# 1:        Shower  4                     5
-# 2:        Faucet 87                     0
-# 3:          Bath  1                     5
-# 4:    Dishwasher  4                     0
-# 5: ClothesWasher 10                     0
+DT_day1_selected[,list(n = length(start)), 
+                 by=c('enduse','Behavior_Wait_Trigger')]
+#           enduse Behavior_Wait_Trigger   n
+# 1:          Bath                     0   3
+# 2: ClothesWasher                     0  37
+# 3:    Dishwasher                     0  10
+# 4:        Faucet                     0 278
+# 5:        Shower                    15   9
 # looks OK
 # set 0 to blank when exporting to Excel
 
 # add Behavior wait (sec)	
-# 45 for showers & baths,
-# 0 if 'Include Behavior Wait?' is No, change to blank when exporting 
+# 45 for showers,
+# 0 if 'Include Behavior Wait?' is No, 
+# change 0 to blank when exporting to Excel
 DT_day1_selected[, Behavior_wait := 0]
-DT_day1_selected[  enduse %in% c("Shower", "Bath"),  
+DT_day1_selected[  enduse %in% c("Shower"),  
                        Behavior_wait := 45]
 
 # check that it worked
-DT_day1_selected[,list(n             = length(start),
-                           Behavior_wait = unique(Behavior_wait)), 
-                     by=c('enduse')]
-#           enduse  n Behavior_wait
-# 1:        Shower  4            45
-# 2:        Faucet 87             0
-# 3:          Bath  1            45
-# 4:    Dishwasher  4             0
-# 5: ClothesWasher 10             0
+DT_day1_selected[,list(n = length(start)), 
+                 by=c('enduse','Behavior_wait')]
+#           enduse Behavior_wait   n
+# 1:          Bath             0   3
+# 2: ClothesWasher             0  37
+# 3:    Dishwasher             0  10
+# 4:        Faucet             0 278
+# 5:        Shower            45   9
 # looks OK
 # set 0 to blank when exporting to Excel
 
 # add Use time, duration (sec)
-# this is the total time of the draw, including any clearing draws
+# this is the total time of the draw, 
+# faucets > 60, subtract 60 for assumed clearing draw in CBECC-Res
+# showers > 300, subtract 60 for assumed clearing draw in CBECC-Res
 DT_day1_selected[, Use_time := duration]
+DT_day1_selected[enduse=="Faucet" & duration>60, Use_time := duration-60]
+DT_day1_selected[enduse=="Shower" & duration>300, Use_time := duration-60]
 
 # look at range of Use_time
-DT_day1_selected[, list(enduse, n=length(start)), 
-                     by=c('enduse','Use_time')][ order(enduse, -Use_time)]
-# looks reasonable for one day
+DT_day1_selected[, list( n=length(start),
+                         max.duration = max(duration),
+                         min.duration = min(duration),
+                         max.Use_time = max(Use_time),
+                         min.Use_time = min(Use_time)),
+                 by=c('enduse')]
+#           enduse   n max.duration min.duration max.Use_time min.Use_time
+# 1:          Bath   3       169.98        79.98       169.98        79.98
+# 2: ClothesWasher  37       559.98        19.98       559.98        19.98
+# 3:    Dishwasher  10       100.02        30.00       100.02        30.00
+# 4:        Faucet 278       460.02        10.02       400.02        10.02
+# 5:        Shower   9       450.00       250.02       390.00       250.02
 # wait Bath looks short, less than 3 minutes?
 DT_day1_selected[enduse=="Bath",]
 
@@ -204,8 +214,8 @@ DT_total_drawpatterns[enduse=='Bath', list(npeople   = unique(people),
 # most ~ 1/4 full
 
 # add, Flow rate - waiting (GPM)
-#   kitchen faucet is 1.8, 
-#   tub/shower combo is 4, 
+#   faucet is 1.8, 
+#   bath is 4.5, 
 #   master bath tubspout is 6
 # blank (0)  if 'Include Behavior Wait?' is No  (sec)(sec)	
 DT_day1_selected[, Flow_rate_waiting := 0]
