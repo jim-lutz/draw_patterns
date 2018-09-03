@@ -207,9 +207,56 @@ the following still need to be added
 2018-08-31
     clean up shower histogram
     charts to go in word documents look better at width = 5.25, height = 4
-
+    
 2018-09-02
     revise make_drawpattern_schedule.R to produce drawschedules for selected DHWDAYUSEs
     
-    check current Title 20 maximum flow rates showers, lavatory faucets & kitchen faucets, etc
-            
+    # add Use time, duration (sec)
+    # this is the total time of the draw, 
+    # faucets > 60, subtract 60 for assumed clearing draw in CBECC-Res
+    # showers > 300, subtract 60 for assumed clearing draw in CBECC-Res
+    
+    The bath flows and durations seem low
+           DHWDAYUSE npeople duration mixedFlow   totvol
+        1:       2E2       2    79.98     2.820 3.759060
+        2:       2E2       2   120.00     2.969 5.938000
+        3:       3D1       3   169.98     3.457 9.793681
+        
+    The 2 baths for 2E2 are: 
+        01/03/2009 04:41:24 for 79.98 seconds and
+        01/03/2009 04:43:12 for 120 seconds
+        should probably merge these and point out problem to Neil Kruis
+
+    checked current Title 20 maximum flow rates showers, lavatory faucets & kitchen faucets, etc
+           
+    current Title 20 maximum flow rates 
+        showers             1.8
+        lavatory faucets    1.2
+        kitchen faucets     1.8, with temporary option of 2.2 
+           
+    since don't know where faucets are (lavatory or kitchen), 
+    assign Flow_rate_waiting to standard & 
+    modify Flow_rate_use for faucets if above standard
+    by hand after locations are assigned
+    
+    since don't know which showers are in combo tub/showers or not,
+    modify Flow_rate_waiting 
+    by hand after locations are assigned
+    assign Flow_rate_use to 1.8 to according to allowable standard
+    
+    review for strange items 
+        see baths, 2E2
+
+       DHWDAYUSE       date    start        enduse duration mixedFlow
+       2E2 2009-01-03 05:08:24        Faucet   100.02     0.047
+       2E2 2009-01-03 10:46:12        Faucet    79.98     0.064
+       2E2 2009-01-03 14:01:48        Faucet   109.98     0.031
+       2E2 2009-01-03 14:52:48        Faucet    79.98     0.038
+       2E2 2009-01-03 18:00:36        Faucet   150.00     0.034
+       4D5 2009-06-08 08:32:24 ClothesWasher   370.02     0.022
+       4D5 2009-06-08 08:38:24 ClothesWasher   360.00     0.025
+
+
+
+    
+           
