@@ -145,7 +145,7 @@ DT_day1_selected[ , Event_Type := 'Use']
 DT_day1_selected[ , Wait_for_Hot_Water := 'No']
 DT_day1_selected[ enduse %in% c("Shower", "Bath"), 
                       Wait_for_Hot_Water := 'Yes']
-DT_day1_selected[ enduse=="Faucet" & duration>60, 
+DT_day1_selected[ enduse=="Faucet" & duration>60 & mixedFlow>0.25, 
                       Wait_for_Hot_Water := 'Yes']
 
 # check that it worked
@@ -158,7 +158,7 @@ DT_day1_selected[,list(n = length(start)),
 # 4:        Faucet                 No 243
 # 5:        Faucet                Yes  35
 # 6:        Shower                Yes   9
-# looks OK
+# looks OK, ~11% faucet draws wait for hot water
 
 # --- --- --- --- --- --- --- --- --- --- 
 # BEHAVIOR WAIT
@@ -276,7 +276,7 @@ DT_day1_selected[, Flow_rate_waiting := 0]
 DT_day1_selected[ Wait_for_Hot_Water=='Yes' & enduse == 'Faucet',  
                       Flow_rate_waiting := 1.2]
 DT_day1_selected[ Wait_for_Hot_Water=='Yes' & enduse == 'Shower',  
-                      Flow_rate_waiting := 1.8]
+                      Flow_rate_waiting := 1.8 * .7]
 DT_day1_selected[ Wait_for_Hot_Water=='Yes' & enduse == 'Bath',  
                       Flow_rate_waiting := 4.5]
 
