@@ -1,5 +1,5 @@
 # make_drawpattern_schedule.R
-# script to build an input file for one day draw pattern for spreadsheet model.
+# script to build an input file for a one day draw pattern as input for spreadsheet model.
 # Jim Lutz "Mon Aug  6 11:57:02 2018"
 
 # set packages & etc
@@ -14,24 +14,38 @@ load( file = paste0(wd_data,"DT_total_drawpatterns.Rdata"))
 DT_total_drawpatterns
 names(DT_total_drawpatterns)
 
-# start with DHWDAYUSE 3D1 & 3 bedrooms
-DT_total_drawpatterns[DHWDAYUSE=='3D1' & bedrooms==3,]
+# start with selected DHWDAYUSEs, '2D4', '4D5', '2E2', '3D1', '3D2' 
+selected.DHWDAYUSE <- c('2D4', '4D5', '2E2', '3D1', '3D2') 
+
+# in DHW3BR
+DT_selected <-
+  DT_total_drawpatterns[DHWDAYUSE %in% selected.DHWDAYUSE
+                        & DHWProfile=='DHW3BR',]
 
 # how many days?
-DT_total_drawpatterns[DHWDAYUSE=='3D1' & bedrooms==3, 
-                      list(date=unique(date)), by=yday][
-  order(date)]
-# 11
+DT_selected[,list(ndate=length(unique(date))), by=c('DHWDAYUSE')][
+  order(DHWDAYUSE)]
+#    DHWDAYUSE ndate
+# 1:       2D4    24
+# 2:       2E2    20
+# 3:       3D1    11
+# 4:       3D2    11
+# 5:       4D5     4
 
-# get the first one
-DT_1day_drawpatterns <-
-  DT_total_drawpatterns[DHWDAYUSE=='3D1' & date=='2009-01-29',]
+# get the first date for each DHWDAYUSE in selected.DHWDAYUSE
+DT_day1_DHWDAYUSE <-
+  DT_selected[, list(date=date[1]), by=DHWDAYUSE]
+#    DHWDAYUSE       date
+# 1:       2D4 2009-01-07
+# 2:       2E2 2009-01-03
+# 3:       3D1 2009-01-29
+# 4:       3D2 2009-04-09
+# 5:       4D5 2009-06-08
 
-# count number of enduses 
-DT_1day_drawpatterns[,list(ndraws = length(start),
-                           totvol = sum(mixedFlow*duration/60)), 
-                      by=c('date', 'enduse')
-                      ][order(-totvol)]
+# count number of enduses for each DHWDAYUSE
+DT_selected[DT_day1_DHWDAYUSE$date,list(ndraws = length(start),
+                                   totvol = sum(mixedFlow*duration/60)), 
+            by=c('DHWDAYUSE','date', 'enduse')][order(DHWDAYUSE,-totvol)]
 #          date        enduse ndraws    totvol
 # 1: 2009-01-29        Faucet     87 42.459839
 # 2: 2009-01-29        Shower      4 21.967499

@@ -207,5 +207,7 @@ the following still need to be added
 2018-08-31
     clean up shower histogram
     charts to go in word documents look better at width = 5.25, height = 4
-    
+
+2018-09-02
+    revise make_drawpattern_schedule.R to produce drawschedules for selected DHWDAYUSEs
             
