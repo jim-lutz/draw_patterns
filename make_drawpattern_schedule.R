@@ -227,8 +227,10 @@ DT_day1_selected[,list(n = length(start)),
 # faucets > 60, subtract 60 for assumed clearing draw in CBECC-Res
 # showers > 300, subtract 60 for assumed clearing draw in CBECC-Res
 DT_day1_selected[, Use_time := duration]
-DT_day1_selected[enduse=="Faucet" & duration>60, Use_time := duration-60]
-DT_day1_selected[enduse=="Shower" & duration>300, Use_time := duration-60]
+DT_day1_selected[enduse=="Faucet" & duration>60 & mixedFlow>.25, 
+                 Use_time := duration-60]
+DT_day1_selected[enduse=="Shower" & duration>300, 
+                 Use_time := duration-60]
 
 # look at range of Use_time
 DT_day1_selected[, list( n=length(start),

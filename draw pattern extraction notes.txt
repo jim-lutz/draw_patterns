@@ -293,9 +293,12 @@ the following still need to be added
             d = 2.0  = 00:02:00
             end = 4.667783 = 04:40:04
             
-    Faucets wait only duration > 60 & MixedFlow > .25
+    Faucets wait only duration > 60 & mixedFlow > .25
     
     Showers, Flow_rate_waiting := 1.8 * .7
             
-    
+    from looking at day_schedule_draws_assigned.csv
+    duplicate draws: 2E2 Faucet 01/03/2009 16:13:12
+    there were some other duplicates as well
+   
            
