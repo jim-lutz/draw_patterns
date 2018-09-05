@@ -301,4 +301,8 @@ the following still need to be added
     duplicate draws: 2E2 Faucet 01/03/2009 16:13:12
     there were some other duplicates as well
    
-           
+2018-09-04
+    modify make_drawpattern_schedule.R to save DT_day1_selected
+    add functions to summarize days for report
+    made and exported DT_day_sum
+    

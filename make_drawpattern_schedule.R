@@ -358,3 +358,37 @@ str(DT_draw_schedule)
 fwrite(DT_draw_schedule, file=paste0(wd_data,"day_schedule.csv"),
        quote = TRUE)
 
+tables()
+
+# add Day_num
+DT_day1_selected[, Day_num := .GRP, by=c('DHWDAYUSE')]
+names(DT_day1_selected)
+
+# save the DT_day1_selected data as an .Rdata file
+save(DT_day1_selected, file = paste0(wd_data,"DT_day1_selected.Rdata"))
+
+# list of enduses
+l.enduses <- unique(DT_day1_selected$enduse)
+
+# make summary table for report by day
+DT_day_sum <-
+  DT_day1_selected[ , list(DHWDAYUSE     = unique(DHWDAYUSE),
+                           People        = unique(people),
+                           wday          = unique(wday),
+                           ndraw         = length(enduse),
+                           totvol        = sum(Flow_rate_use*Use_time/60),
+                           Faucet        = sum(enduse=='Faucet'),
+                           Shower        = sum(enduse=='Shower'),
+                           ClothesWasher = sum(enduse=='ClothesWasher'),
+                           Dishwasher    = sum(enduse=='Dishwasher'),
+                           Bath          = sum(enduse=='Bath')
+                           ),
+                    by=Day_num]
+
+# save DT_day_sum to csv file
+fwrite(DT_day_sum, file=paste0(wd_data,"DT_day_sum.csv"),
+       quote = TRUE)
+
+
+
+
