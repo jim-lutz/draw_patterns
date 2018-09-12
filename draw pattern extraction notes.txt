@@ -305,4 +305,10 @@ the following still need to be added
     modify make_drawpattern_schedule.R to save DT_day1_selected
     add functions to summarize days for report
     made and exported DT_day_sum
+
+2018-09-11
+    made read_draw_schedule.xlsx.R to find draws that were too big in 
+    'Draw schedule for performance analysis.xlsx'
+        
+        
     
