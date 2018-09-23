@@ -131,8 +131,9 @@ names(DT_schedule)
 # add norm & low to "Flow rate - use (GPM)" names to distinguish them
 setnames(DT_schedule, 
          old = c('Flow rate - use (GPM)','Flow rate - use (GPM)__1'),
-         new = c('Flow rate - use [norm] (GPM)','Flow rate - use [low] (GPM)'))
+         new = c('Flow rate - use [std] (GPM)','Flow rate - use [low] (GPM)'))
 
 str(DT_schedule)
 
+# fix for normal use
 
