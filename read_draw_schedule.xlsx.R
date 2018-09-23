@@ -10,8 +10,8 @@ source("setup_wd.R")
 
 # try straight read
 tbl_schedule <-
-read_xlsx(path = paste0(wd_data,"Draw schedule for performance analysis.xlsx"),
-          range = "A3:L538",
+  read_xlsx(path = paste0(wd_data,"Draw schedule for performance analysis.standard 2018-09-21.xlsx"),
+          range = "A3:N538",
 
           col_types = 
             # Day #,	Event Index,	Start Time,	Fixture ID,	Event Type,	
@@ -21,8 +21,12 @@ read_xlsx(path = paste0(wd_data,"Draw schedule for performance analysis.xlsx"),
               "text", "text",
               # Behavior Wait Trigger (sec),	Behavior wait  (sec),	Use time (sec),
               "numeric", "numeric", "numeric", 
-              #Flow rate - waiting (GPM)	Flow rate - use (GPM)
-              "numeric", "numeric")
+              #Flow rate - waiting (GPM)	Flow rate - use (GPM) [Normal flow rate]
+              "numeric", "numeric",
+              # skip column M, 
+              "skip",
+              # Flow rate - use (GPM) [Low flow rate]
+              "numeric")
           )
 
 # turn the tibble into a data.table
@@ -33,7 +37,7 @@ str(DT_schedule)
 names(DT_schedule)
 
 # trouble w/ `Start Time`, in Excel sometimes it's a date, sometimes it's text
-# reread twice & fix
+# reread that column twice & fix
 # read as text
 tbl_Start_Time.text <-
 read_xlsx(path = paste0(wd_data,"Draw schedule for performance analysis.xlsx"),
@@ -62,10 +66,10 @@ merge(DT__Start_Time.text, DT__Start_Time.date, by = 'index', all = TRUE)
 
 str(DT_Start_time)
 
-# set Start_Time when `Start Time.y` is NA
+# set Start_Time to POSIXct of Start Time.x when `Start Time.y` is NA
 DT_Start_time[is.na(`Start Time.y`) , Start_Time := mdy_hms(`Start Time.x`)]
 
-# set Start_Time when Start_Time is NA
+# set Start_Time to Start Time.y when Start_Time is NA
 DT_Start_time[is.na(Start_Time) , Start_Time := `Start Time.y`]
 
 str(DT_Start_time)
@@ -76,6 +80,11 @@ DT_schedule[, Start_Time := DT_Start_time[ , list(Start_Time) ]]
 
 DT_schedule[c(1:5,533:535), list(`Start Time`, Start_Time)]
 # looks like that worked
+
+# set 'Start Time' to 'Start_Time'
+DT_schedule[, `Start Time` := Start_Time]
+DT_schedule[,  Start_Time := NULL]
+str(DT_schedule)
 
 # look at 'Fixture_ID'
 DT_schedule[ , list(n=.N), by=c('Fixture ID')][order(-n)]
@@ -93,7 +102,7 @@ DT_schedule[ , list(n=.N), by=c('Fixture ID')][order(-n)]
 # 11:      B2_SH   9
 # 12:      MB_SH   6
 
-# look at showers, notice left single quotes
+# look for showers > 1.8, notice left single quotes
 DT_shower.fix <-
 DT_schedule[str_detect(`Fixture ID`, '_SH') & `Flow rate - use (GPM)` > 1.8, 
             list( `Day #`, Start_Time, `Fixture ID`, `Flow rate - use (GPM)`)]
@@ -105,7 +114,7 @@ DT_schedule[str_detect(`Fixture ID`, '_SH') & `Flow rate - use (GPM)` > 1.8,
 DT_schedule[str_detect(`Fixture ID`, 'K_SK') , #& `Flow rate - use (GPM)` > 1.8, 
             list( `Day #`, Start_Time, `Fixture ID`, `Flow rate - use (GPM)`)][
               order(-`Flow rate - use (GPM)`)]
-# those are all good
+# those are all good, < 1.8
 
 # look bath sink draws > 1.2
 DT_bath_sink.fix <-
@@ -115,32 +124,15 @@ DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
             list( `Day #`, Start_Time, `Fixture ID`, `Flow rate - use (GPM)`)][
               order(-`Flow rate - use (GPM)`)]
 
-# combine the fixes and save as csv
-fwrite(bind_rows(DT_shower.fix, DT_bath_sink.fix),
-       file = paste0(wd_data,"DT_fix.csv"),
-       row.names = TRUE)
+DT_bath_sink.fix[]
+# there's 28 of them.
 
-# histograms
-# showers
-length(DT_schedule[str_detect(`Fixture ID`, '_SH'),`Flow rate - use (GPM)`])
-qplot(x = DT_schedule[str_detect(`Fixture ID`, '_SH'),`Flow rate - use (GPM)`],
-      xlab="GPM", main = "showers, n=15")
-ggsave(filename = paste0(wd_charts,"showers.png"))
+names(DT_schedule)
+# add norm & low to "Flow rate - use (GPM)" names to distinguish them
+setnames(DT_schedule, 
+         old = c('Flow rate - use (GPM)','Flow rate - use (GPM)__1'),
+         new = c('Flow rate - use [norm] (GPM)','Flow rate - use [low] (GPM)'))
 
-# kitchen sinks
-qplot(x = DT_schedule[str_detect(`Fixture ID`, 'K_SK'),`Flow rate - use (GPM)`],
-      xlab="GPM", main = "kitchen sink, n=147")
-ggsave(filename = paste0(wd_charts,"kitchen_sink.png"))
-
-# other sinks
-length(DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
-                     str_detect(`Fixture ID`, '_SK'),
-                   `Flow rate - use (GPM)`])
-
-qplot(x = DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
-                        str_detect(`Fixture ID`, '_SK'),
-                      `Flow rate - use (GPM)`],
-      xlab="GPM", main = "other sinks, n=271")
-ggsave(filename = paste0(wd_charts,"other_sinks.png"))
+str(DT_schedule)
 
 
