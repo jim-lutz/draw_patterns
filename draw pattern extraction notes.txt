@@ -324,5 +324,9 @@ the following still need to be added
     Faucets wait only > 60 & MixedFlow > .25
     per phone meeting 2018-09-03
 
+2018-09-24
+    histogram flow rates of day 7 for TAC2
+    
+    
 
    

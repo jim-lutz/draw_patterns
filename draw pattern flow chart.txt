@@ -65,5 +65,10 @@ explore_showers.R
     # script to generate histogram of shower durations in the CBECC-Res 3 bedroom draw profile
     input:  ./data/DT_daily.Rdata
     output: ./charts/CBECC_shower_distributions.png
-    
+
+read_draw_schedule.xlsx.R
+    # script to read 'Draw schedule for performance analysis.xlsx'
+    to fix draw schedule for model
+    input:  ./data/'Draw schedule for performance analysis.standard 2018-09-21.xlsx'
+    output: ./data/Draw schedule for performance analysis.standard_[current date].csv"    
     

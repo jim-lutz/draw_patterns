@@ -1,0 +1,55 @@
+# histograms_day7.R
+# script generate histograms of flowrates 
+# by time and by events for reference day
+# "Mon Sep 24 12:44:52 2018"
+
+# set packages & etc
+source("setup.R")
+
+# set up paths to working directories
+source("setup_wd.R")
+
+# read the csv schedule file as data.table
+DT_schedule <-
+  as.data.table(
+    read.csv(file = paste0(wd_data,
+                           "Draw schedule for performance analysis.standard_2018-09-23.csv"))
+)
+
+DT_schedule
+names(DT_schedule)
+
+# clean up the names
+setnames(DT_schedule,
+         old = c("Day..", "Event.Index", "Start.Time", "Fixture.ID", "Event.Type",
+                 "Wait.for.Hot.Water.",  "Include.Behavior.Wait.", 
+                 "Behavior.Wait.Trigger..sec.", "Behavior.wait...sec.", "Use.time..sec.",
+                 "Flow.rate...waiting..GPM.", "Flow.rate...use..std...GPM.",
+                 "Flow.rate...use..low...GPM."),
+         new = c("Day", "Event.Index", "Start.Time", "Fixture.ID", "Event.Type",
+                 "Wait.for.Hot.Water",  "Include.Behavior.Wait", 
+                 "Behavior.Wait.Trigger.sec", "Behavior.wait.sec", "Use.time.sec",
+                 "Flow.rate.waiting.GPM", "Flow.rate.use.std.GPM",
+                 "Flow.rate.use.low.GPM")
+         )
+
+# make histogram of flowrates by event
+# bare plot with data
+ggplot(data = DT_schedule[Day==7]) +
+  # initial histogram
+  geom_histogram(aes(x=Flow.rate.use.std.GPM),
+                 breaks =seq(0,2,0.1),
+                 binwidth = 0.1
+           ) +
+  # titles
+  ggtitle( "Histogram of Flow Rates" ) +
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+  scale_x_continuous(name = "flow rate (GPM)",
+                     breaks = seq(0,2,0.5 ),
+                     minor_breaks = seq(0,2,0.1)) +
+  scale_y_continuous(name = "number of events") 
+
+# list the flow rates
+DT_schedule[Day==7, list(Flow.rate.use.std.GPM)][order(Flow.rate.use.std.GPM)]
+
+
