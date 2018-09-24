@@ -310,5 +310,19 @@ the following still need to be added
     made read_draw_schedule.xlsx.R to find draws that were too big in 
     'Draw schedule for performance analysis.xlsx'
         
-        
+2018-09-23
+    redo to fix waiting on short draws. See Yanda's email 09/21/2018 10:52 PM
+    use /home/jiml/HotWaterResearch/projects/How Low/draw_patterns/data/Draw schedule for performance analysis.standard 2018-09-21.xlsx      
+    add fixes to standard and modifications to low flow  
     
+    for low flow
+    run faucet flows at 0.5 GPM and showers at 1.0 GPM in model  
+    per phone meeting 2018-08-06 
+    only limit sink faucet flows
+    
+    reset faucet wait
+    Faucets wait only > 60 & MixedFlow > .25
+    per phone meeting 2018-09-03
+
+
+   
