@@ -72,3 +72,10 @@ read_draw_schedule.xlsx.R
     input:  ./data/'Draw schedule for performance analysis.standard 2018-09-21.xlsx'
     output: ./data/Draw schedule for performance analysis.standard_[current date].csv"    
     
+histograms_day7.R
+    # script generate histograms of flowrates 
+    # by volume and by events for reference day
+    input:  ./data/'Draw schedule for performance analysis.standard_2018-09-23.csv'
+    output: ./data/draw_schedules_[current date].csv"
+            ./charts/hist_flow_rates_events.png
+            ./charts/hist_flow_rates_volumes.png

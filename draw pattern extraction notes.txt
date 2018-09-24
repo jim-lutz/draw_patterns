@@ -326,6 +326,10 @@ the following still need to be added
 
 2018-09-24
     histogram flow rates of day 7 for TAC2
+    histograms_day7.R
+    
+    charts of waste, energy & water and loads not met reference day
+    
     
     
 

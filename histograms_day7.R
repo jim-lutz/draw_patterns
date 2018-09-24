@@ -1,6 +1,6 @@
 # histograms_day7.R
 # script generate histograms of flowrates 
-# by time and by events for reference day
+# by volume and by events for reference day
 # "Mon Sep 24 12:44:52 2018"
 
 # set packages & etc
@@ -33,7 +33,7 @@ setnames(DT_schedule,
                  "Flow.rate.use.low.GPM")
          )
 
-# make histogram of flowrates by event
+# make histogram of flowrates by number of events
 # bare plot with data
 ggplot(data = DT_schedule[Day==7]) +
   # initial histogram
@@ -54,7 +54,39 @@ ggplot(data = DT_schedule[Day==7]) +
 DT_schedule[Day==7, list(Flow.rate.use.std.GPM)][order(Flow.rate.use.std.GPM)]
 
 # save the plot
-ggsave(filename = paste0(wd_charts,"hist_flow_rates.png"), 
+ggsave(filename = paste0(wd_charts,"hist_flow_rates_events.png"), 
        width = 5.25, height = 4 )
 
+# calculate volume per event
+DT_schedule[ , Event.Volume := (Flow.rate.use.std.GPM / 60) * Use.time.sec ]
 
+# histogram by total volume
+# bare plot with data
+ggplot(data = DT_schedule[Day==7]) +
+  # initial histogram
+  geom_histogram(aes(x=Flow.rate.use.std.GPM,
+                     weight = Event.Volume),
+                 breaks =seq(0,2,0.1),
+                 binwidth = 0.1) +
+  # titles
+  ggtitle( "Histogram of Flow Rates" ) +
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title +
+  labs(caption="from reference day, 78 draws") +
+  # scales
+  scale_x_continuous(name = "flow rate (GPM)",
+                     breaks = seq(0,2,0.5 ),
+                     minor_breaks = seq(0,2,0.1)) +
+  scale_y_continuous(name = "volume delivered (gal)") 
+
+# save the plot
+ggsave(filename = paste0(wd_charts,"hist_flow_rates_volumes.png"), 
+       width = 5.25, height = 4 )
+
+# save the data
+# get date to include in file name
+d <- format(Sys.time(), "%F")
+
+# now to a csv file
+write_csv(DT_schedule,
+          path = paste0(wd_data,"draw_schedules_",d,".csv"),
+          na = "")
