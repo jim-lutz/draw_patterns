@@ -39,11 +39,12 @@ ggplot(data = DT_schedule[Day==7]) +
   # initial histogram
   geom_histogram(aes(x=Flow.rate.use.std.GPM),
                  breaks =seq(0,2,0.1),
-                 binwidth = 0.1
-           ) +
+                 binwidth = 0.1) +
   # titles
   ggtitle( "Histogram of Flow Rates" ) +
-  theme(plot.title = element_text(hjust = 0.5)) + # to center the title
+  theme(plot.title = element_text(hjust = 0.5)) + # to center the title +
+  labs(caption="from reference day, 78 draws") +
+  # scales
   scale_x_continuous(name = "flow rate (GPM)",
                      breaks = seq(0,2,0.5 ),
                      minor_breaks = seq(0,2,0.1)) +
@@ -51,5 +52,9 @@ ggplot(data = DT_schedule[Day==7]) +
 
 # list the flow rates
 DT_schedule[Day==7, list(Flow.rate.use.std.GPM)][order(Flow.rate.use.std.GPM)]
+
+# save the plot
+ggsave(filename = paste0(wd_charts,"hist_flow_rates.png"), 
+       width = 5.25, height = 4 )
 
 
