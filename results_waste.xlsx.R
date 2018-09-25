@@ -63,15 +63,49 @@ for(s in 1:4) {
 }
 
 # turn the results tibble into a data table
-DT_results_compact <- data.table(tbl_results) 
+DT_results <- data.table(tbl_results) 
 
-names(DT_results_compact)
-str(DT_results_compact)
+names(DT_results)
+str(DT_results)
 
+# fix the names 
+setnames(DT_results,
+         old = c("case","layout","WH_location","HW Supply Energy (Btu)",
+                 "HW Energy To fixture - used","HW Energy To fixture - wasted",
+                 "HW Energy Lost to Ambient - during use","HW Energy Lost to Ambient - Cooldown",
+                 "Recirc Loop Pipe Heat Loss (Btu)","Energy Efficiency %",
+                 "Theoretical HW demand (Btu)","% Btu demand not met",
+                 "X__1",
+                 "Water Volume Supplied (Gallon)","Water Volume Used (Gallon)",
+                 "Water Volume Wasted (Gallon)","Water Efficiency %",
+                 "X__2",
+                 "Structural Waiting (Sec)","Behavior Waiting (Sec)","Total Waiting (Sec)",
+                 "Use Duration (Sec)","Time Efficiency %",
+                 "X__3",
+                 "# of draws","# of draws with waiting",
+                 "# of draws with behavioral waiting","# of draws with waiting >15 second",
+                 "# of draws trigger behavioral waiting",
+                 "# of draws with final temperature exceed threshold temperature",
+                 "config"),
+         new = c('case', 'layout', 'WH_location', 
+                 'HW_energy_in', 'HW_energy_used', 'HW_energy_wasted', 
+                 'HW_energy_loss_use', 'HW_energy_loss_cooldown', 
+                 'HW_energy_loss_recirc', 'HW_energy_effy', 
+                 'HW_energy_ideal_use', 'HW_energy_not_met_effy', 
+                 'X__1', 
+                 'HW_volume_in', 'HW_volume_used', 'HW_volume_wasted', 
+                 'HW_volume_effy', 
+                 'X__2', 
+                 'HW_time_wait_structural', 'HW_time_wait_behavioral', 
+                 'HW_time_wait_total', 'HW_time_used', 'HW_time_effy', 
+                 'X__3', 
+                 'HW_draws', 'HW_draws_wait', 'HW_draws_wait_behavioral', 
+                 'HW_draws_wait_15', 'HW_draws_wait_behavioral_trigger', 
+                 'HW_draws_temp_met',  
+                 'config')
+         )
 
-
-
-            
-
+# get rid of X__
+DT_results[, c('X__1','X__2','X__3') := NULL]
 
 
