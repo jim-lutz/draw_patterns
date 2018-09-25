@@ -32,36 +32,42 @@ l_cases_range <- c('A4:C35',  # compact, low
                    'A4:C44',  # distributed, low
                    'A4:C44')  # distributed, std
 
+# for spreadsheets for compact core
+tbl_results <- NULL
 
-DT_results_compact <- NULL
-# for first spreadsheet
-s=1
+# loop through spreadsheets
+# s=1 # debugging only
+for(s in 1:4) {
+  
+  # read cases from spreadsheet
+  tbl_cases <-
+    read_xlsx(path = paste0(d_results,l_fn_results[s]),
+              range = l_cases_range[s],
+              col_names = c('case','layout','WH_location')
+              )
+  
+  # read results from spreadsheet
+  tbl_result_values <-
+    read_xlsx(path = paste0(d_results,l_fn_results[s]),
+              range = l_results_range[s])
+  
+  # combine the tibbles horizontally
+  tbl_results1 <- bind_cols(tbl_cases,tbl_result_values)
+  
+  # add the config
+  tbl_results2 <- add_column(tbl_results1, config=l_descripts[s])
+  
+  # add to overall tbl_results
+  tbl_results <- bind_rows(tbl_results,tbl_results2)
 
-# read cases from spreadsheet
-tbl_cases <-
-  read_xlsx(path = paste0(d_results,l_fn_results[s]),
-            range = l_cases_range[s],
-            col_names = c('case','layout','WH_location')
-            )
+}
 
-# read results from spreadsheet
-tbl_results <-
-  read_xlsx(path = paste0(d_results,l_fn_results[s]),
-            range = l_results_range[s])
+# turn the results tibble into a data table
+DT_results_compact <- data.table(tbl_results) 
 
-# combine the tibbles horizontally
-tbl_spreadsheet <- bind_cols(tbl_cases,tbl_results)
+names(DT_results_compact)
+str(DT_results_compact)
 
-# add the config
-tbl_spreadsheet <- add_column(tbl_spreadsheet, config=l_descripts[s])
-
-
-
-
-
-# turn into a data table and add config description
-DT_results_compact <- 
-  rbind(DT_results_compact, data.table(tbl_spreadsheet) )
 
 
 
