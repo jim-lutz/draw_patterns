@@ -16,7 +16,7 @@ d_results <- "/home/jiml/HotWaterResearch/projects/How Low/model results/"
 
 # get list of results file names in that directory
 l_fn_results <- 
-  list.files(path = d_results, pattern = "^Model.*09-14-2018.xlsx")
+  list.files(path = d_results, pattern = "^Model results.*09-14-2018.xlsx")
 
 l_descripts <- c('compact, low','compact, std','distributed, low','distributed, std')
 
@@ -108,4 +108,15 @@ setnames(DT_results,
 # get rid of X__
 DT_results[, c('X__1','X__2','X__3') := NULL]
 
+# calculate wasted energy
+DT_results[, HW_energy_excess := HW_energy_in - HW_energy_ideal_use]
+
+# calculate wasted water
+DT_results[, HW_volume_excess := HW_volume_in - HW_volume_used]
+
+# calculate loads not met 
+DT_results[, HW_energy_not_met := HW_energy_ideal_use - HW_energy_used]
+
+# save the results for later use
+save(DT_results, file = paste0(wd_data,"DT_results.Rdata"))
 

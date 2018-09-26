@@ -79,3 +79,14 @@ histograms_day7.R
     output: ./data/draw_schedules_[current date].csv"
             ./charts/hist_flow_rates_events.png
             ./charts/hist_flow_rates_volumes.png
+            
+results_waste.xlsx.R
+    # script to read Model Results from 09-14-2018 spreadsheets
+    # to get energy wasted, water wasted, and loads not met
+    # for compact and distributed core
+    # and for normal and low flow
+    input:  ../'model results/Model results.*09-14-2018.xlsx'
+    output: ./data/DT_results.Rdata
+
+    
+            

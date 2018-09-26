@@ -329,8 +329,7 @@ the following still need to be added
     histograms_day7.R
     
     charts of waste, energy & water and loads not met reference day
-    
-    
-    
 
-   
+2018-09-25
+    read Model Results from 09-14-2018 spreadsheets & calculate excess energy, excess water, 
+    and loads not met.    
