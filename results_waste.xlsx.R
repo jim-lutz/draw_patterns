@@ -18,13 +18,17 @@ d_results <- "/home/jiml/HotWaterResearch/projects/How Low/model results/"
 l_fn_results <- 
   list.files(path = d_results, pattern = "^Model results.*09-14-2018.xlsx")
 
-l_descripts <- c('compact, low','compact, std','distributed, low','distributed, std')
+# descriptions of core configuration
+l_cores <- c('compact','compact','distributed','distributed')
+
+# descriptions of flow regimes
+l_flows <- c('low','std','low','std')
 
 # list of spreadsheet results ranges
-l_results_range <- c('FW3:GW35',  # compact, low
-                   'FW3:GW35',  # compact, std
-                   'FW3:GW44',  # distributed, low
-                   'FW3:GW44') # distributed, std
+l_results_range <- c('FW3:GW35', # compact, low
+                   'FW3:GW35',   # compact, std
+                   'FW3:GW44',   # distributed, low
+                   'FW3:GW44')   # distributed, std
 
 # list of spreadsheet cases ranges
 l_cases_range <- c('A4:C35',  # compact, low
@@ -32,7 +36,7 @@ l_cases_range <- c('A4:C35',  # compact, low
                    'A4:C44',  # distributed, low
                    'A4:C44')  # distributed, std
 
-# for spreadsheets for compact core
+# blank tibble
 tbl_results <- NULL
 
 # loop through spreadsheets
@@ -54,12 +58,18 @@ for(s in 1:4) {
   # combine the tibbles horizontally
   tbl_results1 <- bind_cols(tbl_cases,tbl_result_values)
   
-  # add the config
-  tbl_results2 <- add_column(tbl_results1, config=l_descripts[s])
+  # add the cores
+  tbl_results2 <- add_column(tbl_results1, core=l_cores[s], .before = 'WH_location')
+  
+  # add the flows
+  tbl_results3 <- add_column(tbl_results2, flow=l_flows[s], .before = 'WH_location')
   
   # add to overall tbl_results
-  tbl_results <- bind_rows(tbl_results,tbl_results2)
-
+  tbl_results <- bind_rows(tbl_results,tbl_results3)
+  
+  # remove temporary tibbles
+  rm(tbl_cases, tbl_result_values, tbl_results1, tbl_results2, tbl_results3 )
+  
 }
 
 # turn the results tibble into a data table
@@ -70,7 +80,8 @@ str(DT_results)
 
 # fix the names 
 setnames(DT_results,
-         old = c("case","layout","WH_location","HW Supply Energy (Btu)",
+         old = c("case","layout", "core", "flow",
+                 "WH_location","HW Supply Energy (Btu)",
                  "HW Energy To fixture - used","HW Energy To fixture - wasted",
                  "HW Energy Lost to Ambient - during use","HW Energy Lost to Ambient - Cooldown",
                  "Recirc Loop Pipe Heat Loss (Btu)","Energy Efficiency %",
@@ -85,9 +96,10 @@ setnames(DT_results,
                  "# of draws","# of draws with waiting",
                  "# of draws with behavioral waiting","# of draws with waiting >15 second",
                  "# of draws trigger behavioral waiting",
-                 "# of draws with final temperature exceed threshold temperature",
-                 "config"),
-         new = c('case', 'layout', 'WH_location', 
+                 "# of draws with final temperature exceed threshold temperature"
+                 ),
+         new = c('case', 'layout', "core", "flow",
+                 'WH_location', 
                  'HW_energy_in', 'HW_energy_used', 'HW_energy_wasted', 
                  'HW_energy_loss_use', 'HW_energy_loss_cooldown', 
                  'HW_energy_loss_recirc', 'HW_energy_effy', 
@@ -101,32 +113,89 @@ setnames(DT_results,
                  'X__3', 
                  'HW_draws', 'HW_draws_wait', 'HW_draws_wait_behavioral', 
                  'HW_draws_wait_15', 'HW_draws_wait_behavioral_trigger', 
-                 'HW_draws_temp_met',  
-                 'config')
+                 'HW_draws_temp_met'  
+                 )
          )
 
 # get rid of X__
 DT_results[, c('X__1','X__2','X__3') := NULL]
 
-# confirm extracted correct values from spreadsheets
-DT_results[config == 'distributed, std',
-           list(case, layout, WH_location,HW_energy_in)]
+names(DT_results)
+
+# look at layout
+DT_results[, list(n = .N) , by=layout]
+which(is.na(DT_results$layout))
+
+# fill in missing layouts
+DT_results <- fill(DT_results, layout )
+
+# check that it worked 
+DT_results[60:80, list(case, layout, core, flow)]
+which(is.na(DT_results$layout))
+# integer(0)
+
+# identifiers
+# from /How Low/model results/Summary results energy wasted and loads not met - Distributed Core Normal Flow 09-14-2018.xlsx
+l_identifiers <- c("WH1-G-NW-T1L-BR3M-Tee-FBS",
+                "WH1-G-NE-T1L-BR3M-Tee-FBS",
+                "WH1-M-W-T1M-BR3M-Tee-FBS",
+                "WH1-K-N-T1M-BR3M-Tee-FBS",
+                "WH1-G-NW-T1L-BR3L-Tee-FBS",
+                "WH1-G-NW-T1L-BR3M-Mini-FBM",
+                "WH1-G-NE-T1L-BR3M-Mini-FBM",
+                "WH1-M-W-T1L-BR3S-Mini-FBM",
+                "WH1-K-N-T1L-BR3S-Mini-FBM",
+                "WH1-G-NW-T1L-BR3L-Mini-FBM",
+                "WH1-G-NW-T1S-BR0-Cent-FBVL",
+                "WH1-G-NE-T1S-BR0-Cent-FBVL",
+                "WH1-M-W-T1S-BR0-Cent-FBVL",
+                "WH1-K-N-T1S-BR0-Cent-FBL",
+                "WH1-G-NW-T1L-BR0-Cent_NE-FBVL",
+                "WH2-G-NW_M-W-T2S-BR3M-Tee-FBS",
+                "WH2-B2-N_M-W-T2S-BR3M-Tee-FBS",
+                "WH1-G-NW-T1VL-BR0-Tee-FBS",
+                "WH1-M-W-T1VL-BR0-Tee-FBS",
+                "WH1-G-SW-T1VL-BR0-Tee-FBS")
+length(l_identifiers)
+# [1] 20
+
+# add  identifiers for distributed core, low flow 
+DT_results[core == 'distributed' & 
+             flow == 'low' &
+             ! str_detect(WH_location,"pipe") & # exclude small pipes
+             ! str_detect(layout, 'manual') & # exclude manual recirc
+             ! str_detect(layout, 'timer') ,  # exclude timer recirc
+           identifier := l_identifiers ]
+
+# add  identifiers for distributed core, std flow 
+DT_results[core == 'distributed' & 
+             flow == 'std' &
+             !str_detect(WH_location,"pipe") & # exclude small pipes
+             ! str_detect(layout, 'manual') & # exclude manual recirc
+             ! str_detect(layout, 'timer') ,  # exclude timer recirc
+           # list(layout, core, flow, WH_location)]
+           identifier := l_identifiers ]
+
+# confirm extracted correct values
+# by manually comparing the following to the values in the spreadsheets
+DT_results[core == 'distributed' & flow == 'low',
+           list(case, layout, core, flow, HW_energy_in)]
 # looks right
 
-DT_results[config == 'distributed, low',
-           list(case, layout, WH_location,HW_energy_ideal_use)]
+DT_results[core == 'distributed' & flow == 'low',
+           list(case, layout, core, flow, HW_energy_ideal_use)]
 # OK
 
-DT_results[config == 'compact, low',
-           list(case, layout, WH_location,HW_volume_in)]
+DT_results[core == 'compact' & flow == 'low',
+           list(case, layout, core, flow, HW_volume_in)]
 # OK
 
-DT_results[config == 'compact, low',
-           list(case, layout, WH_location,HW_volume_used)]
+DT_results[core == 'compact' & flow == 'low',
+           list(case, layout, core, flow, HW_volume_used)]
 # OK
 
-DT_results[config == 'compact, std',
-           list(case, layout, WH_location,HW_energy_used)]
+DT_results[core == 'compact' & flow == 'std',
+           list(case, layout, core, flow, HW_energy_used)]
 # OK
 
 

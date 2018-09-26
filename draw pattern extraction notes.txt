@@ -333,3 +333,7 @@ the following still need to be added
 2018-09-25
     read Model Results from 09-14-2018 spreadsheets & calculate excess energy, excess water, 
     and loads not met.    
+
+2018-09-26
+    revise results_waste.xlsx.R to get correct values,
+    started results_charts.R
