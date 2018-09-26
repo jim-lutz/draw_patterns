@@ -108,6 +108,28 @@ setnames(DT_results,
 # get rid of X__
 DT_results[, c('X__1','X__2','X__3') := NULL]
 
+# confirm extracted correct values from spreadsheets
+DT_results[config == 'distributed, std',
+           list(case, layout, WH_location,HW_energy_in)]
+# looks right
+
+DT_results[config == 'distributed, low',
+           list(case, layout, WH_location,HW_energy_ideal_use)]
+# OK
+
+DT_results[config == 'compact, low',
+           list(case, layout, WH_location,HW_volume_in)]
+# OK
+
+DT_results[config == 'compact, low',
+           list(case, layout, WH_location,HW_volume_used)]
+# OK
+
+DT_results[config == 'compact, std',
+           list(case, layout, WH_location,HW_energy_used)]
+# OK
+
+
 # calculate wasted energy
 DT_results[, HW_energy_excess := HW_energy_in - HW_energy_ideal_use]
 
@@ -116,6 +138,7 @@ DT_results[, HW_volume_excess := HW_volume_in - HW_volume_used]
 
 # calculate loads not met 
 DT_results[, HW_energy_not_met := HW_energy_ideal_use - HW_energy_used]
+
 
 # save the results for later use
 save(DT_results, file = paste0(wd_data,"DT_results.Rdata"))
