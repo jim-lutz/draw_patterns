@@ -75,8 +75,8 @@ for(s in 1:4) {
 # turn the results tibble into a data table
 DT_results <- data.table(tbl_results) 
 
-names(DT_results)
-str(DT_results)
+# names(DT_results)
+# str(DT_results)
 
 # fix the names 
 setnames(DT_results,
@@ -117,10 +117,14 @@ setnames(DT_results,
                  )
          )
 
-# get rid of X__
+# get rid of X__ variables
 DT_results[, c('X__1','X__2','X__3') := NULL]
 
-names(DT_results)
+# add index of original order
+DT_results[ , index := .I ]
+
+
+# names(DT_results)
 
 # look at layout
 DT_results[, list(n = .N) , by=layout]
@@ -159,7 +163,10 @@ l_identifiers <- c("WH1-G-NW-T1L-BR3M-Tee-FBS",
 length(l_identifiers)
 # [1] 20
 
-# add  identifiers for distributed core, low flow 
+# add  identifier
+DT_results[, identifier:= '']
+
+# for distributed core, low flow 
 DT_results[core == 'distributed' & 
              flow == 'low' &
              ! str_detect(WH_location,"pipe") & # exclude small pipes
