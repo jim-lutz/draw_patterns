@@ -165,3 +165,46 @@ ggplot(data = DT_results_long[flow==test_flow],
 ggsave(filename = paste0("compact_normal_wasted_energy.png"), path=wd_charts,
        width = 5.25, height = 4 )
 
+
+# --- compact core, normal flow, trunk&branch ---
+# facet by pipe_size_factor
+
+# chart distributed core, flow
+ggplot(data = DT_results_long[flow==test_flow & layout=='Trunk&Branch'],
+       aes(label=WH_location)) +
+  # colums of HW_energy_excess 
+  geom_col(aes(x=WH_location, y=value, fill=variable),
+           position = "dodge", width = .5) +
+  
+  scale_color_manual(values = colorchoices,
+                     aesthetics = c("fill")) +
+  
+  # fix the y scale
+  scale_y_continuous(limits = c(0,4000)) +
+  
+  # facet
+  facet_wrap(vars(pipe_size_factor)) +
+  
+  # add the labels
+  labs(title = "Wasted Energy and Loads Not Met",
+       subtitle = "compact core, normal flow trunk & branch by pipe size",
+       y = "energy (BTU)",
+       x = "water heater location") +
+  
+  # center the title
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  
+  # clean up the legend
+  guides(fill = guide_legend(title = NULL)
+  ) +
+  
+  # adjust text size for png plot
+  theme(legend.text = element_text(size = 5)) 
+
+
+# save chart
+ggsave(filename = paste0("compact_normal_TB_pipe_size_wasted_energy.png"), path=wd_charts,
+       width = 5.25, height = 4 )
+
+
