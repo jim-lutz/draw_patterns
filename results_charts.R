@@ -58,8 +58,8 @@ str(DT_results_long)
 # DT_results_long[ , variable := as.character(variable)]
 
 # set the color choices
-colorchoices <- c("Wasted Energy" = "pink", 
-                  "Loads Not Met" = "light blue")
+colorchoices <- c("Wasted Energy" = "red", 
+                  "Loads Not Met" = "blue")
 
 # chart distributed core, normal flow
 ggplot(data = DT_results_long) +
