@@ -151,6 +151,11 @@ DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
 # set 'Flow rate - use [low] (GPM)' to fixed `Flow rate - use [std] (GPM)`
 DT_schedule[ , `Flow rate - use [low] (GPM)` := `Flow rate - use [std] (GPM)`]
 
+# see what happended
+DT_schedule[str_detect(`Fixture ID`, '_SH'), 
+            list(`Flow rate - use [std] (GPM)`,
+                 `Flow rate - use [low] (GPM)`)]
+
 # reset faucet wait
 # Faucets wait only > 60 & MixedFlow > .25
 # per phone meeting 2018-09-03
@@ -226,6 +231,11 @@ DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
 
 # change Start Time to chr
 DT_schedule[ , `Start Time` := as.character(`Start Time`)]
+
+# check 1.5
+DT_schedule[str_detect(`Fixture ID`, '_SH'), 
+            list(`Flow rate - use [std] (GPM)`,
+                 `Flow rate - use [low] (GPM)`)]
 
 # write to Excel file 
 # get date to include in file name
