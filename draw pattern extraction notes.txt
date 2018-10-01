@@ -337,3 +337,7 @@ the following still need to be added
 2018-09-26
     revise results_waste.xlsx.R to get correct values,
     started results_charts.R
+    
+2018-09-30
+    from TAC2, MaryAnne's plea to change showers to 1.5 GPM
+    revise 'read_draw_schedule.xlsx.R'    

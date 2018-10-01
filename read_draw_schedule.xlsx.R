@@ -210,13 +210,13 @@ DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
 
 
 # modifications for extreme low flow
-# run faucet flows at 0.5 GPM and showers at 1.0 GPM in model  
-# per phone meeting 2018-08-06 
+# run faucet flows at 0.5 GPM and showers at 1.5 GPM in model  
+# per TAC2 meeting 2018-09-27
 
-# showers > 1.0, set to 1.0 in 'Flow rate - use [low] (GPM)'
+# showers > 1.5, set to 1.5 in 'Flow rate - use [low] (GPM)'
 DT_schedule[str_detect(`Fixture ID`, '_SH') & 
-              `Flow rate - use [low] (GPM)` > 1.0, 
-            `Flow rate - use [low] (GPM)` := 1.0 ]
+              `Flow rate - use [low] (GPM)` > 1.5, 
+            `Flow rate - use [low] (GPM)` := 1.5 ]
 
 # bath sinks > 0.5, set to 0.5
 DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &

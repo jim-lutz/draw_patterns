@@ -88,5 +88,12 @@ results_waste.xlsx.R
     input:  ../'model results/Model results.*09-14-2018.xlsx'
     output: ./data/DT_results.Rdata
 
+results_charts.R
+    # script to plot energy wasted and loads not met
+    # for distributed core
+    # for normal and low flow
+    input:  ./data/DT_results.Rdata
+    output: ./charts/distributed_normal_wasted_energy.png
+            ./charts/distributed_low_flow_wasted_energy.png
     
             
