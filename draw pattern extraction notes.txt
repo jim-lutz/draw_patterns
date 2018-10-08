@@ -341,3 +341,12 @@ the following still need to be added
 2018-09-30
     from TAC2, MaryAnne's plea to change showers to 1.5 GPM
     revise 'read_draw_schedule.xlsx.R'    
+    
+2018-10-08
+    updates 1.0 -> 1.5 GPM for showers
+    change wait = yes if time > 30 sec, GPM >= .5 
+    revise 'read_draw_schedule.xlsx.R'    
+    
+
+    
+    

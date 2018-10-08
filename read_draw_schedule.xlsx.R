@@ -167,20 +167,22 @@ DT_schedule[str_detect(`Fixture ID`, 'K_SK') &
             ]
 # there's a problem on K_SK
 
-# find K_SK, use time > 60
+# find K_SK, use time > 30
+# per phone meeting 2018-10-08
 DT_schedule[str_detect(`Fixture ID`, 'K_SK') &
-              `Use time (sec)` > 60,
+              `Use time (sec)` > 30,
             ]
-# only 1? and flow rate is 0.9
+# 23
 
 qplot(data = DT_schedule[str_detect(`Fixture ID`, 'K_SK')],
       x = `Use time (sec)`, binwidth=10)
-# yup
+# OK
 
 # fix it now
 DT_schedule[str_detect(`Fixture ID`, 'K_SK'), `Wait for Hot Water?` := 'No']
 DT_schedule[str_detect(`Fixture ID`, 'K_SK') &
-              `Use time (sec)` > 60,
+              `Use time (sec)` > 30 &
+              `Flow rate - use [std] (GPM)` >= 0.5, 
             `Wait for Hot Water?` := 'Yes'
             ]
 
@@ -195,8 +197,8 @@ qplot(data = DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
 # there are some really long ones
 DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
               str_detect(`Fixture ID`, '_SK') &
-              `Use time (sec)` > 60, ]
-# 11 of those
+              `Use time (sec)` > 30, ]
+# 51 of those
 
 # fix the `Wait for Hot Water?` for bathroom sinks
 DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
@@ -204,15 +206,23 @@ DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
             `Wait for Hot Water?` := 'No']
 DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
               str_detect(`Fixture ID`, '_SK') &
-              `Use time (sec)` > 60 &
-              `Flow rate - use [std] (GPM)` > 0.25, 
+              `Use time (sec)` > 30 &
+              `Flow rate - use [std] (GPM)` >= 0.5, 
             `Wait for Hot Water?` := 'Yes'
             ]
 DT_schedule[!str_detect(`Fixture ID`, 'K_SK') &
               str_detect(`Fixture ID`, '_SK') &
               `Wait for Hot Water?` == 'Yes']
-# now there's 10
+# now there's 44
 
+# for Day 7, the reference case
+DT_schedule[str_detect(`Fixture ID`, '_SK') &
+              `Wait for Hot Water?` == 'Yes' &
+              `Day #` == 7,
+            list(`Fixture ID`, `Wait for Hot Water?`, `Use time (sec)`,
+                 `Flow rate - waiting (GPM)`, `Flow rate - use [std] (GPM)`,
+                 `Flow rate - use [low] (GPM)`)
+              ]
 
 # modifications for extreme low flow
 # run faucet flows at 0.5 GPM and showers at 1.5 GPM in model  
@@ -237,7 +247,6 @@ DT_schedule[str_detect(`Fixture ID`, '_SH'),
             list(`Flow rate - use [std] (GPM)`,
                  `Flow rate - use [low] (GPM)`)]
 
-# write to Excel file 
 # get date to include in file name
 d <- format(Sys.time(), "%F")
 
@@ -245,3 +254,4 @@ d <- format(Sys.time(), "%F")
 write_csv(DT_schedule,
           path = paste0(wd_data,"Draw schedule for performance analysis.standard_",d,".csv"),
           na = "")
+
