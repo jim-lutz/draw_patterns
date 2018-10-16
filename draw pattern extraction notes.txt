@@ -347,6 +347,9 @@ the following still need to be added
     change wait = yes if time > 30 sec, GPM >= .5 
     revise 'read_draw_schedule.xlsx.R'    
     
-
+2018-10-15
+    read model results, see notes ../../calls/2018-10-15 Gary notes.txt
+    read_daily_ref_case.xlsx.R makes the daily summaries for the reference case
+    
     
     

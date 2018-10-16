@@ -96,4 +96,11 @@ results_charts.R
     output: ./charts/distributed_normal_wasted_energy.png
             ./charts/distributed_low_flow_wasted_energy.png
     
-            
+read_daily_ref_case.xlsx.R
+    # script to read 'Model results - Distributed Core Normal Flow 10-12-2018.xlsx'
+    # and produce daily performance tables 4-7 in final report
+    input:  ../../model results/2018-10-12/Model results - Distributed Core Normal Flow 10-12-2018.xlsx
+    output: ./data/ref_day_energy_table.csv
+            ./data/ref_day_water_table.csv
+            ./data/ref_day_time_table.csv
+            ./data/ref_day_service_table.csv
