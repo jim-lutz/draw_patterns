@@ -52,6 +52,37 @@ DT_results <-
   data.table(cbind(tbl_descrip_results, tbl_data_results))
 str(DT_results)
 
+names(DT_results)
+# set names for first 2 columns
+setnames(DT_results, old = c(1,2),
+         new = c('Configuration', 'Identification'))
+
+# get the summary results
+DT_summary <-
+  DT_results[, list(
+    `Configuration`,
+    `Identification`,
+    `Energy into HWDS (BTU)` = `HW Supply Energy (Btu)`,
+    `Water into HWDS (gallons)` = `Water Volume Supplied (Gallon)`,
+    `Time Water is Flowing (seconds)` = `Total Waiting (Sec)` +
+                                        `Use Duration (Sec)`,
+    `Load not Met (BTU)` = `Theoretical HW demand (Btu)` - 
+                                         `HW Energy To fixture - used`
+    )]
+
+# get the ideal results
+DT_ideal <- data.table(
+  `Configuration`                   = 'Reference',
+  `Identification`                  = 'Ideal',
+  `Energy into HWDS (BTU)`          = 
+                                DT_results[1, `Theoretical HW demand (Btu)`],
+  `Water into HWDS (gallons)`       = 
+                                DT_results[1, `Water Volume Used (Gallon)`],
+  `Time Water is Flowing (seconds)` = 
+                                DT_results[1, `Use Duration (Sec)`],
+  `Load not Met (BTU)`              = 0
+)
+
 
 
 
