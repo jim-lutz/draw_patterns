@@ -53,3 +53,58 @@ names(DT_results)
 
 # first column is fixture_ID
 setnames(DT_results, old = c('X__1'), new = c('fixture_ID'))
+
+# extract necessary columns for reference results
+DT_ref_results <-
+  DT_results[ , list(
+      `Fixture ID`  = `fixture_ID`,
+      # for the energy table
+      `HW Supply Energy (Btu)`,
+      `To fixture - used` = `HW Energy To fixture - used`,
+      `To fixture - wasted` = `HW Energy To fixture - wasted`,
+      `Lost to Ambient - during use` = `HW Energy Lost to Ambient - during use`,
+      `Stored in Pipe and Insulation` = `HW Energy Lost to Ambient - Cooldown`,
+      `Energy Efficiency %`,
+      # for the water table
+      `Water Volume Supplied (Gallon)`,
+      `Water Volume Used (Gallon)`,
+      `Water Volume Wasted (Gallon)`,
+      `Water Efficiency %`,
+      # for the time table
+      `Structural Waiting (Sec)`,
+      `Behavior Waiting (Sec)`,
+      `Total Waiting (Sec)`,
+      `Use Duration (Sec)`,
+      `Time Efficiency %`,
+      # for the service table
+      `Theoretical HW demand (Btu)`,
+      `HW Energy To fixture - used`
+      )
+  ]
+
+# calc loads not met
+DT_ref_results[,`:=`(
+      `Load not met (Btu)` = `Theoretical HW demand (Btu)` - `HW Energy To fixture - used`,
+      `Load not met (%)`   = 
+            (`Theoretical HW demand (Btu)` - `HW Energy To fixture - used`)/
+              `Theoretical HW demand (Btu)`
+      )
+  ]
+
+# multiply % by 100
+DT_ref_results[,`:=`(
+  `Energy Efficiency %` = `Energy Efficiency %` * 100,
+  `Water Efficiency %`  = `Water Efficiency %`  * 100,
+  `Time Efficiency %`   = `Time Efficiency %`   * 100,
+  `Load not met (%)`    = `Load not met (%)`    * 100)
+  ]
+  
+# remove Recirc & Cooldown
+DT_ref_results <-
+  DT_ref_results[ `Fixture ID` != 'Recirc' &
+                  `Fixture ID` != 'Cooldown'  ]
+
+# change `Load not met (%)` NaN to NA
+DT_ref_results[ is.nan(`Load not met (%)`),
+                `Load not met (%)` := NA]
+
