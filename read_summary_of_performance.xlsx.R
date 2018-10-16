@@ -83,6 +83,24 @@ DT_ideal <- data.table(
   `Load not Met (BTU)`              = 0
 )
 
+# put the ideal reference at the top of the summary
+DT_summary <- rbind(DT_ideal,DT_summary)
 
+# get indices of good Configuration
+goodIdx <- !is.na(DT_summary$Configuration)
+
+# get the non-NA values from Configuration
+# Add a leading NA for later use when index into this vector
+goodVals <- c(NA, DT_summary$Configuration[goodIdx])
+
+# Fill the indices of the output vector with the indices pulled from
+# these offsets of goodVals. Add 1 to avoid indexing to zero.
+fillIdx <- cumsum(goodIdx)+1
+
+# The original vector with gaps filled
+goodVals[fillIdx]
+
+# fix Configuration in DT_summary
+DT_summary[, Configuration:= goodVals[fillIdx]]
 
 
