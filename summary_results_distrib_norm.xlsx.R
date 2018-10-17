@@ -1,5 +1,5 @@
-# read_summary_of_performance.xlsx.R
-# script to read 'Model results - {Distributed|Compact} Core {Normal|Low} Flow 10-12-2018.xlsx'
+# summary_results_distrib_norm.xlsx.R
+# script to read 'Model results - Distributed Core Normal Flow 10-12-2018.xlsx'
 # and produce summary of performance tables 12-17 in final report
 # # read_daily_ref_case.xlsx.R
 # script to read 'Model results - Distributed Core Normal Flow 10-12-2018.xlsx'
