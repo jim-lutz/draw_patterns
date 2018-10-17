@@ -351,5 +351,9 @@ the following still need to be added
     read model results, see notes ../../calls/2018-10-15 Gary notes.txt
     read_daily_ref_case.xlsx.R makes the daily summaries for the reference case
     
-    
+2018-10-16
+    read_summary_of_performance.xlsx.R
+    note: `Loads not Met` is zero in the ideal reference case.
+    percentage loads not met has to be `Load not Met (BTU)`/`Theoretical HW demand (Btu)` 
+    others should be value/value[1]   
     

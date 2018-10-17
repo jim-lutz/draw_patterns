@@ -140,13 +140,13 @@ DT_relative <-
     Configuration,
     Identification,
     `Energy into HWDS (BTU)` = 
-        (`Energy into HWDS (BTU)` - `Energy into HWDS (BTU)`[1])/`Energy into HWDS (BTU)`[1],
+        `Energy into HWDS (BTU)` / `Energy into HWDS (BTU)`[1],
   
     `Water into HWDS (gallons)` = 
-        (`Water into HWDS (gallons)` - `Water into HWDS (gallons)`[1])/`Water into HWDS (gallons)`[1],
+        `Water into HWDS (gallons)` / `Water into HWDS (gallons)`[1],
     
     `Time Water is Flowing (seconds)` = 
-        (`Time Water is Flowing (seconds)` - `Time Water is Flowing (seconds)`[1])/`Time Water is Flowing (seconds)`[1],
+        `Time Water is Flowing (seconds)` / `Time Water is Flowing (seconds)`[1],
     
     `Load not Met (BTU)` =
         `Load not Met (BTU)`/`Energy into HWDS (BTU)`[1]
