@@ -103,4 +103,56 @@ goodVals[fillIdx]
 # fix Configuration in DT_summary
 DT_summary[, Configuration:= goodVals[fillIdx]]
 
+# column of improved Identification
+Identifications <- 
+  c('WH1-G-NW-T1L-BR3M-Tee-FBS', 
+    'WH1-G-NE-T1L-BR3M-Tee-FBS',
+    'WH1-M-W-T1M-BR3M-Tee-FBS',
+    'WH1-K-N-T1M-BR3M-Tee-FBS',	
+    'WH1-G-NW-T1L-BR3L-Tee-FBS',
+    'WH1-G-NW-T1L-BR3M-Mini-FBM',
+    'WH1-G-NE-T1L-BR3M-Mini-FBM',
+    'WH1-M-W-T1L-BR3S-Mini-FBM',
+    'WH1-K-N-T1L-BR3S-Mini-FBM',
+    'WH1-G-NW-T1L-BR3L-Mini-FBM',
+    'WH1-G-NW-T1S-BR0-Cent-FBVL',
+    'WH1-G-NE-T1S-BR0-Cent-FBVL',
+    'WH1-M-W-T1S-BR0-Cent-FBVL',
+    'WH1-K-N-T1S-BR0-Cent-FBL',
+    'WH1-G-NW-T1L-BR0-Cent_NE-FBVL',
+    'WH2-G-NW_M-W-T2S-BR3M-Tee-FBS',
+    'WH2-B2-N_M-W-T2S-BR3M-Tee-FBS',
+    'WH1-G-NW-T1VL-BR0-Tee-FBS',
+    'WH1-M-W-T1VL-BR0-Tee-FBS',
+    'WH1-G-SW-T1VL-BR0-Tee-FBS')
 
+# add Identifications for Identification rows 2:21
+DT_summary[ 2:21, Identification := Identifications]
+
+# save as csv
+write_excel_csv(DT_summary,
+  path = paste0(wd_data, "summary_performance_distributed_norm.csv"),
+  na = "")
+
+# create the relative summary
+DT_relative <-
+  DT_summary[, list(
+    Configuration,
+    Identification,
+    `Energy into HWDS (BTU)` = 
+        (`Energy into HWDS (BTU)` - `Energy into HWDS (BTU)`[1])/`Energy into HWDS (BTU)`[1],
+  
+    `Water into HWDS (gallons)` = 
+        (`Water into HWDS (gallons)` - `Water into HWDS (gallons)`[1])/`Water into HWDS (gallons)`[1],
+    
+    `Time Water is Flowing (seconds)` = 
+        (`Time Water is Flowing (seconds)` - `Time Water is Flowing (seconds)`[1])/`Time Water is Flowing (seconds)`[1],
+    
+    `Load not Met (BTU)` =
+        `Load not Met (BTU)`/`Energy into HWDS (BTU)`[1]
+  )]
+
+# save as csv
+write_excel_csv(DT_relative,
+                path = paste0(wd_data, "summary_relative_distributed_norm.csv"),
+                na = "")
