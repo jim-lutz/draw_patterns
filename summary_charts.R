@@ -86,6 +86,11 @@ DT_relative_long[ ,
                   Identification := factor(Identification, 
                            levels = Identification_levels)]
 
+# save as csv
+write_excel_csv(DT_relative_long,
+                path = paste0(wd_data, "distributed_normal_wasted_energy_2018-10-16.csv"),
+                na = "")
+
 # chart using data from pruned DT_relative_long
 ggplot(data = DT_relative_long) +
   
