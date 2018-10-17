@@ -156,3 +156,7 @@ DT_relative <-
 write_excel_csv(DT_relative,
                 path = paste0(wd_data, "summary_relative_distributed_norm.csv"),
                 na = "")
+
+# save the summary and relative data.tables in one file
+save(DT_summary, DT_relative, 
+     file = paste0(wd_data, "summary_relative_distributed_norm.Rdata"))
