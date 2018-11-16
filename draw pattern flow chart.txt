@@ -141,5 +141,8 @@ summary_charts.R
     # script to plot energy wasted and loads not met
     # for distributed core, normal flow
     input: ./data/summary_relative_distributed_norm.Rdata
+           ./data/summary_relative_distributed_low.Rdata
+           ./data/summary_relative_compact_norm.Rdata
+           ./data/summary_relative_compact_low.Rdata
                 
     

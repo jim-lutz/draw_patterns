@@ -1,6 +1,6 @@
 # summary_charts.R
-# script to plot energy wasted and loads not met
-# for distributed core, normal flow
+# script to plot relative energy wasted and loads not met
+# for all 8 combinations {flow, core, pipe size}
 # "Tue Oct 16 20:51:41 2018"
 
 # set packages & etc
@@ -107,19 +107,40 @@ DT_relative[,
 DT_relative[`Energy Wasted (%)` > .5]
 # it's the recircs
 
-# remove the recircs
-DT_relative[grep("recirc", Configuration) & 
-              grep("timer", Configuration),
-            list(Configuration)]
+# remove the recircs w/ manual & timer
+DT_relative <-
+  DT_relative[!(str_detect(Configuration, "recirc") &
+                str_detect(Configuration, "w/ ") ) ,
+              ]
+
+# list of all the Configuration
+DT_relative[ , list(unique(Configuration))]
+
+# what's with the " 3 branches"?
+DT_relative[ str_detect(Configuration, "3 branches") , 
+             list(Configuration, Identification)]
+# some are distributed core, others are small pipes
+
+# make them consistent
+DT_relative[ str_detect(Configuration, "3 branches") , 
+             Configuration := "Trunk&Branch - 3 branches"]
+
+# list of all the Identification
+DT_relative[ , list(unique(Identification))]
+
+
+
+# fix Trunk&Branck - 3 branches
+DT_relative[grep("Trunk&Branck - 3 branches",Configuration), 
+            Configuration := 'Trunk & 3 branches']
+
+DT_relative[grep("3 branches", Configuration), list(Configuration, Iden)]
 
 
 # set the color choices
 colorchoices <- c("Energy Wasted (%)" = "red", 
                   "Load not Met (%)" = "blue")
 
-# fix Trunk&Branck - 3 branches
-DT_relative[grep("3 branches",Configuration), 
-            Configuration := 'Trunk & 3 branches']
 
 names(DT_relative)
 

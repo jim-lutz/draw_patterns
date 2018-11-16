@@ -23,7 +23,7 @@
     it ran, read the input file. choked cause 
         RulesetFilename   "CA Res 2019.bin"  
     encouraging
-    
+
     created a ExampleFile that runs with CSE errors.        
         
 2018-07-16
@@ -411,6 +411,8 @@ the following still need to be added
     shifted to summary_charts.R
     which script built summary_relative_distributed_norm.Rdata?
     
+2018-11-16
                 
-                
+    working in summary_charts.R, load in all the data.
+    started cleanup                
     
