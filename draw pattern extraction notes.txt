@@ -408,7 +408,9 @@ the following still need to be added
             
     start w/ 19B then 21B then 24B then 26B         
 
-
+    shifted to summary_charts.R
+    which script built summary_relative_distributed_norm.Rdata?
+    
                 
                 
     

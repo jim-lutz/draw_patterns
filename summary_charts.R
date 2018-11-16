@@ -9,7 +9,10 @@ source("setup.R")
 # set up paths to working directories
 source("setup_wd.R")
 
+# load all four relative data.tables then recombine
+
 # load the summary results data
+# first distributed_norm
 load(file = paste0(wd_data,"summary_relative_distributed_norm.Rdata"))
 
 tables()
@@ -17,7 +20,65 @@ tables()
 # 1: DT_relative   42    6  0
 # 2:  DT_summary   42    6  0
 
+# remove the summary table
+rm(DT_summary)
+
+# rename the relative table 
+# this actually just relinks to the same data, since nothing is modified
+DT_relative_dist_norm <- DT_relative
+# remove the DT_relative name
+rm(DT_relative)
+
+# then distributed_low
+load(file = paste0(wd_data,"summary_relative_distributed_low.Rdata"))
+
+tables()
+
+# remove the summary table
+rm(DT_summary)
+
+# rename the relative table
+# this actually just relinks to the same data, since nothing is modified
+DT_relative_dist_low <- DT_relative
+# remove the DT_relative name
+rm(DT_relative)
+
+
+# then compact_norm
+load(file = paste0(wd_data,"summary_relative_compact_norm.Rdata"))
+
+tables()
+
+# remove the summary table
+rm(DT_summary)
+
+# rename the relative table
+# this actually just relinks to the same data, since nothing is modified
+DT_relative_compact_norm <- DT_relative
+# remove the DT_relative name
+rm(DT_relative)
+
+# then compact_low
+load(file = paste0(wd_data,"summary_relative_compact_low.Rdata"))
+
+tables()
+
+# remove the summary table
+rm(DT_summary)
+
+# rename the relative table
+# this actually just relinks to the same data, since nothing is modified
+DT_relative_compact_low <- DT_relative
+# remove the DT_relative name
+rm(DT_relative)
+
+# combine all four tables
+DT_relative <-
+  rbindlist(list(DT_relative_dist_norm, DT_relative_dist_low,
+                 DT_relative_compact_norm, DT_relative_compact_low))
+
 # work with DT_relative
+str(DT_relative)
 names(DT_relative)
 
 # change names
@@ -33,14 +94,24 @@ DT_relative[ , `:=` (`Energy Wasted (%)` = `Energy (%)` - 1.0,
                      `Time Wasted (%)`   = `Time (%)` - 1.0)]
 
 # find max values
-DT_relative[grep("WH Loc", Identification, invert = TRUE), # exclude these
+DT_relative[,
             list(max_Wasted_Energy = max(`Energy Wasted (%)`),
                  max_Wasted_Water  = max(`Water Wasted (%)`),
                  max_Wasted_Time   = max(`Time Wasted (%)`),
                  max_Loads_Not_Met = max(`Load not Met (%)`)
                 )]
 #    max_Wasted_Energy max_Wasted_Water max_Wasted_Time max_Loads_Not_Met
-# 1:         0.4693084        0.4693084         0.18194         0.2527405
+# 1:         0.9434275        0.5608854       0.1820058         0.2527405
+
+# look at the really bad energy wasters
+DT_relative[`Energy Wasted (%)` > .5]
+# it's the recircs
+
+# remove the recircs
+DT_relative[grep("recirc", Configuration) & 
+              grep("timer", Configuration),
+            list(Configuration)]
+
 
 # set the color choices
 colorchoices <- c("Energy Wasted (%)" = "red", 

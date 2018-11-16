@@ -104,3 +104,42 @@ read_daily_ref_case.xlsx.R
             ./data/ref_day_water_table.csv
             ./data/ref_day_time_table.csv
             ./data/ref_day_service_table.csv
+
+summary_results_distrib_norm.xlsx.R
+    # script to read 'Model results - Distributed Core Normal Flow 10-12-2018.xlsx'
+    # and produce summary of performance tables 12-17 in final report
+    input:  ../../model results/2018-10-12/Model results - Distributed Core Normal Flow 10-12-2018.xlsx
+    output: ./data/summary_performance_distributed_norm.csv
+            ./data/summary_relative_distributed_norm.csv
+            ./data/summary_relative_distributed_norm.Rdata
+            
+# summary_results_compact_norm.xlsx.R
+    # script to read 'Model results - Compact Core Normal Flow 10-12-2018.xlsx'
+    # and produce summary of performance tables 12-17 in final report
+    input:  ../../model results/2018-10-12/Model results - Compact Core Normal Flow 10-12-2018.xlsx
+    output: ./data/summary_performance_compact_norm.csv
+            ./data/summary_relative_compact_norm.csv
+            ./data/summary_relative_compact_norm.Rdata
+            
+summary_results_distrib_low.xlsx.R
+    # script to read 'Model results - Distributed Core Low Flow 10-12-2018.xlsx'
+    # and produce summary of performance tables 12-17 in final report
+    input:  ../../model results/2018-10-12/Model results - Distributed Core Low Flow 10-12-2018.xlsx
+    output: ./data/summary_performance_distributed_low.csv
+            ./data/summary_relative_distributed_low.csv
+            ./data/summary_relative_distributed_low.Rdata
+            
+summary_results_compact_low.xlsx.R
+    # script to read 'Model results - Compact Core Low Flow 10-12-2018.xlsx'
+    # and produce summary of performance tables 12-17 in final report
+    input:  ../../model results/2018-10-12/Model results - Compact Core Low Flow 10-12-2018.xlsx
+    output: ./data/summary_performance_compact_low.csv
+            ./data/summary_relative_compact_low.csv
+            ./data/summary_relative_compact_low.Rdata
+            
+summary_charts.R
+    # script to plot energy wasted and loads not met
+    # for distributed core, normal flow
+    input: ./data/summary_relative_distributed_norm.Rdata
+                
+    
