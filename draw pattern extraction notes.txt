@@ -357,3 +357,58 @@ the following still need to be added
     percentage loads not met has to be `Load not Met (BTU)`/`Theoretical HW demand (Btu)` 
     others should be value/value[1]   
     
+2018-11-13
+    revise results_charts.R to do charts for all 8 tables
+    CHAPTER 6: Performance Assessment Results
+        Assessing the Performance of Improvement Strategies – Normal Flow
+            Table 19B. Distributed Wet Room Layouts, Normal Pipe, Normal Flow – Relative to Reference
+            Table 20B. Distributed Wet Room Layouts, Small Pipe, Normal Flow - Relative to Reference
+            Table 21B. Compact Wet Room Layouts, Normal Pipe, Normal Flow – Relative to Reference
+            Table 22B. Compact Wet Room Layouts, Small Pipe, Normal Flow – Relative to Reference
+        Assessing the Performance of Improvement Strategies – Low Flow
+            Table 24B. Distributed Wet Room Layouts, Normal Pipe, Low Flow – Relative to Reference
+            Table 25B. Distributed Wet Room Layouts, Small Pipe, Low Flow – Relative to Reference
+            Table 26B. Compact Wet Room Layouts, Normal Pipe, Low Flow – Relative to Reference
+            Table 27B. Compact Wet Room Layouts, Small Pipe, Low Flow – Relative to Reference
+
+    looks like have to build a 'pipe' variable {'Standard','Use 3/8 pipe',
+        'Not use 1 inch pipe','Use 3/8 pipe & Not use 1 inch pipe' } from 'layout'
+
+    first group by low and normal flow 
+    (these each have the same 4 graphs)
+        then group by distributed and compact core
+            then group by standard and small pipe size
+            (each of these four is grouped differently by 
+                identifier, layout and pipe)
+                
+2018-11-15
+               
+    Normal Flow        
+        19B Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
+            list by Identification, group by Configuration
+
+        20B Distributed Wet Room Rectangle - Small Diameter Piping - Normal Flow
+            list by Configuration, group by Identification (this time it is pipe size)
+
+        21B Compact Wet Room Rectangle - Normal Diameter Piping - Normal Flow
+            list by Identification, group by Configuration
+            
+        22B Compact Wet Room Rectangle - Small Diameter Piping - Normal Flow
+            list by Identification, group by Configuration, further group by pipe size
+        
+    Low Flow, same as above?             
+        24B Distributed Wet Room Rectangle - Normal Diameter Piping - Low Flow
+            yes
+        25B. Distributed Wet Room Layouts, Small Pipe, Low Flow – Relative to Reference
+            yes
+        26B. Compact Wet Room Layouts, Normal Pipe, Low Flow – Relative to Reference
+            yes
+        27B.appenidx Compact Wet Room Layouts, Small Pipe, Low Flow – Relative to Reference
+            yes
+            
+    start w/ 19B then 21B then 24B then 26B         
+
+
+                
+                
+    

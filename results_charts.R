@@ -1,6 +1,7 @@
 # results_charts.R
 # script to plot energy wasted and loads not met
-# for distributed core
+# for distributed & compact core 
+# for normal and small pipes
 # for normal and low flow
 # Mon Sep 24 14:40:25 2018
 
@@ -18,8 +19,31 @@ names(DT_results)
 # change the variable names
 setnames(DT_results,
          old = c('HW_energy_excess','HW_energy_not_met','HW_volume_excess'),
-         new = c('Wasted Energy','Loads Not Met','Wasted Water')
+         new = c('Energy Not Used','Loads Not Met','Water Not Used')
          )
+
+# see what cases are
+sort(unique(DT_results$case))
+# bunch of 46 numbers 1:50 some 40s missing
+
+# see if have all cases {core,pipes, flow}
+DT_results[ , list(n = length(case)
+                   ), by=core]
+#           core  n
+# 1:     compact 64
+# 2: distributed 82
+
+DT_results[ , list(n = length(case)
+), by=layout][order(layout)]
+# 24 different layouts, some w/ recirc
+
+DT_results[ , list(n = length(case)
+), by=flow]
+#    flow  n
+# 1:  low 73
+# 2:  std 73
+
+
 
 
 # find max values
