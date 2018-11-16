@@ -1,8 +1,8 @@
 # results_charts.R
 # script to plot energy wasted and loads not met
-# for distributed & compact core 
-# for normal and small pipes
 # for normal and low flow
+#   for distributed & compact core 
+#     for normal and small pipes
 # Mon Sep 24 14:40:25 2018
 
 # set packages & etc
@@ -43,27 +43,30 @@ DT_results[ , list(n = length(case)
 # 1:  low 73
 # 2:  std 73
 
-
-
-
 # find max values
 DT_results[(core == 'distributed' & identifier!='') |
             core == 'compact' ,
-           list(max_Wasted_Energy = max(`Wasted Energy`),
-                max_Loads_Not_Met = max(`Loads Not Met`),
-                max_Wasted_Water = max(`Wasted Water`)
+           list(max_Energy_Not_Used = max(`Energy Not Used`),
+                max_Loads_Not_Met = max(`Loads Not Met`)
                 ),
            by = c('flow','core')
                 ]
-#    flow        core max_Wasted_Energy max_Loads_Not_Met max_Wasted_Water
-# 1:  low     compact          2427.880          2939.532         5.312066
-# 2:  std     compact          2366.549          3453.936         5.177879
-# 3:  low distributed          2885.546          3129.780         6.313415
-# 4:  std distributed          2554.302          3943.074         5.588671
+#    flow        core max_Energy_Not_Used max_Loads_Not_Met
+# 1:  low     compact            2427.880          2939.532
+# 2:  std     compact            2366.549          3453.936
+# 3:  low distributed            2885.546          3129.780
+# 4:  std distributed            2554.302          3943.074
 
 
 # ordered list of identifiers
 l_identifier = DT_results[index %in% 106:125]$identifier
+# these are the identifiers in Tables 19B & 24B in the correct order
+
+# look at the configurations here
+DT_results[index %in% 106:125]
+
+names(DT_results)
+
 
 # --- distributed core, normal flow ---
 # convert distributed core, normal flow to long data
