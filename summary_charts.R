@@ -121,20 +121,35 @@ DT_relative[ str_detect(Configuration, "3 branches") ,
              list(Configuration, Identification)]
 # some are distributed core, others are small pipes
 
-# make them consistent
+# make the " 3 branches" consistent
 DT_relative[ str_detect(Configuration, "3 branches") , 
              Configuration := "Trunk&Branch - 3 branches"]
 
 # list of all the Identification
 DT_relative[ , list(unique(Identification))]
+# looks OK
+
+# remove 'Energy (%)', 'Water (%)', 'Time (%)', 'Water Wasted (%)', 'Time Wasted (%)'
+DT_relative[ , c('Energy (%)', 'Water (%)', 
+                 'Time (%)', 'Water Wasted (%)', 
+                 'Time Wasted (%)') := NULL
+             ]
+
+names(DT_relative)
+# 138 rows
+
+# convert to long data
+DT_relative_long <-
+  melt(DT_relative[],
+       id.vars = c('Configuration', 'Identification'),
+       measure.vars = c("Load not Met (%)", "Energy Wasted (%)")
+  )
+
+names(DT_relative_long)
 
 
 
-# fix Trunk&Branck - 3 branches
-DT_relative[grep("Trunk&Branck - 3 branches",Configuration), 
-            Configuration := 'Trunk & 3 branches']
 
-DT_relative[grep("3 branches", Configuration), list(Configuration, Iden)]
 
 
 # set the color choices
@@ -142,17 +157,8 @@ colorchoices <- c("Energy Wasted (%)" = "red",
                   "Load not Met (%)" = "blue")
 
 
-names(DT_relative)
 
-# convert long data
-DT_relative_long <-
-  melt(DT_relative[],
-       id.vars = c('Configuration', 'Identification'),
-       measure.vars = c('Energy (%)', 'Water (%)', 'Time (%)', 'Load not Met (%)', 
-                        'Energy Wasted (%)', 'Water Wasted (%)', 'Time Wasted (%)')
-  )
 
-names(DT_relative_long)
 
 # prune DT_relative_long
 DT_relative_long <- # exclude these
