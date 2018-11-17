@@ -126,7 +126,7 @@ DT_relative[ str_detect(Configuration, "3 branches") ,
              Configuration := "Trunk&Branch - 3 branches"]
 
 # list of all the Identification
-DT_relative[ , list(unique(Identification))]
+DT_relative[ , list(Configuration, Identification)]
 # looks OK
 
 # remove 'Energy (%)', 'Water (%)', 'Time (%)', 'Water Wasted (%)', 'Time Wasted (%)'
@@ -147,16 +147,9 @@ DT_relative_long <-
 
 names(DT_relative_long)
 
-
-
-
-
-
-# set the color choices
-colorchoices <- c("Energy Wasted (%)" = "red", 
-                  "Load not Met (%)" = "blue")
-
-
+# set the color choices, using grey and black for photocopying
+colorchoices <- c("Energy Wasted (%)" = "gray74", 
+                  "Load not Met (%)" = "black")
 
 
 
