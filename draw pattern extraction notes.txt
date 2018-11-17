@@ -418,3 +418,6 @@ the following still need to be added
     
     need to add flow variable when loading the data
     go back to add a core variable when loading data
+    
+    small pipe indicated for different records in Configuration than in Identification
+    what's going on?

@@ -165,10 +165,28 @@ DT_relative[ , c('Energy (%)', 'Water (%)',
 names(DT_relative)
 # 138 rows
 
+# add a pipe size variable
+DT_relative[ str_detect(Configuration, "pipe"), smallpipe:=1]
+DT_relative[ str_detect(Configuration, "pipe")]
+DT_relative[ str_detect(Identification, "pipe")]
+DT_relative[ str_detect(Configuration, "Trunk&Branch - 3 branches")]
+small pipe identified both in Configuration and Identification????
+
+
+
+# change 'WH in NE garage' to 'WH in garage'
+DT_relative[ Identification  == 'WH in NE garage',
+             Identification := 'WH in garage']
+
+# look at the Reference cases
+DT_relative[ Configuration == 'Reference']
+# it's value is only 0, so actually don't need to keep it.
+
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
   melt(DT_relative[],
-       id.vars = c('Configuration', 'Identification', 'flow', 'core'),
+       id.vars = c('Configuration', 'Identification', 
+                   'flow', 'core', 'smallpipe'),
        measure.vars = c("Load not Met (%)", "Energy Wasted (%)")
   )
 
@@ -178,12 +196,16 @@ names(DT_relative_long)
 colorchoices <- c("Energy Wasted (%)" = "gray74", 
                   "Load not Met (%)" = "black")
 
-## plot Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
 
+## plot Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
 # find distributed core data
-DT_relative_long[ core=='dist' & flow=='norm', 
+DT_relative_long[ core=='dist' & flow=='norm' & is.na(smallpipe), 
                   list(unique(Identification)) ]
-# looks good
+# where did the pipes come from?
+DT_relative_long[ core=='dist' & flow=='norm' & is.na(smallpipe)
+                  & str_detect(Configuration, "pipe")]
+DT_relative_long[str_detect(Identification, "pipe")]
+
 
 # flag the data records  to keep
 DT_relative_long[ core=='dist' & flow=='norm',
