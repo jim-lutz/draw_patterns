@@ -32,6 +32,9 @@ rm(DT_relative)
 # add flow normal
 DT_relative_dist_norm[, flow:='norm']
 
+# add core dist
+DT_relative_dist_norm[, core:='dist']
+
 
 # then distributed_low
 load(file = paste0(wd_data,"summary_relative_distributed_low.Rdata"))
@@ -49,6 +52,9 @@ rm(DT_relative)
 
 # add flow low
 DT_relative_dist_low[, flow:='low']
+
+# add core dist
+DT_relative_dist_low[, core:='dist']
 
 
 # then compact_norm
@@ -68,6 +74,9 @@ rm(DT_relative)
 # add flow normal
 DT_relative_compact_norm[, flow:='norm']
 
+# add core compact
+DT_relative_compact_norm[, core:='compact']
+
 
 # then compact_low
 load(file = paste0(wd_data,"summary_relative_compact_low.Rdata"))
@@ -85,6 +94,9 @@ rm(DT_relative)
 
 # add flow low
 DT_relative_compact_low[, flow:='low']
+
+# add core compact
+DT_relative_compact_low[, core:='compact']
 
 
 # combine all four tables
@@ -156,7 +168,7 @@ names(DT_relative)
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
   melt(DT_relative[],
-       id.vars = c('Configuration', 'Identification', 'flow'),
+       id.vars = c('Configuration', 'Identification', 'flow', 'core'),
        measure.vars = c("Load not Met (%)", "Energy Wasted (%)")
   )
 
@@ -169,23 +181,22 @@ colorchoices <- c("Energy Wasted (%)" = "gray74",
 ## plot Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
 
 # find distributed core data
-DT_relative_long[ str_detect(Identification,"WH[12]-"), 
+DT_relative_long[ core=='dist' & flow=='norm', 
                   list(unique(Identification)) ]
 # looks good
 
 # flag the data records  to keep
-DT_relative_long[ str_detect(Identification,"WH[12]-") &
-                    flow == 'norm',
+DT_relative_long[ core=='dist' & flow=='norm',
                   flag := 1]
 
 # flag the Ideal to keep
 DT_relative_long[ Identification == 'Ideal' &
-                    flow == 'norm',
+                    core=='dist' & flow == 'norm',
                   flag := 1]
 
 
                     
-DT_long <- # the flagged records
+DT_long <- # just the flagged records
   DT_relative_long[flag==1,] 
 
 DT_relative_long <-  # keep these, Two Heaters & Not use 1 inch pipe = -1
