@@ -29,6 +29,10 @@ DT_relative_dist_norm <- DT_relative
 # remove the DT_relative name
 rm(DT_relative)
 
+# add flow normal
+DT_relative_dist_norm[, flow:='norm']
+
+
 # then distributed_low
 load(file = paste0(wd_data,"summary_relative_distributed_low.Rdata"))
 
@@ -42,6 +46,9 @@ rm(DT_summary)
 DT_relative_dist_low <- DT_relative
 # remove the DT_relative name
 rm(DT_relative)
+
+# add flow low
+DT_relative_dist_low[, flow:='low']
 
 
 # then compact_norm
@@ -58,6 +65,10 @@ DT_relative_compact_norm <- DT_relative
 # remove the DT_relative name
 rm(DT_relative)
 
+# add flow normal
+DT_relative_compact_norm[, flow:='norm']
+
+
 # then compact_low
 load(file = paste0(wd_data,"summary_relative_compact_low.Rdata"))
 
@@ -71,6 +82,10 @@ rm(DT_summary)
 DT_relative_compact_low <- DT_relative
 # remove the DT_relative name
 rm(DT_relative)
+
+# add flow low
+DT_relative_compact_low[, flow:='low']
+
 
 # combine all four tables
 DT_relative <-
@@ -138,10 +153,10 @@ DT_relative[ , c('Energy (%)', 'Water (%)',
 names(DT_relative)
 # 138 rows
 
-# convert to long data
+# convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
   melt(DT_relative[],
-       id.vars = c('Configuration', 'Identification'),
+       id.vars = c('Configuration', 'Identification', 'flow'),
        measure.vars = c("Load not Met (%)", "Energy Wasted (%)")
   )
 
@@ -151,11 +166,27 @@ names(DT_relative_long)
 colorchoices <- c("Energy Wasted (%)" = "gray74", 
                   "Load not Met (%)" = "black")
 
+## plot Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
+
+# find distributed core data
+DT_relative_long[ str_detect(Identification,"WH[12]-"), 
+                  list(unique(Identification)) ]
+# looks good
+
+# flag the data records  to keep
+DT_relative_long[ str_detect(Identification,"WH[12]-") &
+                    flow == 'norm',
+                  flag := 1]
+
+# flag the Ideal to keep
+DT_relative_long[ Identification == 'Ideal' &
+                    flow == 'norm',
+                  flag := 1]
 
 
-# prune DT_relative_long
-DT_relative_long <- # exclude these
-  DT_relative_long[grep("WH Loc", Identification, invert = TRUE) ] 
+                    
+DT_long <- # the flagged records
+  DT_relative_long[flag==1,] 
 
 DT_relative_long <-  # keep these, Two Heaters & Not use 1 inch pipe = -1
   DT_relative_long[ value > 0 ]

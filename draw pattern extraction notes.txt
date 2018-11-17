@@ -417,3 +417,4 @@ the following still need to be added
     started cleanup                
     
     need to add flow variable when loading the data
+    go back to add a core variable when loading data
