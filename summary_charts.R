@@ -87,116 +87,107 @@ DT_relative[ Identification  == 'WH in NE garage',
 DT_relative[ Configuration == 'Reference']
 # it's value is only 0, so actually don't need it.
 
-# TABLE 19 Distributed Wet Room Layouts, Normal Pipe, Normal Flow
-DT_relative[core == 'dist' & smallpipe==FALSE & flow == 'norm' & 
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
+# assign the data to tables as numbered in draft final report v10
+source("assign.tables.R")
 
-# assign table
-DT_relative[core == 'dist' & smallpipe==FALSE & flow == 'norm' & 
-              Configuration != 'Reference',
-            table := '19']
+# create a PipeSize missing variable
+# for Tables 22 & 27, others don't matter
+# Compact Wet Room Layouts, Small Pipe, Normal Flow &
+# Compact Wet Room Layouts, Small Pipe, Low Flow
+DT_relative[, PipeSize := ""] # blank character
 
-
-# TABLE 20 Distributed Wet Room Layouts, Small Pipe, Normal Flow
-# find data
-DT_relative[core == 'dist' & smallpipe==TRUE & flow == 'norm' & 
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
-
-# assign table 
-DT_relative[core == 'dist' & smallpipe==TRUE & flow == 'norm' & 
-              Configuration != 'Reference',
-            table := '20']
-
-DT_relative[core == 'dist' & smallpipe==TRUE & flow == 'norm' & 
-              Configuration != 'Reference']
-# caution, Two Heaters, use 3/8 pipe & Not use 1 inch pipe and
-# Two Heaters, Not use 1 inch pipe don't exist, 
-# data is meaningless
+# Tables 22 & 27
+DT_relative[table=='22' | table=='27',
+            list(Configuration=unique(Configuration))]
 
 
-# TABLE 21 Compact Wet Room Layouts, Normal Pipe, Normal Flow
-# find data
-DT_relative[core == 'compact' & smallpipe==FALSE & flow == 'norm' &
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
+# " & 3/8 pipe & no 1 inch pipe" -> "Use 3/8 pipe & Not use 1 inch pipe"
+DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
+            list(Configuration, PipeSize, table)]
 
-# assign table 
-DT_relative[core == 'compact' & smallpipe==FALSE & flow == 'norm' &
-              Configuration != 'Reference',
-            table := '21']
+# set PipeSize
+DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
+            PipeSize := "Use 3/8 pipe & Not use 1 inch pipe"]
+            
+# clean up Configuration
+DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
+            Configuration := str_remove(Configuration," & 3/8 pipe & no 1 inch pipe")]
 
-
-# TABLE 22 Compact Wet Room Layouts, Small Pipe, Normal Flow
-# find data
-DT_relative[core == 'compact' & smallpipe==TRUE & flow == 'norm' &
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
-
-# assign table 
-DT_relative[core == 'compact' & smallpipe==TRUE & flow == 'norm' &
-              Configuration != 'Reference',
-            table := '22']
-# Configuration doesn't match that in report
-# Should add a 3rd variable for pipe size
+# check that it worked
+DT_relative[ PipeSize == "Use 3/8 pipe & Not use 1 inch pipe",
+             list(Configuration, PipeSize, table)]
 
 
-# TABLE 24 Distributed Wet Room Layouts, Normal Pipe, Low Flow
-# find data
-DT_relative[core == 'dist' & smallpipe==FALSE & flow == 'low' &
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
+# " & no 1 inch pipe" -> "Not use 1 inch pipe"
+DT_relative[str_detect(Configuration," & no 1 inch pipe"),
+            list(Configuration, PipeSize, table)]
 
-# assign table 
-DT_relative[core == 'dist' & smallpipe==FALSE & flow == 'low' &
-              Configuration != 'Reference',
-            table := '24']
+# set PipeSize
+DT_relative[str_detect(Configuration," & no 1 inch pipe"),
+            PipeSize := "Not use 1 inch pipe"]
 
-
-# TABLE 25 Distributed Wet Room Layouts, Small Pipe, Low Flow
-# find data
-DT_relative[core == 'dist' & smallpipe==TRUE & flow == 'low' & 
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
-
-# assign table 
-DT_relative[core == 'dist' & smallpipe==TRUE & flow == 'low' & 
-              Configuration != 'Reference',
-            table := '25']
-# caution, Two Heaters, use 3/8 pipe & Not use 1 inch pipe and
-# Two Heaters, Not use 1 inch pipe don't exist, 
-# data is zero
+# clean up Configuration
+DT_relative[str_detect(Configuration," & no 1 inch pipe"),
+            Configuration := str_remove(Configuration," & no 1 inch pipe")]
 
 
-# TABLE 26  Compact Wet Room Layouts, Normal Pipe, Low Flow
-# find data
-DT_relative[core == 'compact' & smallpipe==FALSE & flow == 'low' &
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
+# " & 3/8 pipe" -> "Use 3/8 pipe"
+DT_relative[str_detect(Configuration," & 3/8 pipe"),
+            list(Configuration, PipeSize, table)]
 
-# assign table 
-DT_relative[core == 'compact' & smallpipe==FALSE & flow == 'low' &
-              Configuration != 'Reference',
-            table := '26']
-# Configuration doesn't match that in report
+# set PipeSize
+DT_relative[str_detect(Configuration," & 3/8 pipe"),
+            PipeSize := "Use 3/8 pipe"]
+
+# clean up Configuration
+DT_relative[str_detect(Configuration," & 3/8 pipe"),
+            Configuration := str_remove(Configuration," & 3/8 pipe")]
 
 
-# TABLE 27   Compact Wet Room Layouts, Small Pipe, Low Flow
-# find data
-DT_relative[core == 'compact' & smallpipe==TRUE & flow == 'low' &
-              Configuration != 'Reference',
-            list(Configuration, Identification, `Load not Met (%)`),]
 
-# assign table 
-DT_relative[core == 'compact' & smallpipe==TRUE & flow == 'low' &
-              Configuration != 'Reference',
-            table := '27']
-# Configuration doesn't match that in report
-# Should add a 3rd variable for pipe size
 
-# check got 8 tables
-DT_relative[,list(n=length(Configuration)),by=table][order(table)]
+# check that it worked
+DT_relative[table=='22' | table=='27',
+            list(Configuration=unique(Configuration))]
+
+
+
+
+#
+
+
+
+# make the Configuration, Identification and PipeSize consistent 
+# with tables in draft final repor v10
+
+# Tables 19 & 24
+DT_relative[table=='19' | table=='24',
+            list(Configuration=unique(Configuration))]
+
+# Trunk & Branch
+DT_relative[ str_detect(Configuration,"Trunk&Branch - 3 branches"),
+             list(Configuration, Identification, table)]
+# also shows up in some small pipes, table 20 & 25 OK there as well
+
+# fix it
+DT_relative[str_detect(Configuration,"Trunk&Branch - 3 branches"),
+             Configuration := "Trunk & 3 Branches"]
+  
+             
+# "Hybrid mini-manifold" -> "Hybrid Mini-Manifold"
+DT_relative[ str_detect(Configuration,"Hybrid mini-manifold"),
+             list(Configuration, Identification, table)]
+# also shows up in some small pipes, table 20 & 25 OK there as well
+
+# fix it
+DT_relative[ str_detect(Configuration,"Hybrid mini-manifold"),
+             Configuration := "Hybrid Mini-Manifold"]
+
+
+# "Home Run" -> "Central Manifold"
+DT_relative[ str_detect(Configuration,"Home Run"),
+             list(Configuration, Identification, table)]
+
 
 
 
