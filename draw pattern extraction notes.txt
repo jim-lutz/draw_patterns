@@ -421,3 +421,8 @@ the following still need to be added
     
     small pipe indicated for different records in Configuration than in Identification
     what's going on?
+    
+2018-11-19
+    double check getting the right data records for each of the 8 combinations
+    
+        

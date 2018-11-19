@@ -11,98 +11,8 @@ source("setup_wd.R")
 
 # load all four relative data.tables then recombine
 
-# load the summary results data
-# first distributed_norm
-load(file = paste0(wd_data,"summary_relative_distributed_norm.Rdata"))
-
-tables()
-#           NAME NROW NCOL MB
-# 1: DT_relative   42    6  0
-# 2:  DT_summary   42    6  0
-
-# remove the summary table
-rm(DT_summary)
-
-# rename the relative table 
-# this actually just relinks to the same data, since nothing is modified
-DT_relative_dist_norm <- DT_relative
-# remove the DT_relative name
-rm(DT_relative)
-
-# add flow normal
-DT_relative_dist_norm[, flow:='norm']
-
-# add core dist
-DT_relative_dist_norm[, core:='dist']
-
-
-# then distributed_low
-load(file = paste0(wd_data,"summary_relative_distributed_low.Rdata"))
-
-tables()
-
-# remove the summary table
-rm(DT_summary)
-
-# rename the relative table
-# this actually just relinks to the same data, since nothing is modified
-DT_relative_dist_low <- DT_relative
-# remove the DT_relative name
-rm(DT_relative)
-
-# add flow low
-DT_relative_dist_low[, flow:='low']
-
-# add core dist
-DT_relative_dist_low[, core:='dist']
-
-
-# then compact_norm
-load(file = paste0(wd_data,"summary_relative_compact_norm.Rdata"))
-
-tables()
-
-# remove the summary table
-rm(DT_summary)
-
-# rename the relative table
-# this actually just relinks to the same data, since nothing is modified
-DT_relative_compact_norm <- DT_relative
-# remove the DT_relative name
-rm(DT_relative)
-
-# add flow normal
-DT_relative_compact_norm[, flow:='norm']
-
-# add core compact
-DT_relative_compact_norm[, core:='compact']
-
-
-# then compact_low
-load(file = paste0(wd_data,"summary_relative_compact_low.Rdata"))
-
-tables()
-
-# remove the summary table
-rm(DT_summary)
-
-# rename the relative table
-# this actually just relinks to the same data, since nothing is modified
-DT_relative_compact_low <- DT_relative
-# remove the DT_relative name
-rm(DT_relative)
-
-# add flow low
-DT_relative_compact_low[, flow:='low']
-
-# add core compact
-DT_relative_compact_low[, core:='compact']
-
-
-# combine all four tables
-DT_relative <-
-  rbindlist(list(DT_relative_dist_norm, DT_relative_dist_low,
-                 DT_relative_compact_norm, DT_relative_compact_low))
+# load the summary relative results data
+source("load.summary_relative_data.R")
 
 # work with DT_relative
 str(DT_relative)
@@ -115,7 +25,8 @@ setnames(DT_relative,
          new = c('Energy (%)','Water (%)', 'Time (%)', 'Load not Met (%)')
          )
 
-# add wasted energy, water & time, not 'Load not Met (%)', it's already relative to reference
+# add wasted energy, water & time, 
+# not 'Load not Met (%)', it's already relative to reference
 DT_relative[ , `:=` (`Energy Wasted (%)` = `Energy (%)` - 1.0,
                      `Water Wasted (%)`  = `Water (%)` - 1.0, 
                      `Time Wasted (%)`   = `Time (%)` - 1.0)]
@@ -141,7 +52,7 @@ DT_relative <-
               ]
 
 # list of all the Configuration
-DT_relative[ , list(unique(Configuration))]
+DT_relative[ , list(n=length(Identification)), by=Configuration]
 
 # what's with the " 3 branches"?
 DT_relative[ str_detect(Configuration, "3 branches") , 
@@ -153,22 +64,18 @@ DT_relative[ str_detect(Configuration, "3 branches") ,
              Configuration := "Trunk&Branch - 3 branches"]
 
 # list of all the Identification
-DT_relative[ , list(Configuration, Identification)]
-# looks OK
-
-# remove 'Energy (%)', 'Water (%)', 'Time (%)', 'Water Wasted (%)', 'Time Wasted (%)'
-DT_relative[ , c('Energy (%)', 'Water (%)', 
-                 'Time (%)', 'Water Wasted (%)', 
-                 'Time Wasted (%)') := NULL
-             ]
-
-names(DT_relative)
-# 138 rows
+DT_relative[ , list(n=length(Configuration)), by=Identification]
+# looks OK?
 
 # add a pipe size variable
 DT_relative[ str_detect(Configuration, "pipe"), smallpipe:=1]
-DT_relative[ str_detect(Configuration, "pipe")]
-DT_relative[ str_detect(Identification, "pipe")]
+
+# look at the small pipes
+DT_relative[ str_detect(Configuration, "pipe"), 
+             list(n=length(Identification)), by=Configuration]
+DT_relative[ str_detect(Identification, "pipe"), 
+             list(n=length(Configuration)), by=Identification]
+
 DT_relative[ str_detect(Configuration, "Trunk&Branch - 3 branches")]
 small pipe identified both in Configuration and Identification????
 
