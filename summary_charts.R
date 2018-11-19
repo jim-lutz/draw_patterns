@@ -82,6 +82,7 @@ DT_relative[ str_detect(Identification, "pipe"),
 # change 'WH in NE garage' to 'WH in garage'
 DT_relative[ Identification  == 'WH in NE garage',
              Identification := 'WH in garage']
+# need to check this
 
 # look at the Reference cases
 DT_relative[ Configuration == 'Reference']
@@ -100,15 +101,20 @@ source("fix.Configuration.R")
 source("fix.Identification.R")
 
 
-
-
+# check that everything is ready to go
 DT_relative[,list(n=length(Configuration)), by = PipeSize]
+# PipeSize is blank for standard pipe sizing
 
-DT_relative[smallpipe==TRUE,
-            list(n=length(Configuration)), by = PipeSize]
+DT_relative[,list(n=length(unique(Identification))), by = PipeSize]
 
+DT_relative[,list(n=length(unique(Configuration))), by = PipeSize]
 
+DT_relative[,list(n=length(unique(Identification))), by = table][order(table)]
 
+DT_relative[,list(n=length(unique(Configuration))), by = table][order(table)]
+
+DT_relative[table %in% c("20",'21','22',"25",'26','27'),
+            list(Identification=unique(Identification)), by = table][order(table)]
 
 
 

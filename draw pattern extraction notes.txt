@@ -428,5 +428,7 @@ the following still need to be added
     will need to fix Configuration and Identification to match tables in Draft Final Report v10
     will need to add pipe size variable for tables 22 & 27
     
+    in compact core, which corner of garage is WH in?
     
-        
+    
+    
