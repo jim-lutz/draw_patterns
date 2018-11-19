@@ -96,10 +96,22 @@ source("PipeSize.R")
 # fix Configuration
 source("fix.Configuration.R")
 
+# fix Identification and set PipeSize for tables 20 & 25
+source("fix.Identification.R")
 
-#
-DT_relative[Identification %in% unique(Identification)]
-DT_relative[,list(smallpipe = unique(smallpipe)), by = Configuration ]
+
+
+
+DT_relative[,list(n=length(Configuration)), by = PipeSize]
+
+DT_relative[smallpipe==TRUE,
+            list(n=length(Configuration)), by = PipeSize]
+
+
+
+
+
+
 
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
