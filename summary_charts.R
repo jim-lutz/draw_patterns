@@ -90,106 +90,16 @@ DT_relative[ Configuration == 'Reference']
 # assign the data to tables as numbered in draft final report v10
 source("assign.tables.R")
 
-# create a PipeSize missing variable
-# for Tables 22 & 27, others don't matter
-# Compact Wet Room Layouts, Small Pipe, Normal Flow &
-# Compact Wet Room Layouts, Small Pipe, Low Flow
-DT_relative[, PipeSize := ""] # blank character
+# assign PipeSize and remove PipeSize from Configuration
+source("PipeSize.R")
 
-# Tables 22 & 27
-DT_relative[table=='22' | table=='27',
-            list(Configuration=unique(Configuration))]
-
-
-# " & 3/8 pipe & no 1 inch pipe" -> "Use 3/8 pipe & Not use 1 inch pipe"
-DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
-            list(Configuration, PipeSize, table)]
-
-# set PipeSize
-DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
-            PipeSize := "Use 3/8 pipe & Not use 1 inch pipe"]
-            
-# clean up Configuration
-DT_relative[str_detect(Configuration," & 3/8 pipe & no 1 inch pipe"),
-            Configuration := str_remove(Configuration," & 3/8 pipe & no 1 inch pipe")]
-
-# check that it worked
-DT_relative[ PipeSize == "Use 3/8 pipe & Not use 1 inch pipe",
-             list(Configuration, PipeSize, table)]
-
-
-# " & no 1 inch pipe" -> "Not use 1 inch pipe"
-DT_relative[str_detect(Configuration," & no 1 inch pipe"),
-            list(Configuration, PipeSize, table)]
-
-# set PipeSize
-DT_relative[str_detect(Configuration," & no 1 inch pipe"),
-            PipeSize := "Not use 1 inch pipe"]
-
-# clean up Configuration
-DT_relative[str_detect(Configuration," & no 1 inch pipe"),
-            Configuration := str_remove(Configuration," & no 1 inch pipe")]
-
-
-# " & 3/8 pipe" -> "Use 3/8 pipe"
-DT_relative[str_detect(Configuration," & 3/8 pipe"),
-            list(Configuration, PipeSize, table)]
-
-# set PipeSize
-DT_relative[str_detect(Configuration," & 3/8 pipe"),
-            PipeSize := "Use 3/8 pipe"]
-
-# clean up Configuration
-DT_relative[str_detect(Configuration," & 3/8 pipe"),
-            Configuration := str_remove(Configuration," & 3/8 pipe")]
-
-
-
-
-# check that it worked
-DT_relative[table=='22' | table=='27',
-            list(Configuration=unique(Configuration))]
-
-
+# fix Configuration
+source("fix.Configuration.R")
 
 
 #
-
-
-
-# make the Configuration, Identification and PipeSize consistent 
-# with tables in draft final repor v10
-
-# Tables 19 & 24
-DT_relative[table=='19' | table=='24',
-            list(Configuration=unique(Configuration))]
-
-# Trunk & Branch
-DT_relative[ str_detect(Configuration,"Trunk&Branch - 3 branches"),
-             list(Configuration, Identification, table)]
-# also shows up in some small pipes, table 20 & 25 OK there as well
-
-# fix it
-DT_relative[str_detect(Configuration,"Trunk&Branch - 3 branches"),
-             Configuration := "Trunk & 3 Branches"]
-  
-             
-# "Hybrid mini-manifold" -> "Hybrid Mini-Manifold"
-DT_relative[ str_detect(Configuration,"Hybrid mini-manifold"),
-             list(Configuration, Identification, table)]
-# also shows up in some small pipes, table 20 & 25 OK there as well
-
-# fix it
-DT_relative[ str_detect(Configuration,"Hybrid mini-manifold"),
-             Configuration := "Hybrid Mini-Manifold"]
-
-
-# "Home Run" -> "Central Manifold"
-DT_relative[ str_detect(Configuration,"Home Run"),
-             list(Configuration, Identification, table)]
-
-
-
+DT_relative[Identification %in% unique(Identification)]
+DT_relative[,list(smallpipe = unique(smallpipe)), by = Configuration ]
 
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
