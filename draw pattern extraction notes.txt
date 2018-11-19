@@ -424,5 +424,9 @@ the following still need to be added
     
 2018-11-19
     double check getting the right data records for each of the 8 combinations
+    add a table identifier
+    will need to fix Configuration and Identification to match tables in Draft Final Report v10
+    will need to add pipe size variable for tables 22 & 27
+    
     
         
