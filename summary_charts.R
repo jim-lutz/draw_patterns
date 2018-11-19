@@ -1,6 +1,7 @@
 # summary_charts.R
 # script to plot relative energy wasted and loads not met
 # for all 8 combinations {flow, core, pipe size}
+# table numbers are from Draft Final Report v10
 # "Tue Oct 16 20:51:41 2018"
 
 # set packages & etc
@@ -68,7 +69,9 @@ DT_relative[ , list(n=length(Configuration)), by=Identification]
 # looks OK?
 
 # add a pipe size variable
-DT_relative[ str_detect(Configuration, "pipe"), smallpipe:=1]
+DT_relative[ , smallpipe:=FALSE]
+DT_relative[ str_detect(Configuration, "pipe"), smallpipe:=TRUE]
+DT_relative[ str_detect(Identification, "pipe"), smallpipe:=TRUE]
 
 # look at the small pipes
 DT_relative[ str_detect(Configuration, "pipe"), 
@@ -76,18 +79,23 @@ DT_relative[ str_detect(Configuration, "pipe"),
 DT_relative[ str_detect(Identification, "pipe"), 
              list(n=length(Configuration)), by=Identification]
 
-DT_relative[ str_detect(Configuration, "Trunk&Branch - 3 branches")]
-small pipe identified both in Configuration and Identification????
-
-
-
 # change 'WH in NE garage' to 'WH in garage'
 DT_relative[ Identification  == 'WH in NE garage',
              Identification := 'WH in garage']
 
 # look at the Reference cases
 DT_relative[ Configuration == 'Reference']
-# it's value is only 0, so actually don't need to keep it.
+# it's value is only 0, so actually don't need it.
+
+# data for table 19B, Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
+DT_relative[core == 'dist' & smallpipe==FALSE & flow == 'norm',
+            list(Configuration, Identification, `Load not Met (%)`)]
+
+
+
+
+
+
 
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
