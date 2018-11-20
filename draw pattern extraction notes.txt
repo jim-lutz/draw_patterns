@@ -433,3 +433,7 @@ the following still need to be added
     got chart for table 19 Distributed_Wet_Room_Layouts_Normal_Pipe_Normal_Flow
     table 24 should be very simila
     
+2018-11-20
+    think about making one source file w/ inputs, like a sloppy function
+    
+        
