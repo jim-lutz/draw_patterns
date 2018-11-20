@@ -100,7 +100,6 @@ source("fix.Configuration.R")
 # fix Identification and set PipeSize for tables 20 & 25
 source("fix.Identification.R")
 
-
 # check that everything is ready to go
 DT_relative[,list(n=length(Configuration)), by = PipeSize]
 # PipeSize is blank for standard pipe sizing
@@ -122,123 +121,105 @@ DT_relative[table %in% c("20",'21','22',"25",'26','27'),
 # convert to long data, so can group by load not met or energy wasted
 DT_relative_long <-
   melt(DT_relative[],
-       id.vars = c('Configuration', 'Identification', 
+       id.vars = c('Configuration', 'Identification', 'PipeSize', 'table',
                    'flow', 'core', 'smallpipe'),
        measure.vars = c("Load not Met (%)", "Energy Wasted (%)")
   )
 
 names(DT_relative_long)
+str(DT_relative_long)
+
 
 # set the color choices, using grey and black for photocopying
 colorchoices <- c("Energy Wasted (%)" = "gray74", 
                   "Load not Met (%)" = "black")
 
 
-## plot Distributed Wet Room Rectangle - Normal Diameter Piping - Normal Flow
-# find distributed core data
-DT_relative_long[ core=='dist' & flow=='norm' & is.na(smallpipe), 
-                  list(unique(Identification)) ]
-# where did the pipes come from?
-DT_relative_long[ core=='dist' & flow=='norm' & is.na(smallpipe)
-                  & str_detect(Configuration, "pipe")]
-DT_relative_long[str_detect(Identification, "pipe")]
+# chart for table 19
+# Distributed Wet Room Layouts, Normal Pipe, Normal Flow
 
+# make a file name
+fn <- "Distributed_Wet_Room_Layouts_Normal_Pipe_Normal_Flow"
 
-# flag the data records  to keep
-DT_relative_long[ core=='dist' & flow=='norm',
-                  flag := 1]
+# find the data
+DT_relative_long_19 <-
+DT_relative_long[ table == '19', ]
 
-# flag the Ideal to keep
-DT_relative_long[ Identification == 'Ideal' &
-                    core=='dist' & flow == 'norm',
-                  flag := 1]
+DT_relative_long_19[, list(Identification, Configuration, table)]
+# don't forget both energy wasted and loads not met are in here
 
+str(DT_relative_long_19)
 
-                    
-DT_long <- # just the flagged records
-  DT_relative_long[flag==1,] 
+# get the order for Identification
+Identification.order <- DT_relative_long_19[variable=="Load not Met (%)"]$Identification
 
-DT_relative_long <-  # keep these, Two Heaters & Not use 1 inch pipe = -1
-  DT_relative_long[ value > 0 ]
+# add gaps before each group of Configuration
+Identification.order <- 
+  c("", Identification.order[1:5],    # Trunk & 3 Branches
+    "", Identification.order[6:10],   # Hybrid Mini-Manifold
+    "", Identification.order[11:15],  # Central Manifold
+    "", Identification.order[16:17],  # Two Heaters
+    "", Identification.order[18:20])  # One-zone w/o Recirc
 
-DT_relative_long <- # exclude skinny pipes
-  DT_relative_long[grep("pipe", Identification, invert = TRUE)]
-
-DT_relative_long <- # only keep these variables
-  DT_relative_long[ variable == 'Energy Wasted (%)' |
-                    variable == 'Load not Met (%)' ]
-
-str(DT_relative_long)
-
-# get original order of Identification
-Identification_levels <- rev(DT_relative[2:21, Identification])
-
-# set Identification as order factor
-DT_relative_long[ , 
-                  Identification := factor(Identification, 
-                           levels = Identification_levels)]
-
+# reverse it so it show up in right order in chart
+Identification.order <- rev(Identification.order)
+  
 # save as csv
-write_excel_csv(DT_relative_long,
-                path = paste0(wd_data, "distributed_normal_wasted_energy_2018-10-16.csv"),
+write_excel_csv(DT_relative_long_19,
+                path = paste0(wd_data, fn, ".csv"),
                 na = "")
 
-# chart using data from pruned DT_relative_long
-ggplot(data = DT_relative_long) +
+# chart using this data 
+ggplot(data = DT_relative_long_19) +
   
   # colums of 'Energy Wasted (%)' and 'Load not Met (%)'
   geom_col(aes(x=Identification, y=value, fill=variable),
          position = "dodge", width = .5) +
   
+  # get specify the right order
+  scale_x_discrete(limits = Identification.order) +
+  
   # turn plot on it's side
   coord_flip() +
 
-  # fuss with category axis tick labels
-  theme(axis.text.y = element_text(vjust = .5, hjust = 0, size = 6)) + # 
-  
-  # add the labels
-  labs(title = "Wasted Energy and Loads Not Met",
-       subtitle = "distributed core, normal flow" ) +
-  
   # remove the Identification label
   xlab("") +
   
-  # set for expand the x-axis for labels to fit in group labels
-  scale_x_discrete( expand = expand_scale(mult = -0.1, add = 3)) +
-  
-  # label the percentages
+ # label the percentages
   scale_y_continuous(name = 'Percent', 
                      labels = c('0%','10%','20%','30%','40%','50%'), limits = NULL,
                      expand = waiver(), na.value = NA_real_,
                      trans = "identity", position = "left", sec.axis = waiver()) +
 
-  # center the title
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5)) + #, size = 10
-  
   # clean up the legend
   guides(fill = guide_legend(title = NULL, reverse = TRUE)) +
   
   # add some text
-  # x values for data range from 1 to 20, for the numbered categories
   annotate("text", 
-           x = c(20.5, 15.5, 10.5,  5.5, 3.5), 
+           x = c(25, 19, 13,  7, 4),  # find from Identification.order 
            y = .1, hjust = 0,
-           label = c("Trunk and Branch",
-                     "Mini-Manifold",
-                     "Central Manifold",
-                     "Two Water Heaters",
-                     "One Trunk ")
-           , size = 2
+           label = unique(DT_relative_long_19$Configuration),
+           size = 4
            ) + #
   
-  # adjust text size for png plot
-  theme(legend.text = element_text(size = 5)) 
+  # specify color of bars
+  scale_colour_manual(values = c("gray74", "black"),
+                      aesthetics = c("colour", "fill")) +
+  
+  # specify location of legend
+  theme(legend.position = "bottom", # c(0.9, .95),
+        legend.background = element_rect( size=0.25, 
+                                          linetype="solid",
+                                          color = "black")
+        )
+  
+  #   # adjust text size for png plot
+  # theme(legend.text = element_text(size = 5)) 
 
 # get date to include in file name
 d <- format(Sys.time(), "%F")
 
 # save chart
-ggsave(filename = paste0("distributed_normal_wasted_energy_",d,".png"), 
+ggsave(filename = paste0("relative_",fn,"_",d,".png"), 
        path=wd_charts) # , width = 5.25, height = 4 
 # Saving 6.21 x 4.42 in image

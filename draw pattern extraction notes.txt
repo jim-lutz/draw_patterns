@@ -430,5 +430,6 @@ the following still need to be added
     
     in compact core, which corner of garage is WH in?
     
-    
+    got chart for table 19 Distributed_Wet_Room_Layouts_Normal_Pipe_Normal_Flow
+    table 24 should be very simila
     
