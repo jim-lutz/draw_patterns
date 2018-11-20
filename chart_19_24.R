@@ -20,7 +20,7 @@ DT_chart_params <-
 fn <-
   with(DT_chart_params,
        {
-         pipe<-ifelse(smallpipe,"norm","small")
+         pipe<-ifelse(smallpipe,"small","norm")
          paste0(core,"_core_",pipe,"_pipe_",flow,"_flow")
        }
   )

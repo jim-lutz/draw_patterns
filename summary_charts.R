@@ -146,14 +146,21 @@ str(DT_relative_long)
 
 # start making the charts
 
-# table number
-tn <- '19'
+# table number 19  Distributed Wet Room Layouts, Normal Pipe, Normal Flow
+tn <- '19' #
 
 # make the chart for table 19
 source("chart_19_24.R")
 
-# table number
+# table '24' # Distributed Wet Room Layouts, Normal Pipe, Low Flow
 tn <- '24'
 
 # make the chart for table 24
 source("chart_19_24.R")
+
+# table 20 Distributed Wet Room Layouts, Small Pipe, Normal Flow 
+tn <- '20'
+
+
+# table 25 Distributed Wet Room Layouts, Small Pipe, Low Flow 
+
