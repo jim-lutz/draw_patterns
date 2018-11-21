@@ -174,4 +174,8 @@ tn <- '26'
 tn <- '22'
 source("chart_22_27.R") # make the chart
 
+# table 27  Compact Wet Room Layouts, Small Pipe, Low Flow
+tn <- '27'
+source("chart_22_27.R") # make the chart
+
 

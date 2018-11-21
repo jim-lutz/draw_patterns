@@ -109,7 +109,7 @@ ggplot(data = DT_relative_long_chart) +
   # turn plot on it's side
   coord_flip() +
   
-  # remove the Identification label
+  # remove the Identification label on the X axis
   xlab("") +
   
   # label the percentages
@@ -121,16 +121,28 @@ ggplot(data = DT_relative_long_chart) +
   # clean up the legend
   guides(fill = guide_legend(title = NULL, reverse = TRUE)) +
   
-  # add some text to group by Configuration
+  # add some text to group by PipeSize
   annotate("text", 
-           x = c(12,9,6,3 ),  # from Identification.limits 
-           y = .2, hjust = 0,
-           label = c("Trunk & 3 Branches", "Hybrid Mini-Manifold",
-                     "Central Manifold", "One-zone w/o Recirc"),
-           # from unique(DT_relative_long_chart[]$Configuration)
+           x = c(39,26,13 ),  # from Identification.labels 
+           y = .3, hjust = 0.5,
+           label = c("Use 3/8 pipe", "Not use 1 inch pipe", 
+                     "Use 3/8 pipe & Not use 1 inch pipe"),
+           # from unique(DT_relative_long_chart[]$PipeSize)
            size = 4
   ) + 
-  
+
+  # add some text to group by Configuration
+  annotate("text", 
+           x = c(38,35,32,29,
+               25,22,19,16,
+               12,9,6,3), # from Identification.labels 
+           y = 0.0, hjust = 0,
+           label = rep(
+             c("Trunk & 3 Branches", "Hybrid Mini-Manifold",
+               "Central Manifold", "One-zone w/o Recirc"), times = 3),
+           # from unique(DT_relative_long_chart[]$Configuration)
+           size = 3
+  ) + 
   # specify color of bars gray and black for photocopying
   scale_colour_manual(values = c("gray74", "black"),
                       aesthetics = c("colour", "fill")) +
