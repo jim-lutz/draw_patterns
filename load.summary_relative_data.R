@@ -9,6 +9,16 @@ tables()
 # 1: DT_relative   42    6  0
 # 2:  DT_summary   42    6  0
 
+# what's in the tables
+names(DT_relative)
+str(DT_relative)
+names(DT_summary)
+str(DT_summary)
+
+# get Ideal for normal flow case for use in the low flow cases
+DT_ideal_norm <-
+  DT_summary[Identification=="Ideal", ]
+
 # remove the summary table
 rm(DT_summary)
 
@@ -25,10 +35,48 @@ DT_relative_dist_norm[, flow:='norm']
 DT_relative_dist_norm[, core:='dist']
 
 
-# then distributed_low
+# now get distributed_low summary and relative data
 load(file = paste0(wd_data,"summary_relative_distributed_low.Rdata"))
 
 tables()
+
+# rebuild DT_relative using the DT_summary and DT_ideal_norm
+# replace first row of DT_summary with DT_ideal_norm
+DT_summary[1, names(DT_summary) := DT_ideal_norm[1]]
+
+# save the distributed_low summary performance as csv
+write_excel_csv(DT_summary,
+                path = paste0(wd_data, 
+                              "summary_performance_distributed_low_",
+                              format(Sys.time(), "%F"),
+                              ".csv"),
+                na = "")
+
+# create the relative distributed_low
+DT_relative <-
+  DT_summary[, list(
+    Configuration,
+    Identification,
+    `Energy into HWDS (BTU)` = 
+      `Energy into HWDS (BTU)` / `Energy into HWDS (BTU)`[1],
+    
+    `Water into HWDS (gallons)` = 
+      `Water into HWDS (gallons)` / `Water into HWDS (gallons)`[1],
+    
+    `Time Water is Flowing (seconds)` = 
+      `Time Water is Flowing (seconds)` / `Time Water is Flowing (seconds)`[1],
+    
+    `Load not Met (BTU)` =
+      `Load not Met (BTU)`/`Energy into HWDS (BTU)`[1]
+  )]
+
+# save the distributed_low summary relative as csv
+write_excel_csv(DT_relative,
+                path = paste0(wd_data, 
+                              "summary_relative_distributed_low_",
+                              format(Sys.time(), "%F"),
+                              ".csv"),
+                na = "")
 
 # remove the summary table
 rm(DT_summary)
@@ -46,7 +94,7 @@ DT_relative_dist_low[, flow:='low']
 DT_relative_dist_low[, core:='dist']
 
 
-# then compact_norm
+# now get the compact_norm
 load(file = paste0(wd_data,"summary_relative_compact_norm.Rdata"))
 
 tables()

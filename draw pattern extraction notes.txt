@@ -452,3 +452,10 @@ the following still need to be added
     gap by PipeSize in big groups, text centered
     gap by Configuration in small groups, text left justified
         
+2018-11-21
+    modify low flow charts and tables to be relative to the standard flows
+    do this in load.summary_relative_data.R?
+    have to reproduce tables for low flow as well.
+    see summary_results_distrib_low.xlsx.R &
+        summary_results_compact_low.xlsx.R
+    

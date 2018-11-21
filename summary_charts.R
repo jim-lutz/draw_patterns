@@ -129,7 +129,10 @@ DT_relative[table %in% c("20",'21','22',"25",'26','27'),
 
 # save as csv
 write_excel_csv(DT_relative,
-                path = paste0(wd_data, "data_relative_charts.csv"),
+                path = paste0(wd_data, 
+                              "data_relative_charts_",
+                              format(Sys.time(), "%F"),
+                              ".csv"),
                 na = "")
 
 

@@ -113,7 +113,7 @@ summary_results_distrib_norm.xlsx.R
             ./data/summary_relative_distributed_norm.csv
             ./data/summary_relative_distributed_norm.Rdata
             
-# summary_results_compact_norm.xlsx.R
+summary_results_compact_norm.xlsx.R
     # script to read 'Model results - Compact Core Normal Flow 10-12-2018.xlsx'
     # and produce summary of performance tables 12-17 in final report
     input:  ../../model results/2018-10-12/Model results - Compact Core Normal Flow 10-12-2018.xlsx
@@ -138,11 +138,32 @@ summary_results_compact_low.xlsx.R
             ./data/summary_relative_compact_low.Rdata
             
 summary_charts.R
-    # script to plot energy wasted and loads not met
-    # for distributed core, normal flow
-    input: ./data/summary_relative_distributed_norm.Rdata
-           ./data/summary_relative_distributed_low.Rdata
-           ./data/summary_relative_compact_norm.Rdata
-           ./data/summary_relative_compact_low.Rdata
+    # script to plot relative energy wasted and loads not met
+    # for all 8 combinations {flow, core, pipe size}
+    # table numbers are from Draft Final Report v10
+    input:  ./data/summary_relative_distributed_norm.Rdata
+            ./data/summary_relative_distributed_low.Rdata
+            ./data/summary_relative_compact_norm.Rdata
+            ./data/summary_relative_compact_low.Rdata
+   sources: ./load.summary_relative_data.R
+                sources: ./summary_relative_distributed_norm.Rdata
+                         ./summary_relative_distributed_low.Rdata
+                         ./summary_relative_compact_norm.Rdata
+                         ./summary_relative_compact_low.Rdata
+            ./assign.tables.R
+            ./PipeSize.R
+            ./fix.Configuration.R   
+            ./fix.Identification.R
+            ./chart_19_24.R
+                output: ./charts/relative_dist_core_norm_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
+            ./chart_20_25.R
+                output: relative_dist_core_small_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
+            ./chart_21_26.R
+                output: relative_compact_core_norm_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
+            ./chart_22_27.R
+                output: relative_compact_core_small_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
+    output: ./data/data_relative_charts__{YYYY-MM-DD}.csv
+    
+    
                 
     
