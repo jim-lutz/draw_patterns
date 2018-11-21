@@ -66,9 +66,9 @@ ggplot(data = DT_relative_long_chart) +
   
   # label the percentages
   scale_y_continuous(name = 'Percent', 
-                     labels = c('0%','10%','20%','30%','40%','50%','60%'), 
-                     breaks=c(0,0.1,0.2,0.3,0.4,0.5,0.6),
-                     limits = c(0, 0.6)) +
+                     labels = c('0%','10%','20%','30%','40%','50%'), 
+                     breaks=c(0,0.1,0.2,0.3,0.4,0.5),
+                     limits = c(0, 0.5)) +
   
   # clean up the legend
   guides(fill = guide_legend(title = NULL, reverse = TRUE)) +

@@ -26,8 +26,11 @@ setnames(DT_relative,
          new = c('Energy (%)','Water (%)', 'Time (%)', 'Load not Met (%)')
          )
 
-# add wasted energy, water & time, 
+
+
+# add wasted energy, water & time, as difference from 100%
 # not 'Load not Met (%)', it's already relative to reference
+# references are relative to norm flow
 DT_relative[ , `:=` (`Energy Wasted (%)` = `Energy (%)` - 1.0,
                      `Water Wasted (%)`  = `Water (%)` - 1.0, 
                      `Time Wasted (%)`   = `Time (%)` - 1.0)]
@@ -60,8 +63,9 @@ DT_relative[,
                  max_Loads_Not_Met = max(`Load not Met (%)`)
             )]
 #    max_Wasted_Energy max_Wasted_Water max_Wasted_Time max_Loads_Not_Met
-# 1:         0.5608854        0.5608854       0.1820058         0.2527405
-# set max to 60% across all charts
+# 1:         0.4693084        0.4693084       0.1820058         0.2527405
+# set max to 50% across all charts
+
 
 
 # list of all the Configuration
@@ -100,10 +104,10 @@ DT_relative[ Identification  == 'WH in NE garage',
 DT_relative[ Configuration == 'Reference']
 # it's value is only 0, so actually don't need it.
 
-# assign the data to tables as numbered in draft final report v10
+# add table variable as numbered in draft final report v10
 source("assign.tables.R")
 
-# assign PipeSize and remove PipeSize from Configuration
+# add PipeSize variable and remove PipeSize from Configuration
 source("PipeSize.R")
 
 # fix Configuration
@@ -151,27 +155,27 @@ str(DT_relative_long)
 
 # table 19  Distributed Wet Room Layouts, Normal Pipe, Normal Flow
 tn <- '19' 
-# source("chart_19_24.R") # make the chart
+source("chart_19_24.R") # make the chart
 
 # table '24' # Distributed Wet Room Layouts, Normal Pipe, Low Flow
 tn <- '24'
-# source("chart_19_24.R") # make the chart
+source("chart_19_24.R") # make the chart
 
 # table 20 Distributed Wet Room Layouts, Small Pipe, Normal Flow 
 tn <- '20'
-# source("chart_20_25.R") # make the chart
+source("chart_20_25.R") # make the chart
 
 # table 25 Distributed Wet Room Layouts, Small Pipe, Low Flow 
 tn <- '25'
-# source("chart_20_25.R") # make the chart
+source("chart_20_25.R") # make the chart
 
 # table 21  Compact Wet Room Layouts, Normal Pipe, Normal Flow
 tn <- '21'
-# source("chart_21_26.R") # make the chart
+source("chart_21_26.R") # make the chart
 
 # table 26  Compact Wet Room Layouts, Normal Pipe, Low Flow 
 tn <- '26'
-# source("chart_21_26.R") # make the chart
+source("chart_21_26.R") # make the chart
 
 # table 22  Compact Wet Room Layouts, Small Pipe, Normal Flow
 tn <- '22'
@@ -180,5 +184,4 @@ source("chart_22_27.R") # make the chart
 # table 27  Compact Wet Room Layouts, Small Pipe, Low Flow
 tn <- '27'
 source("chart_22_27.R") # make the chart
-
 
