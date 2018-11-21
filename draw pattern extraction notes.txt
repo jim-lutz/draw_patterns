@@ -436,4 +436,7 @@ the following still need to be added
 2018-11-20
     think about making one source file w/ inputs, like a sloppy function
     
+    20 & 25
+    order by Configuration, not Identification
+    gap by PipeSize, not Configuration
         
