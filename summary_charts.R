@@ -10,8 +10,6 @@ source("setup.R")
 # set up paths to working directories
 source("setup_wd.R")
 
-# load all four relative data.tables then recombine
-
 # load the summary relative results data
 source("load.summary_relative_data.R")
 
@@ -66,7 +64,14 @@ DT_relative[,
 # 1:         0.4693084        0.4693084       0.1820058         0.2527405
 # set max to 50% across all charts
 
-
+# find the min values 
+DT_relative[`Energy Wasted (%)`>-1,
+            list(min_Wasted_Energy = min(`Energy Wasted (%)`),
+                 min_Wasted_Water  = min(`Water Wasted (%)`),
+                 min_Wasted_Time   = min(`Time Wasted (%)`),
+                 min_Loads_Not_Met = min(`Load not Met (%)`)
+            )]
+# set min to -10% across all charts
 
 # list of all the Configuration
 DT_relative[ , list(n=length(Identification)), by=Configuration]

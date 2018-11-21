@@ -464,4 +464,7 @@ the following still need to be added
 
     relative_compact_core_small_pipe_low_flow_2018-11-21
     some energy wasted is now less than the ideal energy into the HWDS in the norm flow case
+    reset the min y-scale to -10% across all charts
+    
+    shift the text in the gaps to -0.1 and .2
     

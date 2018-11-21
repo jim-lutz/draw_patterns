@@ -64,11 +64,11 @@ ggplot(data = DT_relative_long_chart) +
   # remove the Identification label
   xlab("") +
   
-  # label the percentages
+  # set the y scale parameters
   scale_y_continuous(name = 'Percent', 
-                     labels = c('0%','10%','20%','30%','40%','50%'), 
-                     breaks=c(0,0.1,0.2,0.3,0.4,0.5),
-                     limits = c(0, 0.5)) +
+                     labels = c('-10%', '0%','10%','20%','30%','40%','50%'), 
+                     breaks=c(-0.1,0,0.1,0.2,0.3,0.4,0.5),
+                     limits = c(-0.1, 0.5)) +
   
   # clean up the legend
   guides(fill = guide_legend(title = NULL, reverse = TRUE)) +
@@ -76,7 +76,7 @@ ggplot(data = DT_relative_long_chart) +
   # add some text
   annotate("text", 
            x = c(25, 19, 13,  7, 4),  # find from Identification.order 
-           y = .1, hjust = 0,
+           y = -0.1, hjust = 0,
            label = unique(DT_relative_long_chart$Configuration),
            size = 4
   ) + #

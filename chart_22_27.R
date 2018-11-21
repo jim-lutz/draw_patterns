@@ -112,11 +112,11 @@ ggplot(data = DT_relative_long_chart) +
   # remove the Identification label on the X axis
   xlab("") +
   
-  # label the percentages
+  # set the y scale parameters
   scale_y_continuous(name = 'Percent', 
-                     labels = c('0%','10%','20%','30%','40%','50%'), 
-                     breaks=c(0,0.1,0.2,0.3,0.4,0.5),
-                     limits = c(0, 0.5)) +
+                     labels = c('-10%', '0%','10%','20%','30%','40%','50%'), 
+                     breaks=c(-0.1,0,0.1,0.2,0.3,0.4,0.5),
+                     limits = c(-0.1, 0.5)) +
   
   # clean up the legend
   guides(fill = guide_legend(title = NULL, reverse = TRUE)) +
@@ -124,7 +124,7 @@ ggplot(data = DT_relative_long_chart) +
   # add some text to group by PipeSize
   annotate("text", 
            x = c(39,26,13 ),  # from Identification.labels 
-           y = .3, hjust = 0.5,
+           y = .2, hjust = 0.5,
            label = c("Use 3/8 pipe", "Not use 1 inch pipe", 
                      "Use 3/8 pipe & Not use 1 inch pipe"),
            # from unique(DT_relative_long_chart[]$PipeSize)
@@ -136,7 +136,7 @@ ggplot(data = DT_relative_long_chart) +
            x = c(38,35,32,29,
                25,22,19,16,
                12,9,6,3), # from Identification.labels 
-           y = 0.0, hjust = 0,
+           y = -0.1, hjust = 0,
            label = rep(
              c("Trunk & 3 Branches", "Hybrid Mini-Manifold",
                "Central Manifold", "One-zone w/o Recirc"), times = 3),
