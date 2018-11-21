@@ -164,10 +164,14 @@ tn <- '25'
 
 # table 21  Compact Wet Room Layouts, Normal Pipe, Normal Flow
 tn <- '21'
-source("chart_21_26.R") # make the chart
+# source("chart_21_26.R") # make the chart
 
 # table 26  Compact Wet Room Layouts, Normal Pipe, Low Flow 
 tn <- '26'
-source("chart_21_26.R") # make the chart
+# source("chart_21_26.R") # make the chart
+
+# table 22  Compact Wet Room Layouts, Small Pipe, Normal Flow
+tn <- '22'
+source("chart_22_27.R") # make the chart
 
 
