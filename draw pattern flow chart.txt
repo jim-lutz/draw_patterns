@@ -146,15 +146,19 @@ summary_charts.R
             ./data/summary_relative_compact_norm.Rdata
             ./data/summary_relative_compact_low.Rdata
    sources: ./load.summary_relative_data.R
-                sources: ./summary_relative_distributed_norm.Rdata
-                         ./summary_relative_distributed_low.Rdata
-                         ./summary_relative_compact_norm.Rdata
-                         ./summary_relative_compact_low.Rdata
+                input:  ./summary_relative_distributed_norm.Rdata
+                        ./summary_relative_distributed_low.Rdata
+                        ./summary_relative_compact_norm.Rdata
+                        ./summary_relative_compact_low.Rdata
+                output: ./data/summary_performance_distributed_low_{YYYY-MM-DD}.csv
+                        ./data/summary_relative_distributed_low_{YYYY-MM-DD}.csv
+                        ./data/summary_performance_compact_low_{YYYY-MM-DD}.csv
+                        ./data/summary_relative_compact_low_{YYYY-MM-DD}.csv
             ./assign.tables.R
             ./PipeSize.R
             ./fix.Configuration.R   
             ./fix.Identification.R
-            ./chart_19_24.R
+    output: ./chart_19_24.R
                 output: ./charts/relative_dist_core_norm_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
             ./chart_20_25.R
                 output: relative_dist_core_small_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
@@ -162,7 +166,7 @@ summary_charts.R
                 output: relative_compact_core_norm_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
             ./chart_22_27.R
                 output: relative_compact_core_small_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
-    output: ./data/data_relative_charts__{YYYY-MM-DD}.csv
+            ./data/data_relative_charts__{YYYY-MM-DD}.csv
     
     
                 
