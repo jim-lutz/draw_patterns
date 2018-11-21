@@ -440,3 +440,9 @@ the following still need to be added
     order by Configuration, not Identification
     gap by PipeSize, not Configuration
         
+    21 & 26 
+    order by Identification,
+    gap by Configuration
+    
+    concerned about chart sizes, may have to deal with that in R, I hope not.
+    confirm location of WH in garage     

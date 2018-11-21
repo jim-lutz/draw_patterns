@@ -156,8 +156,18 @@ tn <- '24'
 
 # table 20 Distributed Wet Room Layouts, Small Pipe, Normal Flow 
 tn <- '20'
-source("chart_20_25.R") # make the chart
+# source("chart_20_25.R") # make the chart
 
 # table 25 Distributed Wet Room Layouts, Small Pipe, Low Flow 
 tn <- '25'
-source("chart_20_25.R") # make the chart
+# source("chart_20_25.R") # make the chart
+
+# table 21  Compact Wet Room Layouts, Normal Pipe, Normal Flow
+tn <- '21'
+source("chart_21_26.R") # make the chart
+
+# table 26  Compact Wet Room Layouts, Normal Pipe, Low Flow 
+tn <- '26'
+source("chart_21_26.R") # make the chart
+
+
