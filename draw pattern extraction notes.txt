@@ -467,4 +467,11 @@ the following still need to be added
     reset the min y-scale to -10% across all charts
     
     shift the text in the gaps to -0.1 and .2
+
+2019-06-12
+    scatter_day7.R to make a scatter plot of draws by flow rate compared to duration
+    part of answer to lowest flow?
+    gave up on finishing this.
+    Didn't seem like it'd be useful enough to finish at this late date.
+    
     

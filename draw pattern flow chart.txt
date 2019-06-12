@@ -168,6 +168,12 @@ summary_charts.R
                 output: relative_compact_core_small_pipe_{norm|low}_flow_{YYYY-MM-DD}.png
             ./data/data_relative_charts__{YYYY-MM-DD}.csv
     
+scatter_day7.R
+    # script generate scatter plot of flowrates 
+    # by duration of draw for reference day
+    input:  ./data/'Draw schedule for performance analysis.standard_2018-09-23.csv'
+    output: not completed
+            
     
                 
     
